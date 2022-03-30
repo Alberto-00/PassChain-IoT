@@ -58,3 +58,4 @@ extra... ancora da definire
 + [TTGO ESP32](http://www.lilygo.cn/prod_view.aspx?TypeId=50033&Id=1126&FId=t3:50033:3)
 + Tempo stimato batteria 500mah usando solo 300mah per prezervare la salute della batteria **857 ore equivalgono a 35.708333 giorni**.
 + [Tizio con tanti progetti da cui prendere spunto](https://www.youtube.com/c/ThatProject/videos)
++ Se si hanno problemi con la compilazione del codice dopo che si ha già installato i driver per il computer e aver scaricato da arduino ide i driver per la scheda seguire questa guida [LINK](https://arduino-esp8266.readthedocs.io/en/latest/faq/a04-board-generic-is-unknown.html)
