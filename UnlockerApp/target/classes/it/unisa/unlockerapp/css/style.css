@@ -1,5 +1,10 @@
-#labelAuthentication {
+.root {
     -fx-background-image: url("../assets/authentication.png");
+    -fx-background-size: cover;
+}
+
+.root2 {
+    -fx-background-image: url("../assets/homepage.png");
     -fx-background-size: cover;
 }
 
@@ -11,4 +16,12 @@
     -fx-background-radius: 3px;
     -fx-border-radius: 3px;
     -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.75),1,0,1,1);
+}
+
+.button {
+    -fx-background-color: transparent;
+}
+
+.button:hover{
+    -fx-background-color: rgba(220,220,220,0.3);
 }

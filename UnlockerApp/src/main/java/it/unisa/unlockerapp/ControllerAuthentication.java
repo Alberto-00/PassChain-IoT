@@ -1,16 +1,21 @@
 package it.unisa.unlockerapp;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
-public class Controller implements Initializable {
+public class ControllerAuthentication implements Initializable {
     @FXML
     private TextField otp1;
 
@@ -25,6 +30,9 @@ public class Controller implements Initializable {
 
     @FXML
     private TextField otp5;
+
+    @FXML
+    private Button btnAuthentication;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -54,10 +62,23 @@ public class Controller implements Initializable {
         setOtpCharacters(otp5);
     }
 
-    protected void setOtpCharacters(TextField otp){
+    private void setOtpCharacters(TextField otp){
         var pattern = Pattern.compile(".?");
         TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>)
                 change -> pattern.matcher(change.getControlNewText()).matches() ? change : null);
         otp.setTextFormatter(formatter);
+    }
+
+    @FXML
+    public void handleButtonAction () throws IOException {
+        Stage stage = (Stage) btnAuthentication.getScene().getWindow();
+        stage.close();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/homepage.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("Unlocker IoT");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.show();
     }
 }

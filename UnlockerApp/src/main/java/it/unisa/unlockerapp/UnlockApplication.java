@@ -11,12 +11,12 @@ import java.io.IOException;
 public class UnlockApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(UnlockApplication.class.getResource("authentication.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/authentication.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Unlocker IoT");
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.getIcons().add(new Image("D:\\Progetti GitHub\\Progetto-IoT\\UnlockerApp\\src\\main\\resources\\it\\unisa\\unlockerapp\\assets\\iconApp.png"));
+        stage.getIcons().add(new Image("D:\\Progetti GitHub\\Progetto-IoT\\UnlockerApp\\src\\main\\resources\\it\\unisa\\unlockerapp\\assets\\icon.png"));
         stage.show();
     }
 
