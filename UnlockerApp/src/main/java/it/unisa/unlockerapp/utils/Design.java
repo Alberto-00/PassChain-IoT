@@ -2,9 +2,15 @@ package it.unisa.unlockerapp.utils;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 public class Design {
 
@@ -45,5 +51,27 @@ public class Design {
             translateTransition1.setByX(-600);
             translateTransition1.play();
         });
+    }
+
+    public static void setCredentials(TextField webName, TextField username, TextField password) {
+        webName.setStyle("-fx-background-color: rgba(91, 155, 233, 0.78); " +
+                "-fx-text-fill: white; ");
+        webName.setPromptText("Name Application");
+
+        username.setStyle("-fx-background-color: rgba(91, 155, 233, 0.78); " +
+
+                "-fx-text-fill: white; ");
+        username.setPromptText("Username");
+
+        password.setStyle("-fx-background-color: rgba(91, 155, 233, 0.78); " +
+
+                "-fx-text-fill: white; ");
+        password.setPromptText("Password");
+    }
+
+    public static void textAreaNotEditable(TextArea txtArea) {
+        txtArea.setEditable(false);
+        txtArea.setMouseTransparent(true);
+        txtArea.setFocusTraversable(false);
     }
 }

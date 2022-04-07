@@ -17,25 +17,19 @@ import java.util.regex.Pattern;
 
 public class ControllerAuthentication implements Initializable {
     @FXML
-    private TextField otp1;
-
-    @FXML
-    private TextField otp2;
-
-    @FXML
-    private TextField otp3;
-
-    @FXML
-    private TextField otp4;
-
-    @FXML
-    private TextField otp5;
+    private TextField otp1, otp2, otp3, otp4, otp5, otp6,
+            otp7, otp8, otp9, otp10;
 
     @FXML
     private Button btnAuthentication;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        setColorOtp(otp1, otp2, otp3, otp4, otp5);
+        setColorOtp(otp6, otp7, otp8, otp9, otp10);
+    }
+
+    private void setColorOtp(TextField otp1, TextField otp2, TextField otp3, TextField otp4, TextField otp5) {
         otp1.setStyle("-fx-background-color: rgba(91, 155, 233, 0.78); " +
                 "-fx-highlight-fill: transparent; " +
                 "-fx-text-fill: white; ");
@@ -70,7 +64,7 @@ public class ControllerAuthentication implements Initializable {
     }
 
     @FXML
-    public void handleButtonAction () throws IOException {
+    private void handleButtonAction () throws IOException {
         Stage stage = (Stage) btnAuthentication.getScene().getWindow();
         stage.close();
 

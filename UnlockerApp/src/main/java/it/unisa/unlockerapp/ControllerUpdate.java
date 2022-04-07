@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerAdd implements Initializable {
+public class ControllerUpdate implements Initializable {
 
     @FXML
     private TextField webName, username, password;

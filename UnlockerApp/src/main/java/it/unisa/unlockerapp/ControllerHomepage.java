@@ -26,15 +26,26 @@ public class ControllerHomepage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Design.setSidebar(panel1, panel2, menu);
-
-        txtArea.setEditable(false);
-        txtArea.setMouseTransparent(true);
-        txtArea.setFocusTraversable(false);
+        Design.textAreaNotEditable(txtArea);
     }
 
     @FXML
-    public void loadAddPage() throws IOException {
+    private void loadHomePage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/homepage.fxml"));
+        AnchorPane pane = fxmlLoader.load();
+        rootPane.getChildren().setAll(pane);
+    }
+
+    @FXML
+    private void loadAddPage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/add.fxml"));
+        AnchorPane pane = fxmlLoader.load();
+        rootPane.getChildren().setAll(pane);
+    }
+
+    @FXML
+    private void loadUpdatePage() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/update.fxml"));
         AnchorPane pane = fxmlLoader.load();
         rootPane.getChildren().setAll(pane);
     }

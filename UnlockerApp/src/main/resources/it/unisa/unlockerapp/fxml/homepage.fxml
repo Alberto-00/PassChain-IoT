@@ -51,6 +51,11 @@
          </children>
       </AnchorPane>
       <TextArea fx:id="txtArea" layoutX="139.0" layoutY="273.0" prefHeight="200.0" prefWidth="581.0" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="80.0" />
+      <ImageView fitHeight="163.0" fitWidth="172.0" layoutX="319.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="269.0" AnchorPane.leftAnchor="319.0" AnchorPane.rightAnchor="318.0" AnchorPane.topAnchor="68.0">
+         <image>
+            <Image url="@../assets/icon.png" />
+         </image>
+      </ImageView>
       <AnchorPane fx:id="panel1" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <AnchorPane prefHeight="454.0" prefWidth="50.0" style="-fx-background-color: #394b62;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
          <children>
@@ -89,30 +94,45 @@
          <children>
             <VBox layoutY="20.0" prefHeight="200.0" prefWidth="100.0" spacing="41.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
                <children>
-                  <JFXButton alignment="BASELINE_LEFT" prefHeight="38.0" prefWidth="179.0" styleClass="button" stylesheets="@../css/style.css" text="Dashboard" textFill="WHITE">
+                  <JFXButton alignment="BASELINE_LEFT" onAction="#loadHomePage" prefHeight="38.0" prefWidth="179.0" styleClass="button" stylesheets="@../css/style.css" text="Dashboard" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </JFXButton>
                   <JFXButton alignment="BASELINE_LEFT" onAction="#loadAddPage" prefHeight="38.0" prefWidth="179.0" styleClass="button" text="Add New" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </JFXButton>
-                  <JFXButton alignment="BASELINE_LEFT" prefHeight="38.0" prefWidth="179.0" styleClass="button" text="Update" textFill="WHITE">
+                  <JFXButton alignment="BASELINE_LEFT" onAction="#loadUpdatePage" prefHeight="38.0" prefWidth="179.0" styleClass="button" text="Update" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </JFXButton>
                   <JFXButton alignment="BASELINE_LEFT" prefHeight="38.0" prefWidth="179.0" styleClass="button" text="Delete" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </JFXButton>
                   <JFXButton alignment="BASELINE_LEFT" prefHeight="38.0" prefWidth="179.0" styleClass="button" text="Set Finger Print" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </JFXButton>
                </children>
             </VBox>
