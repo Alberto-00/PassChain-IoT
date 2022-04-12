@@ -59,3 +59,8 @@ extra... ancora da definire
 + Tempo stimato batteria 500mah usando solo 300mah per prezervare la salute della batteria **857 ore equivalgono a 35.708333 giorni**.
 + [Tizio con tanti progetti da cui prendere spunto](https://www.youtube.com/c/ThatProject/videos)
 + Se si hanno problemi con la compilazione del codice dopo che si ha già installato i driver per il computer e aver scaricato da arduino ide i driver per la scheda seguire questa guida [LINK](https://arduino-esp8266.readthedocs.io/en/latest/faq/a04-board-generic-is-unknown.html)
++ Rimappare [LINK](https://www.esp32.com/viewtopic.php?t=17546)  le porte hardware dell'ESP32 TTGO:
+	+ Procedura [LINK](https://www.b4x.com/android/forum/threads/remap-hardware-serial-ports-on-esp32.123750/)
+	+ Percorso su MacOS: /Users/NomeUtente/Documents/Arduino/hardware/espressif/esp32/cores/esp32/HardwareSerial.cpp 
++ Utilizzare il sensore fingerprint Adafruit con Python richiede la seguente procedura [LINK](https://docs.circuitpython.org/projects/fingerprint/en/latest/)
++ O Utilizzando MicroPython è richiesta la seguente libreria [LINK](https://docs.circuitpython.org/projects/fingerprint/en/latest/_modules/adafruit_fingerprint.html)
