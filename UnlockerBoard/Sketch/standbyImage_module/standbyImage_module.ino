@@ -11,7 +11,7 @@ void setup(){
 
   digitalRainAnim.init(&tft);
   digitalRainAnim.setTextColor(4, 188, 200);
-  digitalRainAnim.setHeadCharColor(4, 254, 253);
+  digitalRainAnim.setHeadCharColor(4, 254, 253);*/
 }
 
 void loop(){
