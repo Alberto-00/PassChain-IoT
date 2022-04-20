@@ -6,12 +6,12 @@ DigitalRainAnim digitalRainAnim = DigitalRainAnim();
 
 void setup(){
   tft.begin();
-  tft.setRotation(0);
+  tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
 
   digitalRainAnim.init(&tft);
   digitalRainAnim.setTextColor(4, 188, 200);
-  digitalRainAnim.setHeadCharColor(4, 254, 253);*/
+  digitalRainAnim.setHeadCharColor(4, 254, 253);
 }
 
 void loop(){
