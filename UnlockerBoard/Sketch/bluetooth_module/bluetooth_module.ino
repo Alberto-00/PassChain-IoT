@@ -51,9 +51,6 @@ void write_button(){
 
   bleKeyboard.print("Password");
   delay(1000);
-
-  bleKeyboard.write(KEY_RETURN);
-  delay(1000);
 }
 
 void setup() {
@@ -79,6 +76,11 @@ int counter = 0;
 void loop() {  
   int buttonState1 = digitalRead(BUTTON1PIN);
   int buttonState2 = digitalRead(BUTTON2PIN);
+
+  if(!bleKeyboard.isConnected() && counter == 1){
+    check_connection();
+    counter = 2;
+  }
 
   if(bleKeyboard.isConnected()){
     if(counter == 0){
