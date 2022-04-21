@@ -47,10 +47,11 @@ void write_button(){
   tft.fillScreen(TFT_BLACK);
   tft.println("Writing");
   tft.println("password");
-  tft.fillScreen(TFT_BLACK);
-
+  
   bleKeyboard.print("Password");
-  delay(1000);
+  delay(2000);
+  
+  tft.fillScreen(TFT_BLACK);
 }
 
 void setup() {
@@ -65,35 +66,30 @@ void setup() {
   tft.setTextSize(1); //la dimensione va da 1 a 5, di default usa 1
 
   bleKeyboard.begin();
-
-  if(!bleKeyboard.isConnected()){
-    check_connection();
-  }
 }
 
-int counter = 0;
+bool counter = false;
 
 void loop() {  
   int buttonState1 = digitalRead(BUTTON1PIN);
   int buttonState2 = digitalRead(BUTTON2PIN);
 
-  if(!bleKeyboard.isConnected() && counter == 1){
+  if(!bleKeyboard.isConnected() && !counter){
     check_connection();
-    counter = 2;
+    counter = true;
   }
 
   if(bleKeyboard.isConnected()){
-    if(counter == 0){
+    if(!counter){
       check_connection();
-      tft.fillScreen(TFT_BLACK);
-      counter = 1;
-    }
+      counter = true;
+    } else{
+      tft.setCursor(0, 30);
+      tft.print("Select the place where to write\r\nand press the\r\nbottom button.");
     
-    tft.setCursor(0, 30);
-    tft.print("Select the place where to write\r\nand press the\r\nbottom button.");
-    
-    if(buttonState2 == LOW){
-      write_button();
+      if(buttonState2 == LOW){
+        write_button();
+      }
     }
   }
 }
