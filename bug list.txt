@@ -1,1 +1,4 @@
-1. In Windows la scrittura tramite bluetooth funziona solo se il dispositivo è collegato prima al telefono o MacOS
+1. In Windows la scrittura tramite bluetooth funziona solo se il dispositivo è collegato prima al telefono o MacOS;
+2. Scritta prima del logo iniziale;
+3. implementare deep sleep;
+4. aggiustare le scritte.
