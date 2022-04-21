@@ -14,19 +14,19 @@ void check_connection() {
     tft.setCursor(0, 30);
     tft.fillScreen(TFT_BLACK);
     tft.print("Connecting.");
-    delay(500);
+    delay(400);
     tft.print(".");
-    delay(500);
+    delay(400);
     tft.print(".");
-    delay(500);
+    delay(400);
     tft.print(".");
-    delay(500);
+    delay(400);
     
     if(bleKeyboard.isConnected()) {
       tft.setCursor(0, 30);
       tft.fillScreen(TFT_BLACK);
       tft.println("The device is\r\nconnected !");
-      delay(2000);
+      delay(2500);
       tft.fillScreen(TFT_BLACK);
       return;
     }
@@ -36,7 +36,6 @@ void check_connection() {
       tft.setCursor(0, 30);
       tft.fillScreen(TFT_BLACK);
       tft.println("Connection\r\nFailed !\r\n\r\nBluetooth off.");
-      delay(2000);
       return;
     }
   }
@@ -66,30 +65,33 @@ void setup() {
   tft.setTextSize(1); //la dimensione va da 1 a 5, di default usa 1
 
   bleKeyboard.begin();
+
+  if(bleKeyboard.isConnected()){
+    check_connection();
+  }
 }
 
-bool counter = false;
+bool connection_status = false;
 
 void loop() {  
   int buttonState1 = digitalRead(BUTTON1PIN);
   int buttonState2 = digitalRead(BUTTON2PIN);
 
-  if(!bleKeyboard.isConnected() && !counter){
-    check_connection();
-    counter = true;
-  }
-
-  if(bleKeyboard.isConnected()){
-    if(!counter){
+  if(!bleKeyboard.isConnected()){
+    if(!connection_status){
       check_connection();
-      counter = true;
-    } else{
-      tft.setCursor(0, 30);
-      tft.print("Select the place where to write\r\nand press the\r\nbottom button.");
-    
-      if(buttonState2 == LOW){
-        write_button();
-      }
+      connection_status = true;
     }
+  } else{
+    if(connection_status)
+      check_connection();
+      
+    tft.setCursor(0, 30);
+    tft.print("Select the place where to write\r\nand press the\r\nbottom button.");
+    
+    if(buttonState2 == LOW){
+      write_button();
+    }
+    connection_status = false;
   }
 }
