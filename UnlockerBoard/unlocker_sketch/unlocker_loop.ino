@@ -1,19 +1,16 @@
 
 void loop(){
- /*************************
-  * standbyImage_module loop *
+  /*************************
+  * blockScreen_module loop *
   *************************/
-  /*if(){
-    digitalRainAnim.loop(); 
-  }*/
+  if(isInactive_device()){
+    blockScreen();
+  }
 
 
  /*************************
   * bluetooth_module loop *
   *************************/
-  int buttonState1 = digitalRead(BUTTON1PIN);
-  int buttonState2 = digitalRead(BUTTON2PIN);
-
   if(!bleKeyboard.isConnected()){
     if(!connection_status){
       check_connection();

@@ -1,5 +1,6 @@
 
 void setup(){
+  Serial.begin(115200);
  /****************************
   * startDevice_module setup *
   ****************************/
@@ -8,7 +9,7 @@ void setup(){
   tft.fillScreen(TFT_BLACK);
   tft.setSwapBytes(true);
   tft.pushImage(56,18,140,99,logo);
-  delay(3500);
+  delay(4000);
   
 
   /****************************
@@ -31,15 +32,4 @@ void setup(){
   tft.setTextSize(0);
   
   bleKeyboard.begin();
-
-
-  /******************************
-   * function to send the board *
-   *    in deep_sleep mode      *
-   ******************************/
-  /*  NOT WORKING 'A SIGNOR ME NE' MANNAT'   ->   attualmente la scheda mostra il logo e poi va in deep_sleep, da capire perchè
-  //esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);  //Function that wake-up the board after the setted time (is based on the variable TIME_TO_SLEEP that is defined in unlocker_sketch)
-  if(TIME_TO_SLEEP * uS_TO_S_FACTOR > 30)
-    esp_deep_sleep_start(); //The function that actually trigger the deep_sleep mode
-  */
 }

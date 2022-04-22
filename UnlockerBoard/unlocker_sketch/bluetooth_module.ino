@@ -1,6 +1,6 @@
 
 void check_connection() {
-  int count = 0;
+  unsigned long count = 0;
  
   while(1){
     tft.setCursor(0, 30);
