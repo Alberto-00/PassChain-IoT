@@ -1,3 +1,4 @@
+
 void setup(){
  /****************************
   * startDevice_module setup *
@@ -5,13 +6,10 @@ void setup(){
   tft.init();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
-
   tft.setSwapBytes(true);
-  tft.pushImage(68,9,120,120,icon);
-  
-  bleKeyboard.begin();
+  tft.pushImage(56,18,140,99,logo);
   delay(3500);
-
+  
 
   /****************************
   * standbyImage_module setup *
@@ -26,11 +24,13 @@ void setup(){
   **************************/
   pinMode(BUTTON1PIN, INPUT);
   pinMode(BUTTON2PIN, INPUT);
-    
+
   tft.fillScreen(TFT_BLACK);
   tft.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
   tft.setFreeFont(&Orbitron_Light_24);
-  tft.setTextSize(1); //la dimensione va da 1 a 5, di default usa 1
+  tft.setTextSize(0);
+  
+  bleKeyboard.begin();
 
 
   /******************************

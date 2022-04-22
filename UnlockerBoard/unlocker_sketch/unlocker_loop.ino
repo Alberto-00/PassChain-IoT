@@ -1,5 +1,5 @@
 
-void loop(){  
+void loop(){
  /*************************
   * standbyImage_module loop *
   *************************/

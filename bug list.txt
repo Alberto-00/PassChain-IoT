@@ -1,4 +1,5 @@
-1. In Windows la scrittura tramite bluetooth funziona solo se il dispositivo è collegato prima al telefono o MacOS;
+1. Incompatibilità con Windows 11;
 2. Scritta prima del logo iniziale;
 3. implementare deep sleep;
 4. aggiustare le scritte.
+5. dimenticare il dispositivo - feature
