@@ -1,6 +1,5 @@
 
 void setup(){
-  Serial.begin(9600);
  /****************************
   * startDevice_module setup *
   ****************************/
@@ -9,16 +8,15 @@ void setup(){
   tft.fillScreen(TFT_BLACK);
   tft.setSwapBytes(true);
   tft.pushImage(56,18,140,99,logo);
-  delay(4000);
-  
+    
 
   /****************************
-  * standbyImage_module setup *
+  * blockScreen_module setup *
   *****************************/
   digitalRainAnim.init(&tft);
   digitalRainAnim.setTextColor(4, 188, 200);
   digitalRainAnim.setHeadCharColor(4, 254, 253);
-
+  restart_time();
 
   /*************************
   * bluetooth_module setup *
@@ -26,10 +24,11 @@ void setup(){
   pinMode(BUTTON1PIN, INPUT);
   pinMode(BUTTON2PIN, INPUT);
 
-  tft.fillScreen(TFT_BLACK);
   tft.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
   tft.setFreeFont(&Orbitron_Light_24);
   tft.setTextSize(0);
   
   bleKeyboard.begin();
+  delay(3500);
+  tft.fillScreen(TFT_BLACK);
 }

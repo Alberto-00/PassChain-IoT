@@ -13,10 +13,7 @@ TFT_eSPI tft = TFT_eSPI();
 BleKeyboard bleKeyboard;
 DigitalRainAnim digitalRainAnim = DigitalRainAnim();
 
-int buttonState1 = digitalRead(BUTTON1PIN);
-int buttonState2 = digitalRead(BUTTON2PIN);
-
-
+ 
 /*******************************
  * functions - global variables *
  *      bluetooth_module       *
@@ -24,11 +21,15 @@ int buttonState2 = digitalRead(BUTTON2PIN);
 void check_connection();
 void write_button();
 
-bool connection_status = false;
-
 
 /*******************************
  * functions blockScreen_module *
  *******************************/
+void check_inactivity_device();
 bool isInactive_device();
 void blockScreen();
+void restart_time();
+
+bool connection_status = false;
+unsigned long start_time;
+unsigned long stop_time;

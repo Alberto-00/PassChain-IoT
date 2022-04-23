@@ -1,8 +1,7 @@
-
 void check_connection() {
   unsigned long count = 0;
  
-  while(1){
+  while(true){
     tft.setCursor(0, 30);
     tft.fillScreen(TFT_BLACK);
     tft.print("Connecting.");
