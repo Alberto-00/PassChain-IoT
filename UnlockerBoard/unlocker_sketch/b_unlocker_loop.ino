@@ -17,7 +17,6 @@ void loop(){
     }
   } else{
     check_inactivity_device();
-    deepSleep();
     
     if(connection_status){
       check_connection();

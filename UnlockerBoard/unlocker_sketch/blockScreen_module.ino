@@ -22,6 +22,7 @@ void blockScreen(){
   while(buttonState2 == HIGH){
     digitalRainAnim.loop();
     buttonState2 = digitalRead(BUTTON2PIN);
+    deepSleep();
   }
   
   if(!bleKeyboard.isConnected())

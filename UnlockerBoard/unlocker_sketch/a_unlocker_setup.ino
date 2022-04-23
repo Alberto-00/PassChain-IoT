@@ -1,5 +1,6 @@
 
 void setup(){
+  //Serial.begin(9600);
  /****************************
   * startDevice_module setup *
   ****************************/

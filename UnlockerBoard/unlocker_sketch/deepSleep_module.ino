@@ -7,7 +7,7 @@ void wakeup_deepSleep(){
 }
 
 void deepSleep(){
-  if(isInactive_device(DEEPSLEEP_TIME)){
+  if(isInactive_device(DEEPSLEEP_TIME+BLOCKSCREEN_TIME)){
      esp_deep_sleep_start();
      restart_time(); 
   }
