@@ -30,6 +30,8 @@ bool isInactive_device();
 void blockScreen();
 void restart_time();
 
+int buttonState1, buttonState2;
 bool connection_status = false;
+bool isInactive = false;
 unsigned long start_time;
 unsigned long stop_time;

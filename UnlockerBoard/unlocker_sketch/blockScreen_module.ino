@@ -1,14 +1,14 @@
 
 bool isInactive_device(){ 
-  int buttonState1 = digitalRead(BUTTON1PIN);
-  int buttonState2 = digitalRead(BUTTON2PIN);
+  buttonState1 = digitalRead(BUTTON1PIN);
+  buttonState2 = digitalRead(BUTTON2PIN);
   
   stop_time = millis();
 
   if(buttonState1 != HIGH || buttonState2 != HIGH){
     restart_time();
     return false;
-  } else if((stop_time - start_time) > 15000){
+  } else if((stop_time - start_time) > 8000){
       restart_time();
       return true;
   } else {
@@ -18,16 +18,18 @@ bool isInactive_device(){
 
 void blockScreen(){
   tft.fillScreen(TFT_BLACK);
-  int buttonState2 = digitalRead(BUTTON2PIN);
+  buttonState2 = digitalRead(BUTTON2PIN);
   
   while(buttonState2 == HIGH){
     digitalRainAnim.loop();
     buttonState2 = digitalRead(BUTTON2PIN);
   }
   
-  digitalRainAnim.pause();
+  if(!bleKeyboard.isConnected())
+    connection_status = false;
+
   tft.fillScreen(TFT_BLACK);
-  return;
+  isInactive = true;
 }
 
 void check_inactivity_device(){
