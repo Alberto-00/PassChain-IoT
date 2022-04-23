@@ -1,5 +1,4 @@
-1. implementare deep sleep;
-2. scritta prima del logo;
+1. scritta prima del logo;
 
 
 x. dimenticare il dispositivo - feature

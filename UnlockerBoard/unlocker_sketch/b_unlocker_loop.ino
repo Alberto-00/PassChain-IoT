@@ -8,7 +8,8 @@ void loop(){
   *************************/
   if(!bleKeyboard.isConnected()){
     check_inactivity_device();
-   
+    deepSleep();
+    
     if(!connection_status){
       check_connection();
       restart_time();
@@ -16,7 +17,8 @@ void loop(){
     }
   } else{
     check_inactivity_device();
-        
+    deepSleep();
+    
     if(connection_status){
       check_connection();
       restart_time();
@@ -25,11 +27,10 @@ void loop(){
     tft.setCursor(0, 30);
     tft.print("Select the place where to write\r\nand press the\r\nbottom button.");
     
-    if(buttonState2 == LOW && !isInactive){
+    if(buttonState2 == LOW){
       write_button();
       restart_time();
     }
-    isInactive = false;
     connection_status = false;
   }
 }

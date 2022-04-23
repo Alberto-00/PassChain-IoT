@@ -18,6 +18,7 @@ void setup(){
   digitalRainAnim.setHeadCharColor(4, 254, 253);
   restart_time();
 
+
   /*************************
   * bluetooth_module setup *
   **************************/
@@ -29,6 +30,7 @@ void setup(){
   tft.setTextSize(0);
   
   bleKeyboard.begin();
+  wakeup_deepSleep();
   delay(3500);
   tft.fillScreen(TFT_BLACK);
 }

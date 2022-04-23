@@ -1,5 +1,5 @@
 
-bool isInactive_device(){ 
+bool isInactive_device(unsigned long inactivity_time){ 
   buttonState1 = digitalRead(BUTTON1PIN);
   buttonState2 = digitalRead(BUTTON2PIN);
   
@@ -8,8 +8,7 @@ bool isInactive_device(){
   if(buttonState1 != HIGH || buttonState2 != HIGH){
     restart_time();
     return false;
-  } else if((stop_time - start_time) > 8000){
-      restart_time();
+  } else if((stop_time - start_time) > inactivity_time){
       return true;
   } else {
     return false;
@@ -29,12 +28,17 @@ void blockScreen(){
     connection_status = false;
 
   tft.fillScreen(TFT_BLACK);
-  isInactive = true;
+  
+  while(buttonState2 == LOW){
+     buttonState2 = digitalRead(BUTTON2PIN);
+  }
 }
 
 void check_inactivity_device(){
-  if(isInactive_device())
+  if(isInactive_device(BLOCKSCREEN_TIME)){
     blockScreen();
+    restart_time();
+  }
 }
 
 void restart_time(){
