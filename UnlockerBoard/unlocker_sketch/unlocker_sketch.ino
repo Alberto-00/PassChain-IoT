@@ -6,11 +6,11 @@
 #define BUTTON1PIN 35
 #define BUTTON2PIN 0
 #define DEEP_SLEEP T3
-#define BLOCKSCREEN_TIME 30000   //tempo dopo il quale si avvia il block-screen  90000
-#define DEEPSLEEP_TIME 5000  //tempo dopo il quale si avvia il deep-sleep   240000
+#define BLOCKSCREEN_TIME 90000   /* tempo dopo il quale si avvia il block-screen 90s = 1.5 min */
+#define DEEPSLEEP_TIME 150000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (90000 + 150000) = 240s = 4min */
 
-#define uS_TO_S_FACTOR 1000000 /* Fattore di conversione da microsecondi a secondi*/
-#define TIME_TO_SLEEP 30 /* Tempo prima del quale scheda vada in deep_sleep_mode (in secondi)*/
+#define uS_TO_S_FACTOR 1000000 /* Fattore di conversione da microsecondi a secondi */
+#define TIME_TO_SLEEP 30       /* Tempo prima del quale scheda vada in deep_sleep_mode (in secondi) */
 #define Threshold 40
 
 
