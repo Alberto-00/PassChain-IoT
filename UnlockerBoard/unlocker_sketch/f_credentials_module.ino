@@ -58,8 +58,6 @@ void menuList(){
   int i = 0, j = 0, pos = 0;
   int shift = 30;
   
-  
-  
   while(true){
     buttonState1 = digitalRead(BUTTON1PIN);
     buttonState2 = digitalRead(BUTTON2PIN);
@@ -73,12 +71,10 @@ void menuList(){
       i+=3;
     }
 
-    Serial.print("POS: ");
-    Serial.println(pos);
-    Serial.print("I: ");
-    Serial.println(i);
-    Serial.print("Array[3]: ");
-    Serial.println(credentials[3].getName());
+    if(pos < 0 && i >= 3){
+      pos = 2;
+      i -= 3;
+    }
      
     switch(pos){
       case 0: {
@@ -153,16 +149,14 @@ void menuList(){
     }
 
     while(buttonState1 == digitalRead(BUTTON1PIN) && buttonState2 == digitalRead(BUTTON2PIN)){
-      if(buttonState1 == LOW && pos > 0){
+      if(buttonState1 == LOW){
         pos--;
-        delay(150);
+        delay(200);
       }
-        
       else if(buttonState2 == LOW){
         pos++;
-        delay(150);
+        delay(200);
       }
     }
-    
   }
 }
