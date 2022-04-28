@@ -1,4 +1,3 @@
-int arraySize = 15;
 
 bool load_R_credentialsFile(){
   if(!SPIFFS.begin(true)){
@@ -104,7 +103,6 @@ int menuList(){
       pos = 2;
       i -= 3;
     } 
-    
     if(pos < 0 && i == 0){
       if(sizeJson % 3 == 0){
         pos = 2;
@@ -117,7 +115,6 @@ int menuList(){
         i = sizeJson - 2;
       }
     }
-
      
     switch(pos){
       case 0: {
