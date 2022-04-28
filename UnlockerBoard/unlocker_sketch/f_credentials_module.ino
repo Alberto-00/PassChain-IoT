@@ -32,7 +32,7 @@ void read_credentialsFile(){
     }
     unsigned int sizeJson = doc["credentials"].size();
 
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < sizeJson; i++){
       if(doc["credentials"][i].containsKey("name") && doc["credentials"][i]["name"] != NULL)
         credentials[i].setName(doc["credentials"][i]["name"]);
       else break;
@@ -58,23 +58,30 @@ void menuList(){
   int i = 0, j = 0, pos = 0;
   int shift = 30;
   
-  tft.setCursor(0, shift);
-  tft.println("Authentication ?");
+  
   
   while(true){
     buttonState1 = digitalRead(BUTTON1PIN);
     buttonState2 = digitalRead(BUTTON2PIN);
+    bool temp1 = buttonState1;
+    bool temp2 = buttonState2;
 
-    if(buttonState1 == LOW && pos > 0)
-      pos--;
-    else if(buttonState2 == LOW)
-      pos++;
-
+    tft.fillScreen(TFT_BLACK);
+    tft.setCursor(0, shift);
+    tft.println("Authentication ?");
+    
     if(pos > 2){
       pos = 0;
       i+=3;
     }
-      
+
+    Serial.print("POS: ");
+    Serial.println(pos);
+    Serial.print("I: ");
+    Serial.println(i);
+    Serial.print("Array[3]: ");
+    Serial.println(credentials[3].getName());
+     
     switch(pos){
       case 0: {
         if(credentials[i].getName() != NULL){
@@ -96,7 +103,7 @@ void menuList(){
       }
       
       case 1:{
-        Serial.println(credentials[i].getName());
+        //Serial.println(credentials[i].getName());
         if(credentials[i].getName() != NULL){
           tft.setCursor(21, shift += 30);
           tft.println(credentials[i].getName());
@@ -144,5 +151,17 @@ void menuList(){
         break;  
       }
     }
+
+    while(temp1 == digitalRead(BUTTON1PIN) && temp2 == digitalRead(BUTTON2PIN)){
+      if(buttonState1 == LOW && pos > 0){
+        pos--;
+        delay(150);
+      }
+        
+      else if(buttonState2 == LOW)
+        pos++;
+        delay(150);
+    }
+    
   }
 }
