@@ -33,9 +33,9 @@ void setup(){
   bleKeyboard.begin();
   wakeup_deepSleep();
   
-  /*if(load_credentialsFile()){
+  if(load_credentialsFile()){
     read_credentialsFile();
-  }*/
+  }
   
   delay(3500);
   tft.fillScreen(TFT_BLACK);

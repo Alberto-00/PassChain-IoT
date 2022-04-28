@@ -8,7 +8,7 @@ void loop(){
   *************************/
   if(!bleKeyboard.isConnected()){
     check_inactivity_device();
-    deepSleep();
+    //deepSleep();
     
     if(!connection_status){
       check_connection();
@@ -26,7 +26,7 @@ void loop(){
   /******************************
    *   credentials_module loop  *
    ******************************/
-    menuList();
+   menuList();
   /******************************
    *   credentials_module END   *
    ******************************/

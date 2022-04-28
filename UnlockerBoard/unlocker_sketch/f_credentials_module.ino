@@ -1,13 +1,11 @@
 
 bool load_credentialsFile(){
   if(!SPIFFS.begin(true)){
-    Serial.println("An Error has occurred while mounting SPIFFS");
     return false;
   }
   
   authFile = SPIFFS.open("/credentials.json");
   if(!authFile){
-    Serial.println("Failed to open file for reading");
     return false;
   }
   return true;
@@ -22,7 +20,7 @@ bool close_credentialsFile(){
 }
 
 void read_credentialsFile(){
-  StaticJsonDocument<256> doc;
+  StaticJsonDocument<6144> doc;
   
   if(authFile){
     DeserializationError error = deserializeJson(doc, authFile);
@@ -32,13 +30,13 @@ void read_credentialsFile(){
       Serial.println(error.c_str());
       return;
     }
-
     unsigned int sizeJson = doc["credentials"].size();
-    
-    for(int i = 0; i < sizeJson; i++){
+
+    for(int i = 0; i < 3; i++){
       if(doc["credentials"][i].containsKey("name") && doc["credentials"][i]["name"] != NULL)
         credentials[i].setName(doc["credentials"][i]["name"]);
-        
+      else break;
+    
       if(doc["credentials"][i].containsKey("username") && doc["credentials"][i]["username"] != NULL)
          credentials[i].setUsername(doc["credentials"][i]["username"]);
 
@@ -57,28 +55,94 @@ bool write_credentialsFile(){
 }
 
 void menuList(){
-  int i = 0, j = 0;
+  int i = 0, j = 0, pos = 0;
+  int shift = 30;
+  
+  tft.setCursor(0, shift);
+  tft.println("Authentication ?");
   
   while(true){
-   //check_inactivity_device();
-   buttonState1 = digitalRead(BUTTON1PIN);
-   buttonState2 = digitalRead(BUTTON2PIN);
+    buttonState1 = digitalRead(BUTTON1PIN);
+    buttonState2 = digitalRead(BUTTON2PIN);
 
-   
-   if(buttonState1 == LOW && i - 1 >= 0){
-    tft.fillScreen(TFT_BLACK);
-    tft.setCursor(0, 30);
-    tft.println("Authentication ?");
-    tft.setCursor(0, 60);
-    tft.print("> " + credentials[i--].getName());
-     tft.setCursor(0, 70);
-    tft.print("> " + credentials[i].getName());
-   } 
-   else if(buttonState2 == LOW && credentials[i + 1].getName() != NULL){
-     tft.fillScreen(TFT_BLACK);
-     tft.setCursor(0, 30);
-     tft.println("Authentication ?");
-     tft.print(credentials[i++].getName());
-   }
- }
+    if(buttonState1 == LOW && pos > 0)
+      pos--;
+    else if(buttonState2 == LOW)
+      pos++;
+
+    if(pos > 2){
+      pos = 0;
+      i+=3;
+    }
+      
+    switch(pos){
+      case 0: {
+        if(credentials[i].getName() != NULL){
+          tft.setCursor(0, shift += 30);
+          tft.print("> " + credentials[i].getName());
+        } else break;
+
+        for(j = i+1; j < i+3; j++){
+          if(credentials[j].getName() != NULL){
+            tft.setCursor(21, shift += 30);
+            tft.print(credentials[j].getName());     
+          } else{
+            shift = 30;
+            break;
+          }
+        }
+        shift = 30;
+        break;
+      }
+      
+      case 1:{
+        Serial.println(credentials[i].getName());
+        if(credentials[i].getName() != NULL){
+          tft.setCursor(21, shift += 30);
+          tft.println(credentials[i].getName());
+        } else break;
+
+        for(j = i+1; j < i+3; j++){
+          if(credentials[j].getName() != NULL){
+            if(j == i+1){
+              tft.setCursor(0, shift += 30);
+              tft.print("> " + credentials[j].getName()); 
+            } else{
+              tft.setCursor(21, shift += 30);
+              tft.print(credentials[j].getName()); 
+            }    
+          } else{
+            shift = 30;
+            break;
+          }
+        }
+        shift = 30;
+        break;
+      }
+      
+      case 2:{
+        if(credentials[i].getName() != NULL){
+          tft.setCursor(21, shift += 30);
+          tft.println(credentials[i].getName());
+        } else break;
+        
+        for(j = i+1; j < i+3; j++){
+          if(credentials[j].getName() != NULL){
+            if(j == i+2){
+              tft.setCursor(0, shift += 30);
+              tft.print("> " + credentials[j].getName()); 
+            } else{
+              tft.setCursor(21, shift += 30);
+              tft.print(credentials[j].getName()); 
+            }    
+          } else{
+            shift = 30;
+            break;
+          }
+        }
+        shift = 30;
+        break;  
+      }
+    }
+  }
 }

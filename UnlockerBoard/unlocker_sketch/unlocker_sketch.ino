@@ -23,7 +23,7 @@
 TFT_eSPI tft = TFT_eSPI();
 BleKeyboard bleKeyboard;
 DigitalRainAnim digitalRainAnim = DigitalRainAnim();
-Credential credentials[200];
+Credential credentials[80];
 touch_pad_t touchPin;
 File authFile;
 
