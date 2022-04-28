@@ -74,6 +74,9 @@ void menuList(){
     if(pos < 0 && i >= 3){
       pos = 2;
       i -= 3;
+    } else if(pos < 0 && i == 0){
+      pos = 0;
+      i = 0;
     }
      
     switch(pos){
