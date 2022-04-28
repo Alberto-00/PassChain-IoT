@@ -1,3 +1,4 @@
+int arraySize = 15;
 
 bool load_credentialsFile(){
   if(!SPIFFS.begin(true)){
@@ -75,9 +76,15 @@ void menuList(){
       pos = 2;
       i -= 3;
     } else if(pos < 0 && i == 0){
+      pos = 2;
+      i = arraySize;
+    }
+
+    if(i > arraySize){
       pos = 0;
       i = 0;
     }
+
      
     switch(pos){
       case 0: {
