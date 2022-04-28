@@ -63,8 +63,6 @@ void menuList(){
   while(true){
     buttonState1 = digitalRead(BUTTON1PIN);
     buttonState2 = digitalRead(BUTTON2PIN);
-    bool temp1 = buttonState1;
-    bool temp2 = buttonState2;
 
     tft.fillScreen(TFT_BLACK);
     tft.setCursor(0, shift);
@@ -150,17 +148,20 @@ void menuList(){
         shift = 30;
         break;  
       }
+      default:
+        break;
     }
 
-    while(temp1 == digitalRead(BUTTON1PIN) && temp2 == digitalRead(BUTTON2PIN)){
+    while(buttonState1 == digitalRead(BUTTON1PIN) && buttonState2 == digitalRead(BUTTON2PIN)){
       if(buttonState1 == LOW && pos > 0){
         pos--;
         delay(150);
       }
         
-      else if(buttonState2 == LOW)
+      else if(buttonState2 == LOW){
         pos++;
         delay(150);
+      }
     }
     
   }
