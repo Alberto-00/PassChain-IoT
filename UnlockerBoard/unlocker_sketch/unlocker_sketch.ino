@@ -31,6 +31,7 @@ int buttonState1, buttonState2;
 bool connection_status = false;
 unsigned long start_time;
 unsigned long stop_time;
+unsigned int sizeJson;
 
 
 /*******************************
@@ -59,8 +60,9 @@ void deepSleep();
 /********************************
  * functions credentials_module *
  ********************************/
-bool load_credentialsFile();
+bool load_R_credentialsFile();
+bool load_W_credentialsFile();
 bool close_credentialsFile();
 void read_credentialsFile();
-bool write_credentialsFile();
-void menuList();
+bool write_credentialsFile(char *name, char *username, char *password, char *pinCode);
+int menuList();

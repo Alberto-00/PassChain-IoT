@@ -1,10 +1,22 @@
 
-bool load_credentialsFile(){
+bool load_R_credentialsFile(){
   if(!SPIFFS.begin(true)){
     return false;
   }
   
-  authFile = SPIFFS.open("/credentials.json");
+  authFile = SPIFFS.open("/credentials.json", "r");
+  if(!authFile){
+    return false;
+  }
+  return true;
+}
+
+bool load_W_credentialsFile(){
+  if(!SPIFFS.begin(true)){
+    return false;
+  }
+  
+  authFile = SPIFFS.open("/credentials.json", "w");
   if(!authFile){
     return false;
   }
@@ -30,7 +42,7 @@ void read_credentialsFile(){
       Serial.println(error.c_str());
       return;
     }
-    unsigned int sizeJson = doc["credentials"].size();
+    sizeJson = doc["credentials"].size();
 
     for(int i = 0; i < sizeJson; i++){
       if(doc["credentials"][i].containsKey("name") && doc["credentials"][i]["name"] != NULL)
@@ -50,12 +62,28 @@ void read_credentialsFile(){
     Serial.println("Can't open file.");
 }
 
-bool write_credentialsFile(){
+bool write_credentialsFile(char *name, char *username, char *password, char *pinCode){
+  if(sizeJson + 1 < 80){
+    if(load_W_credentialsFile()){
+      StaticJsonDocument<300> doc;
+      JsonObject obj = doc.createNestedObject("credentials");
+      
+      obj["name"] = "Kenny";
+      obj["username"] = "Kenny";
+      obj["password"] = "Kenny";
+      sizeJson++;
   
+      serializeJson(doc, authFile);
+      close_credentialsFile();
+      return true;
+    } 
+    return false;
+  } else
+      return false;
 }
 
-void menuList(){
-  int i = 0, j = 0, pos = 0;
+int menuList(){
+  int i = 0, j = 0, pos = 0, current = i;
   int shift = 30;
   
   while(true){
@@ -74,9 +102,18 @@ void menuList(){
     if(pos < 0 && i >= 3){
       pos = 2;
       i -= 3;
-    } else if(pos < 0 && i == 0){
-      pos = 0;
-      i = 0;
+    } 
+    if(pos < 0 && i == 0){
+      if(sizeJson % 3 == 0){
+        pos = 2;
+        i = sizeJson - 3;
+      } else if(sizeJson % 3 == 1){
+        pos = 0;
+        i = sizeJson - 1;
+      } else{
+        pos = 1;          
+        i = sizeJson - 2;
+      }
     }
      
     switch(pos){
@@ -84,6 +121,7 @@ void menuList(){
         if(credentials[i].getName() != NULL){
           tft.setCursor(0, shift += 30);
           tft.print("> " + credentials[i].getName());
+          current = i;
         } else break;
 
         for(j = i+1; j < i+3; j++){
@@ -110,7 +148,8 @@ void menuList(){
           if(credentials[j].getName() != NULL){
             if(j == i+1){
               tft.setCursor(0, shift += 30);
-              tft.print("> " + credentials[j].getName()); 
+              tft.print("> " + credentials[j].getName());
+              current = j; 
             } else{
               tft.setCursor(21, shift += 30);
               tft.print(credentials[j].getName()); 
@@ -135,6 +174,7 @@ void menuList(){
             if(j == i+2){
               tft.setCursor(0, shift += 30);
               tft.print("> " + credentials[j].getName()); 
+              current = j;
             } else{
               tft.setCursor(21, shift += 30);
               tft.print(credentials[j].getName()); 
@@ -157,9 +197,36 @@ void menuList(){
         delay(200);
       }
       else if(buttonState2 == LOW){
-        pos++;
-        delay(200);
+        if(pos == 2){
+          if(credentials[i+3].getName() != NULL){
+            pos++;
+            delay(200);
+          } else{
+            pos = 0;
+            i = 0;
+            delay(200);
+          }
+        } else if(pos == 0){
+           if(credentials[i+1].getName() != NULL){
+            pos++;
+            delay(200);
+          } else{
+            pos = 0;
+            i = 0;
+            delay(200);
+          }
+        } else if(pos == 1){
+          if(credentials[i+2].getName() != NULL){
+            pos++;
+            delay(200);
+          } else{
+            pos = 0;
+            i = 0;
+            delay(200);
+          }
+        }
       }
     }
   }
+  return current;
 }
