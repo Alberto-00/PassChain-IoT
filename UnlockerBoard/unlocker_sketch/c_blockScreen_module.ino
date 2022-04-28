@@ -2,7 +2,7 @@
 bool isInactive_device(unsigned long inactivity_time){ 
   buttonState1 = digitalRead(BUTTON1PIN);
   buttonState2 = digitalRead(BUTTON2PIN);
-  
+
   stop_time = millis();
 
   if(buttonState1 != HIGH || buttonState2 != HIGH){

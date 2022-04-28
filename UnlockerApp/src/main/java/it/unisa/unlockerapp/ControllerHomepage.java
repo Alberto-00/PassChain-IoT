@@ -1,5 +1,6 @@
 package it.unisa.unlockerapp;
 
+import it.unisa.unlockerapp.utils.ArduinoConnection;
 import it.unisa.unlockerapp.utils.Design;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

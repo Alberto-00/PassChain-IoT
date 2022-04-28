@@ -1,3 +1,4 @@
+
 void check_connection() {
   unsigned long count = 0;
  
@@ -31,7 +32,6 @@ void check_connection() {
     }
   }
 }
-
 
 void write_button(){
   tft.setCursor(0, 60);

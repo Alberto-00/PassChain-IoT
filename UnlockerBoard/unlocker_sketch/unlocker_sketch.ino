@@ -1,7 +1,10 @@
 #include <TFT_eSPI.h>
 #include <BleKeyboard.h>
+#include <SD.h>
+#include <ArduinoJson.h>
 #include <DigitalRainAnim.h>
 #include "logo.h"
+#include "Credential.h"
 
 #define BUTTON1PIN 35
 #define BUTTON2PIN 0
@@ -14,26 +17,32 @@
 #define Threshold 40
 
 
-/********************
- * Inizializzazione *
- ********************/
+/****************************
+ *     Global Variables     *
+ ****************************/
 TFT_eSPI tft = TFT_eSPI();
 BleKeyboard bleKeyboard;
 DigitalRainAnim digitalRainAnim = DigitalRainAnim();
+Credential credentials[200];
 touch_pad_t touchPin;
+File authFile;
 
- 
+int buttonState1, buttonState2;
+bool connection_status = false;
+unsigned long start_time;
+unsigned long stop_time;
+
+
 /*******************************
- * functions - global variables *
- *      bluetooth_module       *
+ * functions bluetooth_module  *
  *******************************/
 void check_connection();
 void write_button();
 
 
-/*******************************
+/********************************
  * functions blockScreen_module *
- *******************************/
+ ********************************/
 void check_inactivity_device();
 bool isInactive_device(unsigned long);
 void blockScreen();
@@ -41,13 +50,17 @@ void restart_time();
 
 
 /*******************************
- * functions deepSleep_module *
+ * functions deepSleep_module  *
  *******************************/
 void wakeup_deepSleep();
 void deepSleep();
 
 
-int buttonState1, buttonState2;
-bool connection_status = false;
-unsigned long start_time;
-unsigned long stop_time;
+/********************************
+ * functions credentials_module *
+ ********************************/
+bool load_credentialsFile();
+bool close_credentialsFile();
+void read_credentialsFile();
+bool write_credentialsFile();
+void menuList();

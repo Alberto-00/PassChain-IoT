@@ -1,6 +1,6 @@
 
 void setup(){
-  //Serial.begin(9600);
+  Serial.begin(115200);
  /****************************
   * startDevice_module setup *
   ****************************/
@@ -32,6 +32,11 @@ void setup(){
   
   bleKeyboard.begin();
   wakeup_deepSleep();
+  
+  /*if(load_credentialsFile()){
+    read_credentialsFile();
+  }*/
+  
   delay(3500);
   tft.fillScreen(TFT_BLACK);
 }
