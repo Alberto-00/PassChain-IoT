@@ -22,10 +22,12 @@
  ****************************/
 TFT_eSPI tft = TFT_eSPI();
 BleKeyboard bleKeyboard;
+ StaticJsonDocument<6144> doc;
 DigitalRainAnim digitalRainAnim = DigitalRainAnim();
 Credential credentials[80];
 touch_pad_t touchPin;
 File authFile;
+
 
 int buttonState1, buttonState2;
 bool connection_status = false;
@@ -64,5 +66,5 @@ bool load_R_credentialsFile();
 bool load_W_credentialsFile();
 bool close_credentialsFile();
 void read_credentialsFile();
-bool write_credentialsFile(char *name, char *username, char *password, char *pinCode);
+bool write_credentialsFile(char*, char*, char*, char*);
 int menuList();

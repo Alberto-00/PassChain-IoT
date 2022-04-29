@@ -4,7 +4,7 @@ bool load_R_credentialsFile(){
     return false;
   }
   
-  authFile = SPIFFS.open("/credentials.json", "r");
+  authFile = SPIFFS.open("/credentials.json");
   if(!authFile){
     return false;
   }
@@ -31,9 +31,7 @@ bool close_credentialsFile(){
   return false;
 }
 
-void read_credentialsFile(){
-  StaticJsonDocument<6144> doc;
-  
+void read_credentialsFile(){  
   if(authFile){
     DeserializationError error = deserializeJson(doc, authFile);
 
@@ -65,21 +63,41 @@ void read_credentialsFile(){
 bool write_credentialsFile(char *name, char *username, char *password, char *pinCode){
   if(sizeJson + 1 < 80){
     if(load_W_credentialsFile()){
-      StaticJsonDocument<300> doc;
-      JsonObject obj = doc.createNestedObject("credentials");
-      
-      obj["name"] = "Kenny";
-      obj["username"] = "Kenny";
-      obj["password"] = "Kenny";
+      if(name != NULL){
+        doc["credentials"][sizeJson]["name"] = name;
+        credentials[sizeJson].setName(doc["credentials"][sizeJson]["name"]);
+      }
+
+      if(username != NULL){
+        doc["credentials"][sizeJson]["username"] = username;
+        credentials[sizeJson].setUsername(doc["credentials"][sizeJson]["username"]);
+      }
+
+      if(password != NULL){
+        doc["credentials"][sizeJson]["password"] = password;
+        credentials[sizeJson].setPassword(doc["credentials"][sizeJson]["password"]);
+      }
+         
+      if(pinCode != NULL){
+        doc["credentials"][sizeJson]["pinCode"] = pinCode;
+        credentials[sizeJson].setPinCode(doc["credentials"][sizeJson]["pinCode"]);
+      }  
+    
       sizeJson++;
-  
-      serializeJson(doc, authFile);
+      serializeJsonPretty(doc, authFile);
       close_credentialsFile();
       return true;
     } 
     return false;
   } else
       return false;
+}
+
+bool delete_credentials(char *name){
+  for(int i = 0; i < sizeJson; i++){
+    if()
+    
+  }
 }
 
 int menuList(){
