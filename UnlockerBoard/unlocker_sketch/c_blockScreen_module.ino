@@ -35,11 +35,13 @@ void blockScreen(){
   }
 }
 
-void check_inactivity_device(){
+bool check_inactivity_device(){
   if(isInactive_device(BLOCKSCREEN_TIME)){
     blockScreen();
     restart_time();
+    return true;
   }
+  return false;
 }
 
 void restart_time(){

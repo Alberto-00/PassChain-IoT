@@ -16,7 +16,7 @@ bool load_W_credentialsFile(){
     return false;
   }
   
-  authFile = SPIFFS.open("/credentials.json", "w");
+  authFile = SPIFFS.open("/credentials.json", "a");
   if(!authFile){
     return false;
   }
@@ -93,10 +93,80 @@ bool write_credentialsFile(char *name, char *username, char *password, char *pin
       return false;
 }
 
-bool delete_credentials(char *name){
-  for(int i = 0; i < sizeJson; i++){
-    if()
-    
+bool update_credentialsFile(char *oldName, char* newName, char* username, char* password, char* pinCode){
+  if(load_W_credentialsFile()){
+    if(oldName != NULL){
+      for(int i = 0; i < sizeJson; i++){
+        if(strcmp(doc["credentials"][i]["name"], oldName) == 0){
+          
+          if(newName != NULL){
+            doc["credentials"][i]["name"] = newName;
+            credentials[i].setName(doc["credentials"][i]["name"]);
+          }
+
+          if(username != NULL){
+            doc["credentials"][i]["username"] = username;
+            credentials[i].setUsername(doc["credentials"][i]["username"]);
+          }
+
+          if(password != NULL){
+            doc["credentials"][i]["password"] = password;
+            credentials[i].setPassword(doc["credentials"][i]["password"]);
+          }
+
+          if(pinCode != NULL){
+            doc["credentials"][i]["pinCode"] = pinCode;
+            credentials[i].setPinCode(doc["credentials"][i]["pinCode"]);
+          }
+          serializeJsonPretty(doc, authFile);
+          close_credentialsFile();
+          return true;
+        }
+      }
+    }
+    close_credentialsFile();
+    return false;
+  }
+  return false;
+}
+
+bool remove_credentialsFile(char* name){
+  if(load_W_credentialsFile()){
+    if(name != NULL){
+      for(int i = 0; i < sizeJson; i++){
+        if(strcmp(doc["credentials"][i]["name"], name) == 0){
+          JsonArray cred = doc["credentials"];
+          cred.remove(i);
+          updateArray(i);
+          serializeJsonPretty(doc, authFile);
+          close_credentialsFile();
+          return true;
+        }
+      }
+    }
+    close_credentialsFile();
+    return false;
+  }
+  return false;
+}
+
+void updateArray(int pos){
+  for(int i = pos; i < sizeJson - 1; i++){
+    if(credentials[i+1].getName() != NULL){
+      credentials[i].setName(credentials[i+1].getName());
+    }
+
+    if(credentials[i+1].getUsername() != NULL){
+      credentials[i].setUsername(credentials[i+1].getUsername());
+    }
+
+    if(credentials[i+1].getPassword() != NULL){
+      credentials[i].setPassword(credentials[i+1].getPassword());
+    }
+
+    if(credentials[i+1].getPinCode() != NULL){
+      credentials[i].setPinCode(credentials[i+1].getPinCode());
+    }
   }
 }
 
@@ -156,7 +226,6 @@ int menuList(){
       }
       
       case 1:{
-        //Serial.println(credentials[i].getName());
         if(credentials[i].getName() != NULL){
           tft.setCursor(21, shift += 30);
           tft.println(credentials[i].getName());
@@ -208,8 +277,16 @@ int menuList(){
       default:
         break;
     }
-
+    
     while(buttonState1 == digitalRead(BUTTON1PIN) && buttonState2 == digitalRead(BUTTON2PIN)){
+      if(check_inactivity_device()){
+        break;
+      }
+
+      if(!bleKeyboard.isConnected()){
+        return -1;
+      }
+      
       if(buttonState1 == LOW){
         pos--;
         delay(200);
@@ -224,7 +301,8 @@ int menuList(){
             i = 0;
             delay(200);
           }
-        } else if(pos == 0){
+        } 
+        else if(pos == 0){
            if(credentials[i+1].getName() != NULL){
             pos++;
             delay(200);
@@ -233,7 +311,8 @@ int menuList(){
             i = 0;
             delay(200);
           }
-        } else if(pos == 1){
+        } 
+        else if(pos == 1){
           if(credentials[i+2].getName() != NULL){
             pos++;
             delay(200);

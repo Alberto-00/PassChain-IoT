@@ -8,7 +8,6 @@ void loop(){
   *************************/
   if(!bleKeyboard.isConnected()){
     check_inactivity_device();
-    //deepSleep();
     
     if(!connection_status){
       check_connection();
@@ -23,22 +22,23 @@ void loop(){
       restart_time();
     }
 
-  /******************************
-   *   credentials_module loop  *
-   ******************************/
-   menuList();
-  /******************************
-   *   credentials_module END   *
-   ******************************/
-
-    tft.setCursor(0, 30);
-    tft.fillScreen(TFT_BLACK);
-    tft.print("Select the place where to write\r\nand press the\r\nbottom button.");
+   /******************************
+    *   credentials_module loop  *
+    ******************************/
+    int select = menuList();
+    if(select != -1){
+      tft.setCursor(0, 30);
+      tft.fillScreen(TFT_BLACK);
+      tft.print("Select the place where to write\r\nand press the\r\nbottom button.");
     
-    if(buttonState2 == LOW){
-      write_button();
-      restart_time();
+      if(buttonState2 == LOW){
+        write_button();
+        restart_time();
+      }
     }
-    connection_status = false;
+   /******************************
+    *   credentials_module END   *
+    ******************************/
+    else  connection_status = false;
   }
 }

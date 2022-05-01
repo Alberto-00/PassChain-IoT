@@ -36,8 +36,9 @@ void setup(){
   if(load_R_credentialsFile()){
     read_credentialsFile();
     close_credentialsFile();
-  }  
-  
+  }
+
   delay(3500);
+  start_time = millis();
   tft.fillScreen(TFT_BLACK);
 }

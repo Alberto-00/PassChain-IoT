@@ -22,7 +22,7 @@
  ****************************/
 TFT_eSPI tft = TFT_eSPI();
 BleKeyboard bleKeyboard;
- StaticJsonDocument<6144> doc;
+StaticJsonDocument<6144> doc;
 DigitalRainAnim digitalRainAnim = DigitalRainAnim();
 Credential credentials[80];
 touch_pad_t touchPin;
@@ -46,7 +46,7 @@ void write_button();
 /********************************
  * functions blockScreen_module *
  ********************************/
-void check_inactivity_device();
+bool check_inactivity_device();
 bool isInactive_device(unsigned long);
 void blockScreen();
 void restart_time();
@@ -67,4 +67,7 @@ bool load_W_credentialsFile();
 bool close_credentialsFile();
 void read_credentialsFile();
 bool write_credentialsFile(char*, char*, char*, char*);
+bool update_credentialsFile(char *, char*, char*, char*, char*);
+bool remove_credentialsFile(char*);
+void updateArray(int);
 int menuList();
