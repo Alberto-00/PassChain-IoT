@@ -26,19 +26,44 @@ void loop(){
     *   credentials_module loop  *
     ******************************/
     int select = menuList();
+
     if(select != -1){
-      tft.setCursor(0, 30);
+      bool username = false;
+      bool password = false;
       tft.fillScreen(TFT_BLACK);
-      tft.print("Select the place where to write\r\nand press the\r\nbottom button.");
     
-      if(buttonState2 == LOW){
-        write_button();
-        restart_time();
+      while(!username || !password){
+        buttonState1 = digitalRead(BUTTON1PIN);
+        buttonState2 = digitalRead(BUTTON2PIN);
+      
+        tft.setCursor(0, 30);
+        tft.println("Username:");
+        tft.println("*********");
+      
+        tft.setCursor(0, 90);
+        tft.println("Password:");
+        tft.println("*********");
+    
+        if(buttonState2 == LOW){
+          write_button("password", credentials[select].getPassword());
+          restart_time();
+          password = true;
+        }
+      
+        if(buttonState1 == LOW){
+          write_button("username", credentials[select].getUsername());
+          restart_time();
+          username = true;
+        } 
       }
+      
+      username = false;
+      password = false;
     }
    /******************************
     *   credentials_module END   *
     ******************************/
-    else  connection_status = false;
+    
+    connection_status = false;
   }
 }

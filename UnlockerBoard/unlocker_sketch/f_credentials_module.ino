@@ -289,41 +289,44 @@ int menuList(){
       
       if(buttonState1 == LOW){
         pos--;
-        delay(200);
+        delay(125);
       }
       else if(buttonState2 == LOW){
         if(pos == 2){
           if(credentials[i+3].getName() != NULL){
             pos++;
-            delay(200);
+            delay(125);
           } else{
             pos = 0;
             i = 0;
-            delay(200);
+            delay(125);
           }
         } 
         else if(pos == 0){
            if(credentials[i+1].getName() != NULL){
             pos++;
-            delay(200);
+            delay(125);
           } else{
             pos = 0;
             i = 0;
-            delay(200);
+            delay(125);
           }
         } 
         else if(pos == 1){
           if(credentials[i+2].getName() != NULL){
             pos++;
-            delay(200);
+            delay(125);
           } else{
             pos = 0;
             i = 0;
-            delay(200);
+            delay(125);
           }
         }
       }
+
+      if(fingerprint_match()){
+        return current + pos;
+      }
     }
   }
-  return current;
 }

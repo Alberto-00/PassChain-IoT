@@ -33,14 +33,16 @@ void check_connection() {
   }
 }
 
-void write_button(){
+void write_button(String type, String credentials){
   tft.setCursor(0, 60);
   tft.fillScreen(TFT_BLACK);
-  tft.println("Writing");
-  tft.println("password");
+  tft.println("Writing"); tft.print(type);
+  tft.print("."); delay(670);
   
-  bleKeyboard.print("Password");
-  delay(2000);
+  bleKeyboard.print(credentials);
   
+  tft.print("."); delay(670);
+  tft.print("."); delay(670);
+  tft.print(".");
   tft.fillScreen(TFT_BLACK);
 }

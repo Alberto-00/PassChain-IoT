@@ -3,6 +3,7 @@
 #include <SD.h>
 #include <ArduinoJson.h>
 #include <DigitalRainAnim.h>
+#include <Adafruit_Fingerprint.h>
 #include "logo.h"
 #include "Credential.h"
 
@@ -16,6 +17,12 @@
 #define TIME_TO_SLEEP 30       /* Tempo prima del quale scheda vada in deep_sleep_mode (in secondi) */
 #define Threshold 40
 
+#if (defined(__AVR__) || defined(ESP8266)) && !defined(__AVR_ATmega2560__)
+SoftwareSerial mySerial(2, 3);
+#else
+#define mySerial Serial1
+#endif
+
 
 /****************************
  *     Global Variables     *
@@ -28,6 +35,8 @@ Credential credentials[80];
 touch_pad_t touchPin;
 File authFile;
 
+Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
+uint8_t id;
 
 int buttonState1, buttonState2;
 bool connection_status = false;
@@ -40,7 +49,7 @@ unsigned int sizeJson;
  * functions bluetooth_module  *
  *******************************/
 void check_connection();
-void write_button();
+void write_button(String, String);
 
 
 /********************************
@@ -71,3 +80,14 @@ bool update_credentialsFile(char *, char*, char*, char*, char*);
 bool remove_credentialsFile(char*);
 void updateArray(int);
 int menuList();
+
+
+/********************************
+ * functions fingerprint_module *
+ ********************************/
+void fingerprint_setup();
+void fingerprint_info();
+bool fingerprint_enroll();
+void fingerprint_deleteAll();
+void fingerprint_delete();
+bool fingerprint_match();

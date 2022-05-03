@@ -1,6 +1,6 @@
 
 void setup(){
-  Serial.begin(115200);
+  Serial.begin(9600);
  /****************************
   * startDevice_module setup *
   ****************************/
@@ -9,8 +9,14 @@ void setup(){
   tft.fillScreen(TFT_BLACK);
   tft.setSwapBytes(true);
   tft.pushImage(56,18,140,99,logo);
-    
 
+
+  /***************************
+  * fingerprint_module setup *
+  ****************************/
+  fingerprint_setup();
+
+  
   /****************************
   * blockScreen_module setup *
   *****************************/
@@ -32,13 +38,17 @@ void setup(){
   
   bleKeyboard.begin();
   wakeup_deepSleep();
-  
+
+
+  /***************************
+  * credentials_module setup *
+  ****************************/
   if(load_R_credentialsFile()){
     read_credentialsFile();
     close_credentialsFile();
   }
 
-  delay(3500);
+  delay(2000);
   start_time = millis();
   tft.fillScreen(TFT_BLACK);
 }
