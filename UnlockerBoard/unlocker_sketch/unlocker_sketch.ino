@@ -5,13 +5,14 @@
 #include <DigitalRainAnim.h>
 #include <Adafruit_Fingerprint.h>
 #include <Pangodream_18650_CL.h>
-#include "logo.h"
-#include "battery/home.h"
+#include "logo/logo.h"
+#include "logo/home.h"
 #include "battery/battery_01.h"
 #include "battery/battery_02.h"
 #include "battery/battery_03.h"
 #include "battery/battery_04.h"
 #include "battery/battery_05.h"
+#include "battery/battery_low.h"
 #include "Credential.h"
 
 #define BUTTON1PIN 35
@@ -43,6 +44,7 @@ SoftwareSerial mySerial(2, 3);
 TFT_eSPI tft = TFT_eSPI();
 TFT_eSPI tft_battery = TFT_eSPI();
 TFT_eSPI tft_logo = TFT_eSPI();
+TFT_eSPI tft_bold = TFT_eSPI();
 
 BleKeyboard bleKeyboard;
 StaticJsonDocument<6144> doc;

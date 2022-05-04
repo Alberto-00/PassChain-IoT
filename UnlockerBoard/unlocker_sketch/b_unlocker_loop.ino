@@ -42,13 +42,13 @@ void loop(){
         buttonState1 = digitalRead(BUTTON1PIN);
         buttonState2 = digitalRead(BUTTON2PIN);
       
-        tft.setCursor(5, 47);
-        tft.print("> Username:");
+        tft_bold.setCursor(5, 47);
+        tft_bold.print("> Username:");
         tft.setCursor(26, 73);
         tft.print("************");
       
-        tft.setCursor(5, 104);
-        tft.print("> Password:");
+        tft_bold.setCursor(5, 104);
+        tft_bold.print("> Password:");
         tft.setCursor(26, 132);
         tft.print("************");
 
@@ -70,13 +70,13 @@ void loop(){
             buttonState1 = digitalRead(BUTTON1PIN);
             buttonState2 = digitalRead(BUTTON2PIN);
       
-            tft.setCursor(5, 47);
-            tft.print("> Username:");
+            tft_bold.setCursor(5, 47);
+            tft_bold.print("> Username:");
             tft.setCursor(26, 73);
             tft.print(credentials[select].getUsername());
       
-            tft.setCursor(5, 104);
-            tft.print("> Password:");
+            tft_bold.setCursor(5, 104);
+            tft_bold.print("> Password:");
             tft.setCursor(26, 128);
             tft.print(credentials[select].getPassword());
 

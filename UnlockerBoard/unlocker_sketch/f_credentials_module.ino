@@ -179,8 +179,8 @@ int menuList(){
     int shift = 45;
     
     tft.fillRect(0,25,235,110,TFT_BLACK);
-    tft.setCursor(45, shift);
-    tft.println("Authentication");
+    tft_bold.setCursor(45, shift);
+    tft_bold.println("Authentication");
     
     if(pos > 2){
       pos = 0;

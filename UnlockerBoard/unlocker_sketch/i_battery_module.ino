@@ -35,23 +35,44 @@ void battery_info(void *arg){
         drawingText("Chrg");
         vTaskDelay(500);
       }
-    }else{
-        int imgNum = 0;
-        int batteryLevel = BL.getBatteryChargeLevel();
+    }
 
-        if(batteryLevel >= 80){
-          imgNum = 3;
-        }else if(batteryLevel < 80 && batteryLevel >= 50 ){
-          imgNum = 2;
-        }else if(batteryLevel < 50 && batteryLevel >= 20 ){
-          imgNum = 1;
-        }else if(batteryLevel < 20 ){
-          imgNum = 0;
-        }  
+    else if(BL.getBatteryVolts() >= 4.1 && BL.getBatteryVolts() <= 4.18){
+      tft_battery.fillRect(153,3,35,17,TFT_BLACK);
+      drawingBatteryIcon(batteryImages[3]); 
+      drawingText("100%");
+      vTaskDelay(1000);
+    }
+
+    else if(BL.getBatteryVolts() <= 3.55){
+      tft.fillScreen(TFT_BLACK);
+      tft.setCursor(35, 32);
+      tft.setFreeFont(&FreeSansBold12pt7b);
+      tft.print("LOW BATTERY");
+      tft.pushImage(20, 50, 199, 76, battery_low);
+      
+      delay(3000);
+      esp_deep_sleep_start();
+    }
+
+    else{
+       tft_battery.fillRect(153,3,35,17,TFT_BLACK);
+       int imgNum = 0;
+       int batteryLevel = BL.getBatteryChargeLevel();
+
+       if(batteryLevel >= 80){
+         imgNum = 3;
+       }else if(batteryLevel < 80 && batteryLevel >= 50 ){
+         imgNum = 2;
+       }else if(batteryLevel < 50 && batteryLevel >= 20 ){
+         imgNum = 1;
+       }else if(batteryLevel < 20 ){
+         imgNum = 0;
+       }  
     
-        drawingBatteryIcon(batteryImages[imgNum]); 
-        drawingText(String(batteryLevel) + "%");
-        vTaskDelay(1000);
+       drawingBatteryIcon(batteryImages[imgNum]); 
+       drawingText(String(batteryLevel) + "%");
+       vTaskDelay(1000);
     }
   }
 }
@@ -79,6 +100,6 @@ void drawingBatteryIcon(char* filePath){
 }
 
 void drawingText(String text){
-  tft_battery.setCursor(153, 3);
+  tft_battery.setCursor(155, 3);
   tft_battery.print(text);
 }

@@ -5,16 +5,21 @@ void setup(){
  /****************************
   * startDevice_module setup *
   ****************************/
-  tft.fillScreen(TFT_BLACK);
-  tft.begin();   
+  tft_bold.begin();   
+  tft_bold.setRotation(1);
+  tft_bold.setSwapBytes(true);
+  tft_bold.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
+  tft_bold.setFreeFont(&FreeSansBold12pt7b);
+  
+  tft.begin();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
   tft.setSwapBytes(true);
   tft.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
   tft.setFreeFont(&FreeSans12pt7b);
-  tft.pushImage(56, 18, 140,99, logo);
-  
+  tft.pushImage(56, 18, 140, 99, logo);
 
+  
   /***************************
   * fingerprint_module setup *
   ****************************/
@@ -47,11 +52,12 @@ void setup(){
     read_credentialsFile();
     close_credentialsFile();
   }
-
+  
   delay(1500);
-  start_time = millis();
   tft.fillScreen(TFT_BLACK);
-
+  
+  start_time = millis();
+ 
   
   /***************************
   *   battery_module setup   *
