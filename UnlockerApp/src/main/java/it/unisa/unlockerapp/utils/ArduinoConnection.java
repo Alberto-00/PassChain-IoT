@@ -24,7 +24,7 @@ public class ArduinoConnection {
             }
         }
 
-        arduinoPort.addDataListener(new SerialPortDataListener() {
+        /*arduinoPort.addDataListener(new SerialPortDataListener() {
             @Override
             public int getListeningEvents() {
                 return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
@@ -38,7 +38,7 @@ public class ArduinoConnection {
                     System.out.println(msg);
                 }
             }
-        });
+        });*/
         //arduinoPort.closePort();
     }
 }

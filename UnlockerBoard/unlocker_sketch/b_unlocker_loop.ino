@@ -26,37 +26,84 @@ void loop(){
     *   credentials_module loop  *
     ******************************/
     int select = menuList();
-
+    delay(200);
+    
     if(select != -1){
       bool username = false;
       bool password = false;
-      tft.fillScreen(TFT_BLACK);
+      bool exit = false;
+      
+      tft.fillRect(0,25,235,110,TFT_BLACK);
     
-      while(!username || !password){
+      while((!username || !password) && !exit){
+        if(!bleKeyboard.isConnected())
+          break;
+          
         buttonState1 = digitalRead(BUTTON1PIN);
         buttonState2 = digitalRead(BUTTON2PIN);
       
-        tft.setCursor(0, 30);
-        tft.println("Username:");
-        tft.println("*********");
+        tft.setCursor(5, 47);
+        tft.print("> Username:");
+        tft.setCursor(26, 73);
+        tft.print("************");
       
-        tft.setCursor(0, 90);
-        tft.println("Password:");
-        tft.println("*********");
-    
+        tft.setCursor(5, 104);
+        tft.print("> Password:");
+        tft.setCursor(26, 132);
+        tft.print("************");
+
+        if(fingerprint_match()){
+          exit = true;
+          tft.fillRect(0,25,235,110,TFT_BLACK);
+          delay(200);
+          
+          while(!username || !password){
+            if(!bleKeyboard.isConnected())
+              break;
+
+            if(fingerprint_match()){
+              exit = false;
+              tft.fillRect(0,25,235,110,TFT_BLACK);
+              break;
+            }
+              
+            buttonState1 = digitalRead(BUTTON1PIN);
+            buttonState2 = digitalRead(BUTTON2PIN);
+      
+            tft.setCursor(5, 47);
+            tft.print("> Username:");
+            tft.setCursor(26, 73);
+            tft.print(credentials[select].getUsername());
+      
+            tft.setCursor(5, 104);
+            tft.print("> Password:");
+            tft.setCursor(26, 128);
+            tft.print(credentials[select].getPassword());
+
+            if(buttonState2 == LOW){
+              write_button("password", credentials[select].getPassword());
+              restart_time();
+              password = true;
+            }
+            if(buttonState1 == LOW){
+              write_button("username", credentials[select].getUsername());
+              restart_time();
+              username = true;
+            } 
+          }
+          delay(200);
+        }
         if(buttonState2 == LOW){
           write_button("password", credentials[select].getPassword());
           restart_time();
           password = true;
         }
-      
         if(buttonState1 == LOW){
           write_button("username", credentials[select].getUsername());
           restart_time();
           username = true;
         } 
       }
-      
       username = false;
       password = false;
     }

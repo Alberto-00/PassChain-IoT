@@ -4,18 +4,31 @@
 #include <ArduinoJson.h>
 #include <DigitalRainAnim.h>
 #include <Adafruit_Fingerprint.h>
+#include <Pangodream_18650_CL.h>
 #include "logo.h"
+#include "battery/home.h"
+#include "battery/battery_01.h"
+#include "battery/battery_02.h"
+#include "battery/battery_03.h"
+#include "battery/battery_04.h"
+#include "battery/battery_05.h"
 #include "Credential.h"
 
 #define BUTTON1PIN 35
 #define BUTTON2PIN 0
 #define DEEP_SLEEP T3
-#define BLOCKSCREEN_TIME 90000   /* tempo dopo il quale si avvia il block-screen 90s = 1.5 min */
+#define BLOCKSCREEN_TIME 90000   /* tempo dopo il quale si avvia il block-screen 90s = 1.5min */
 #define DEEPSLEEP_TIME 150000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (90000 + 150000) = 240s = 4min */
 
 #define uS_TO_S_FACTOR 1000000 /* Fattore di conversione da microsecondi a secondi */
 #define TIME_TO_SLEEP 30       /* Tempo prima del quale scheda vada in deep_sleep_mode (in secondi) */
 #define Threshold 40
+
+#define MIN_USB_VOL 4.50
+#define ADC_PIN 34
+#define CONV_FACTOR 1.8
+#define READS 20
+#define ARRAY_SIZE 5
 
 #if (defined(__AVR__) || defined(ESP8266)) && !defined(__AVR_ATmega2560__)
 SoftwareSerial mySerial(2, 3);
@@ -28,12 +41,19 @@ SoftwareSerial mySerial(2, 3);
  *     Global Variables     *
  ****************************/
 TFT_eSPI tft = TFT_eSPI();
+TFT_eSPI tft_battery = TFT_eSPI();
+TFT_eSPI tft_logo = TFT_eSPI();
+
 BleKeyboard bleKeyboard;
 StaticJsonDocument<6144> doc;
 DigitalRainAnim digitalRainAnim = DigitalRainAnim();
 Credential credentials[80];
 touch_pad_t touchPin;
 File authFile;
+
+Pangodream_18650_CL BL(ADC_PIN, CONV_FACTOR, READS);
+char *batteryImages[ARRAY_SIZE] = {"battery/battery_01", "battery/battery_02", "battery/battery_03", "battery/battery_04", "battery/battery_05"};
+TaskHandle_t TaskHandle_2;
 
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
 uint8_t id;

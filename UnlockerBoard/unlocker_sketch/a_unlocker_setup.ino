@@ -1,15 +1,19 @@
 
 void setup(){
-  Serial.begin(9600);
+  Serial.begin(115200);
+  
  /****************************
   * startDevice_module setup *
   ****************************/
-  tft.init();
+  tft.fillScreen(TFT_BLACK);
+  tft.begin();   
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
   tft.setSwapBytes(true);
-  tft.pushImage(56,18,140,99,logo);
-
+  tft.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
+  tft.setFreeFont(&FreeSans12pt7b);
+  tft.pushImage(56, 18, 140,99, logo);
+  
 
   /***************************
   * fingerprint_module setup *
@@ -24,17 +28,13 @@ void setup(){
   digitalRainAnim.setTextColor(4, 188, 200);
   digitalRainAnim.setHeadCharColor(4, 254, 253);
   restart_time();
-
+  
 
   /*************************
   * bluetooth_module setup *
   **************************/
   pinMode(BUTTON1PIN, INPUT);
   pinMode(BUTTON2PIN, INPUT);
-
-  tft.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
-  tft.setFreeFont(&Orbitron_Light_24);
-  tft.setTextSize(0);
   
   bleKeyboard.begin();
   wakeup_deepSleep();
@@ -48,7 +48,13 @@ void setup(){
     close_credentialsFile();
   }
 
-  delay(2000);
+  delay(1500);
   start_time = millis();
   tft.fillScreen(TFT_BLACK);
+
+  
+  /***************************
+  *   battery_module setup   *
+  ****************************/
+  battery_setup();
 }

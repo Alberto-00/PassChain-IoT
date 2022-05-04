@@ -172,15 +172,15 @@ void updateArray(int pos){
 
 int menuList(){
   int i = 0, j = 0, pos = 0, current = i;
-  int shift = 30;
   
   while(true){
     buttonState1 = digitalRead(BUTTON1PIN);
     buttonState2 = digitalRead(BUTTON2PIN);
-
-    tft.fillScreen(TFT_BLACK);
-    tft.setCursor(0, shift);
-    tft.println("Authentication ?");
+    int shift = 45;
+    
+    tft.fillRect(0,25,235,110,TFT_BLACK);
+    tft.setCursor(45, shift);
+    tft.println("Authentication");
     
     if(pos > 2){
       pos = 0;
@@ -207,71 +207,59 @@ int menuList(){
     switch(pos){
       case 0: {
         if(credentials[i].getName() != NULL){
-          tft.setCursor(0, shift += 30);
+          tft.setCursor(5, shift += 28);
           tft.print("> " + credentials[i].getName());
           current = i;
         } else break;
 
         for(j = i+1; j < i+3; j++){
           if(credentials[j].getName() != NULL){
-            tft.setCursor(21, shift += 30);
+            tft.setCursor(26, shift += 28);
             tft.print(credentials[j].getName());     
-          } else{
-            shift = 30;
-            break;
-          }
+          } else break;
         }
-        shift = 30;
         break;
       }
       
       case 1:{
         if(credentials[i].getName() != NULL){
-          tft.setCursor(21, shift += 30);
+          tft.setCursor(26, shift += 28);
           tft.println(credentials[i].getName());
         } else break;
 
         for(j = i+1; j < i+3; j++){
           if(credentials[j].getName() != NULL){
             if(j == i+1){
-              tft.setCursor(0, shift += 30);
+              tft.setCursor(5, shift += 28);
               tft.print("> " + credentials[j].getName());
               current = j; 
             } else{
-              tft.setCursor(21, shift += 30);
+              tft.setCursor(26, shift += 28);
               tft.print(credentials[j].getName()); 
             }    
-          } else{
-            shift = 30;
-            break;
-          }
+          } else break;
         }
-        shift = 30;
         break;
       }
       
       case 2:{
         if(credentials[i].getName() != NULL){
-          tft.setCursor(21, shift += 30);
+          tft.setCursor(26, shift += 28);
           tft.println(credentials[i].getName());
         } else break;
         
         for(j = i+1; j < i+3; j++){
           if(credentials[j].getName() != NULL){
             if(j == i+2){
-              tft.setCursor(0, shift += 30);
+              tft.setCursor(5, shift += 28);
               tft.print("> " + credentials[j].getName()); 
               current = j;
             } else{
-              tft.setCursor(21, shift += 30);
+              tft.setCursor(26, shift += 28);
               tft.print(credentials[j].getName()); 
             }    
-          } else{
-            shift = 30;
-            break;
-          }
+          } else break;
         }
-        shift = 30;
         break;  
       }
       default:
@@ -289,41 +277,41 @@ int menuList(){
       
       if(buttonState1 == LOW){
         pos--;
-        delay(125);
+        delay(200);
       }
       else if(buttonState2 == LOW){
         if(pos == 2){
           if(credentials[i+3].getName() != NULL){
             pos++;
-            delay(125);
+            delay(200);
           } else{
             pos = 0;
             i = 0;
-            delay(125);
+            delay(200);
           }
         } 
         else if(pos == 0){
            if(credentials[i+1].getName() != NULL){
             pos++;
-            delay(125);
+            delay(200);
           } else{
             pos = 0;
             i = 0;
-            delay(125);
+            delay(200);
           }
         } 
         else if(pos == 1){
           if(credentials[i+2].getName() != NULL){
             pos++;
-            delay(125);
+            delay(200);
           } else{
             pos = 0;
             i = 0;
-            delay(125);
+            delay(200);
           }
         }
       }
-
+      
       if(fingerprint_match()){
         return current + pos;
       }

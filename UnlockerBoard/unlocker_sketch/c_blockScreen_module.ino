@@ -30,15 +30,16 @@ void blockScreen(){
 
   tft.fillScreen(TFT_BLACK);
   
-  while(buttonState2 == LOW){
+  while(buttonState2 == LOW)
      buttonState2 = digitalRead(BUTTON2PIN);
-  }
 }
 
 bool check_inactivity_device(){
   if(isInactive_device(BLOCKSCREEN_TIME)){
+    vTaskDelete(TaskHandle_2);
     blockScreen();
     restart_time();
+    battery_setup();
     return true;
   }
   return false;
