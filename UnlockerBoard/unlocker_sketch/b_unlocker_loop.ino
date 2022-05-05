@@ -55,7 +55,6 @@ void loop(){
         if(fingerprint_match()){
           exit = true;
           tft.fillRect(0,25,235,110,TFT_BLACK);
-          delay(200);
           
           while(!username || !password){
             if(!bleKeyboard.isConnected())

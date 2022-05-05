@@ -30,41 +30,35 @@ void battery_info(void *arg){
     tft_logo.print("PassChain");
     
     if(BL.getBatteryVolts() >= MIN_USB_VOL){
-      for(int i=0; i< ARRAY_SIZE; i++){
-        drawingBatteryIcon(batteryImages[i]);
-        drawingText("Chrg");
-        vTaskDelay(500);
+      for(int i = 0; i < ARRAY_SIZE; i++){
+       drawingBatteryIcon(batteryImages[i]);
+       drawingText("Chrg");
+       vTaskDelay(500);
       }
     }
 
-    else if(BL.getBatteryVolts() >= 4.1 && BL.getBatteryVolts() <= 4.18){
-      tft_battery.fillRect(153,3,35,17,TFT_BLACK);
-      drawingBatteryIcon(batteryImages[3]); 
-      drawingText("100%");
-      vTaskDelay(1000);
-    }
-
-    else if(BL.getBatteryVolts() <= 3.55){
-      tft.fillScreen(TFT_BLACK);
-      tft.setCursor(35, 32);
-      tft.setFreeFont(&FreeSansBold12pt7b);
-      tft.print("LOW BATTERY");
-      tft.pushImage(20, 50, 199, 76, battery_low);
+    else if(BL.getBatteryVolts() <= 3.5){
+     tft.fillScreen(TFT_BLACK);
+     tft.setCursor(35, 32);
+     tft.setFreeFont(&FreeSansBold12pt7b);
+     tft.setTextColor(TFT_WHITE, TFT_BLACK);
+     tft.print("LOW BATTERY");
+     tft.pushImage(20, 50, 199, 76, battery_low);
       
-      delay(3000);
-      esp_deep_sleep_start();
-    }
+     delay(3000);
+     esp_deep_sleep_start();
+   }
 
     else{
        tft_battery.fillRect(153,3,35,17,TFT_BLACK);
        int imgNum = 0;
-       int batteryLevel = BL.getBatteryChargeLevel();
+       int batteryLevel = getBatteryLevel();
 
        if(batteryLevel >= 80){
          imgNum = 3;
-       }else if(batteryLevel < 80 && batteryLevel >= 50 ){
+       }else if(batteryLevel < 80 && batteryLevel >= 50){
          imgNum = 2;
-       }else if(batteryLevel < 50 && batteryLevel >= 20 ){
+       }else if(batteryLevel < 50 && batteryLevel >= 20){
          imgNum = 1;
        }else if(batteryLevel < 20 ){
          imgNum = 0;
@@ -102,4 +96,20 @@ void drawingBatteryIcon(char* filePath){
 void drawingText(String text){
   tft_battery.setCursor(155, 3);
   tft_battery.print(text);
+}
+
+int getBatteryLevel(){
+  double battery = BL.getBatteryVolts();
+
+  for(int i = 0; i < 100 - 1; i++){
+    if(battery >= _vs[i] && battery <= _vs[i+1]){
+      double min = _vs[i];
+      double max = _vs[i+1];
+
+      if((battery - min) < (max - battery))
+        return i + 1;
+      else
+        return i + 2;
+    }
+  }
 }
