@@ -17,11 +17,14 @@ bool isInactive_device(unsigned long inactivity_time){
 
 void blockScreen(){
   tft.fillScreen(TFT_BLACK);
-  buttonState2 = digitalRead(BUTTON2PIN);
   
-  while(buttonState2 == HIGH){
+  while(true){
     digitalRainAnim.loop();
-    buttonState2 = digitalRead(BUTTON2PIN);
+    
+    if(fingerprint_match()){
+      delay(100);
+      break;
+    }
     deepSleep();
   }
   
@@ -29,9 +32,6 @@ void blockScreen(){
     connection_status = false;
 
   tft.fillScreen(TFT_BLACK);
-  
-  while(buttonState2 == LOW)
-     buttonState2 = digitalRead(BUTTON2PIN);
 }
 
 bool check_inactivity_device(){

@@ -18,8 +18,8 @@
 #define BUTTON1PIN 35
 #define BUTTON2PIN 0
 #define DEEP_SLEEP T3
-#define BLOCKSCREEN_TIME 90000   /* tempo dopo il quale si avvia il block-screen 90s = 1.5min */
-#define DEEPSLEEP_TIME 150000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (90000 + 150000) = 240s = 4min */
+#define BLOCKSCREEN_TIME 120000   /* tempo dopo il quale si avvia il block-screen 120s = 2min */
+#define DEEPSLEEP_TIME 150000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (120000 + 150000) = 270s = 4.5min */
 
 #define uS_TO_S_FACTOR 1000000 /* Fattore di conversione da microsecondi a secondi */
 #define TIME_TO_SLEEP 30       /* Tempo prima del quale scheda vada in deep_sleep_mode (in secondi) */
@@ -56,7 +56,7 @@ File authFile;
 Pangodream_18650_CL BL(ADC_PIN, CONV_FACTOR, READS);
 char *batteryImages[ARRAY_SIZE] = {"battery/battery_01", "battery/battery_02", "battery/battery_03", "battery/battery_04", "battery/battery_05"};
 TaskHandle_t TaskHandle_2;
-int _vs[100] = {3.505, 3.510, 3.515, 3.520, 3.525, 3.530, 3.540, 3.550, 3.600, 3.650, 3.700,
+double _vs[100] = {3.505, 3.510, 3.515, 3.520, 3.525, 3.530, 3.540, 3.550, 3.600, 3.650, 3.700,
                 3.703, 3.706, 3.710, 3.713, 3.716, 3.719, 3.723, 3.726, 3.729, 3.732, 3.735, 
                 3.739, 3.742, 3.745, 3.748, 3.752, 3.755, 3.758, 3.761, 3.765, 3.768, 3.771, 
                 3.774, 3.777, 3.781, 3.784, 3.787, 3.790, 3.794, 3.797, 3.800, 3.805, 3.811, 
