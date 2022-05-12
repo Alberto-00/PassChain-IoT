@@ -5,7 +5,7 @@ bool isInactive_device(unsigned long inactivity_time){
 
   stop_time = millis();
 
-  if(buttonState1 != HIGH || buttonState2 != HIGH){
+  if(buttonState1 == LOW || buttonState2 == LOW || fingerprint_match()){
     restart_time();
     return false;
   } else if((stop_time - start_time) > inactivity_time){

@@ -4,13 +4,7 @@ void setup(){
   
  /****************************
   * startDevice_module setup *
-  ****************************/
-  tft_bold.begin();   
-  tft_bold.setRotation(1);
-  tft_bold.setSwapBytes(true);
-  tft_bold.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
-  tft_bold.setFreeFont(&FreeSansBold12pt7b);
-  
+  ****************************/ 
   tft.begin();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
@@ -55,6 +49,12 @@ void setup(){
   
   delay(1500);
   tft.fillScreen(TFT_BLACK);
+  
+  tft_bold.begin();   
+  tft_bold.setRotation(1);
+  tft_bold.setSwapBytes(true);
+  tft_bold.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
+  tft_bold.setFreeFont(&FreeSansBold12pt7b);
   
   start_time = millis();
  

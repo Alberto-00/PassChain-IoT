@@ -76,6 +76,8 @@ unsigned long start_time;
 unsigned long stop_time;
 unsigned int sizeJson;
 
+bool doubleClick();
+
 
 /*******************************
  *  functions battery_module   *

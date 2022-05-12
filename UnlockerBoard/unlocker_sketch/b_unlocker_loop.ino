@@ -36,6 +36,11 @@ void loop(){
       tft.fillRect(0,25,235,110,TFT_BLACK);
     
       while((!username || !password) && !exit){
+        check_inactivity_device();
+
+        //if(doubleClick())
+          //return;
+        
         if(!bleKeyboard.isConnected())
           break;
           
@@ -57,6 +62,11 @@ void loop(){
           tft.fillRect(0,25,235,110,TFT_BLACK);
           
           while(!username || !password){
+            check_inactivity_device();
+
+            //if(doubleClick())
+              //return;
+            
             if(!bleKeyboard.isConnected())
               break;
 
@@ -113,3 +123,25 @@ void loop(){
     connection_status = false;
   }
 }
+/*
+bool doubleClick(){
+    buttonState2 = digitalRead(BUTTON2PIN);
+    
+    if (buttonState2 == LOW){
+      int start = millis();
+      buttonState2 = digitalRead(BUTTON2PIN);
+      
+      while(buttonState2 == LOW)
+        buttonState2 = digitalRead(BUTTON2PIN);
+
+      buttonState2 = digitalRead(BUTTON2PIN);
+      if(buttonState2 == HIGH)
+        return false;
+        
+      int stop = millis(); 
+      if (stop - start <= 100){
+        return true;
+      }
+    }
+    return false;
+}*/

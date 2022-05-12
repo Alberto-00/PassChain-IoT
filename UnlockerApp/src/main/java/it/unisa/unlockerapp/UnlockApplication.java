@@ -20,7 +20,7 @@ public class UnlockApplication extends Application {
         stage.setTitle("Unlocker IoT");
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.getIcons().add(new Image("D:\\Progetti GitHub\\Progetto-IoT\\UnlockerApp\\src\\main\\resources\\it\\unisa\\unlockerapp\\assets\\icon.png"));
+        stage.getIcons().add(new Image("D:\\Progetti GitHub\\PassChain-IoT\\UnlockerApp\\src\\main\\resources\\it\\unisa\\unlockerapp\\assets\\icon.png"));
         stage.show();
     }
 
