@@ -173,14 +173,15 @@ void updateArray(int pos){
 int menuList(){
   int i = 0, j = 0, pos = 0, current = i;
   
+  tft_bold.setCursor(45, 45);
+  tft_bold.println("Authentication");
+  
   while(true){
     buttonState1 = digitalRead(BUTTON1PIN);
     buttonState2 = digitalRead(BUTTON2PIN);
     int shift = 45;
     
-    tft.fillRect(0,25,235,110,TFT_BLACK);
-    tft_bold.setCursor(45, shift);
-    tft_bold.println("Authentication");
+    tft.fillRect(0,50,235,85,TFT_BLACK);
     
     if(pos > 2){
       pos = 0;

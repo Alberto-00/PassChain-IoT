@@ -46,8 +46,7 @@ void setup(){
     read_credentialsFile();
     close_credentialsFile();
   }
-  
-  delay(1500);
+
   tft.fillScreen(TFT_BLACK);
   
   tft_bold.begin();   
@@ -55,6 +54,12 @@ void setup(){
   tft_bold.setSwapBytes(true);
   tft_bold.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
   tft_bold.setFreeFont(&FreeSansBold12pt7b);
+
+  tft_menu.begin();   
+  tft_menu.setRotation(1);
+  tft_menu.setSwapBytes(true);
+  tft_menu.setTextColor(TFT_BLACK, tft.color565(3, 211, 216));
+  tft_menu.setFreeFont(&FreeSansBold12pt7b);
   
   start_time = millis();
  

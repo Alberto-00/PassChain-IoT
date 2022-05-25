@@ -19,7 +19,7 @@
 #define BUTTON2PIN 0
 #define DEEP_SLEEP T3
 #define BLOCKSCREEN_TIME 120000   /* tempo dopo il quale si avvia il block-screen 120s = 2min */
-#define DEEPSLEEP_TIME 150000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (120000 + 150000) = 270s = 4.5min */
+#define DEEPSLEEP_TIME 150000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (120000 + 150000) = 270s = 4.5m*/
 
 #define uS_TO_S_FACTOR 1000000 /* Fattore di conversione da microsecondi a secondi */
 #define TIME_TO_SLEEP 30       /* Tempo prima del quale scheda vada in deep_sleep_mode (in secondi) */
@@ -42,6 +42,7 @@ SoftwareSerial mySerial(2, 3);
  *     Global Variables     *
  ****************************/
 TFT_eSPI tft = TFT_eSPI();
+TFT_eSPI tft_menu = TFT_eSPI();
 TFT_eSPI tft_battery = TFT_eSPI();
 TFT_eSPI tft_logo = TFT_eSPI();
 TFT_eSPI tft_bold = TFT_eSPI();
@@ -131,3 +132,10 @@ bool fingerprint_enroll();
 void fingerprint_deleteAll();
 void fingerprint_delete();
 bool fingerprint_match();
+
+
+/******************************
+ *  functions menu_module *
+ ******************************/
+int mainMenu();
+int credentialMenu();
