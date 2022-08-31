@@ -172,11 +172,19 @@ void updateArray(int pos){
 
 int menuList(){
   int i = 0, j = 0, pos = 0, current = i;
+  boolean title = false;
   
   tft_bold.setCursor(45, 45);
   tft_bold.println("Authentication");
   
   while(true){
+    
+    if(title){
+      title = false;
+      tft_bold.setCursor(45, 45);
+      tft_bold.println("Authentication");
+    }
+    
     buttonState1 = digitalRead(BUTTON1PIN);
     buttonState2 = digitalRead(BUTTON2PIN);
     int shift = 45;
@@ -269,6 +277,7 @@ int menuList(){
     
     while(buttonState1 == digitalRead(BUTTON1PIN) && buttonState2 == digitalRead(BUTTON2PIN)){
       if(check_inactivity_device()){
+        title = true;
         break;
       }
 
@@ -313,8 +322,8 @@ int menuList(){
         }
       }
       
-      if(fingerprint_match()){
-        return current + pos;
+      if(fingerprint_match()){ 
+        return current;
       }
     }
   }

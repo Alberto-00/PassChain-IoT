@@ -84,8 +84,10 @@ int mainMenu(){
 }
 
 
-int credentialMenu(){
-  while(true){
+void credentialMenu(){
+  
+  while(true){  
+    
     /*************************
     * bluetooth_module loop *
     *************************/
@@ -136,7 +138,7 @@ int credentialMenu(){
           tft_bold.print("> Password:");
           tft.setCursor(26, 132);
           tft.print("************");
-
+          
           if(fingerprint_match()){
             exit = true;
             tft.fillRect(0,25,235,110,TFT_BLACK);
@@ -158,13 +160,13 @@ int credentialMenu(){
       
               tft_bold.setCursor(5, 47);
               tft_bold.print("> Username:");
-              tft.setCursor(26, 73);
-              tft.print(credentials[select].getUsername());
+              tft_credentials.setCursor(26, 73);
+              tft_credentials.print(credentials[select].getUsername());
       
               tft_bold.setCursor(5, 104);
               tft_bold.print("> Password:");
-              tft.setCursor(26, 128);
-              tft.print(credentials[select].getPassword());
+              tft_credentials.setCursor(26, 128);
+              tft_credentials.print(credentials[select].getPassword());
 
               if(buttonState2 == LOW){
                 write_button("password", credentials[select].getPassword());
@@ -175,7 +177,9 @@ int credentialMenu(){
                 write_button("username", credentials[select].getUsername());
                 restart_time();
                 username = true;
-              } 
+              }
+              if(username && password)
+                return;
             }
             delay(200);
           }

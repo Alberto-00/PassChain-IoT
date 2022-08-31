@@ -14,6 +14,7 @@
 #include "battery/battery_05.h"
 #include "battery/battery_low.h"
 #include "Credential.h"
+#include "esp_gap_ble_api.h"
 
 #define BUTTON1PIN 35
 #define BUTTON2PIN 0
@@ -46,11 +47,12 @@ TFT_eSPI tft_menu = TFT_eSPI();
 TFT_eSPI tft_battery = TFT_eSPI();
 TFT_eSPI tft_logo = TFT_eSPI();
 TFT_eSPI tft_bold = TFT_eSPI();
+TFT_eSPI tft_credentials = TFT_eSPI();
 
 BleKeyboard bleKeyboard;
-StaticJsonDocument<6144> doc;
+StaticJsonDocument<12288> doc;
 DigitalRainAnim digitalRainAnim = DigitalRainAnim();
-Credential credentials[80];
+Credential credentials[100];
 touch_pad_t touchPin;
 File authFile;
 
@@ -77,8 +79,6 @@ unsigned long start_time;
 unsigned long stop_time;
 unsigned int sizeJson;
 
-bool doubleClick();
-
 
 /*******************************
  *  functions battery_module   *
@@ -91,6 +91,7 @@ int getBatteryLevel();
  *******************************/
 void check_connection();
 void write_button(String, String);
+void sendSequence(String);
 
 
 /********************************
@@ -138,4 +139,4 @@ bool fingerprint_match();
  *  functions menu_module *
  ******************************/
 int mainMenu();
-int credentialMenu();
+void credentialMenu();
