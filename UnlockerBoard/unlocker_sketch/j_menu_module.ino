@@ -178,8 +178,12 @@ void credentialMenu(){
                 restart_time();
                 username = true;
               }
-              if(username && password)
-                return;
+              
+              if(username && password){
+                username = true;
+                password = true;
+                break; 
+              }
             }
             delay(200);
           }

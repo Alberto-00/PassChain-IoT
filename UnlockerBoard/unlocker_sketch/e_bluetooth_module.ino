@@ -74,7 +74,7 @@ void sendSequence(String sequence){
         special=0;
         bleKeyboard.print("\\");
         bleKeyboard.print(sequence.charAt(i));
-      }                        
+      }        
     }        
     else {
       if(sequence.charAt(i) == '\\')
