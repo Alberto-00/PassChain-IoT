@@ -12,6 +12,10 @@ int mainMenu(){
     int shift = 82;
     
     tft_menu.fillRect(0,56,235,71,TFT_BLACK);
+    tft_bold.setCursor(55, 47);
+    tft_bold.println("PassChain");
+    tft.drawLine(0, 54, 235, 54, tft.color565(3, 211, 216));
+    tft.drawLine(0, 130, 235, 130, tft.color565(3, 211, 216));
     
     if(pos < 0)
       pos = 3;
@@ -59,6 +63,9 @@ int mainMenu(){
         tft_menu.print("> Settings");
         break;  
       }
+
+      default:
+        break;
     }
     
     while(buttonState1 == digitalRead(BUTTON1PIN) && buttonState2 == digitalRead(BUTTON2PIN)){
@@ -84,7 +91,7 @@ int mainMenu(){
 }
 
 
-void credentialMenu(){
+void credentialsMenu(){
   
   while(true){  
     
@@ -110,7 +117,7 @@ void credentialMenu(){
       /******************************
       *   credentials_module loop  *
       ******************************/
-      int select = menuList();
+      int select = subMenuCredentials();
       delay(200);
     
       if(select != -1){
@@ -161,13 +168,13 @@ void credentialMenu(){
       
               tft_bold.setCursor(5, 47);
               tft_bold.print("> Username:");
-              tft_credentials.setCursor(26, 73);
-              tft_credentials.print(credentials[select].getUsername());
+              tft_lightText.setCursor(26, 73);
+              tft_lightText.print(credentials[select].getUsername());
       
               tft_bold.setCursor(5, 104);
               tft_bold.print("> Password:");
-              tft_credentials.setCursor(26, 128);
-              tft_credentials.print(credentials[select].getPassword());
+              tft_lightText.setCursor(26, 128);
+              tft_lightText.print(credentials[select].getPassword());
 
               if(buttonState2 == LOW){
                 write_button("password", credentials[select].getPassword());
@@ -209,4 +216,46 @@ void credentialMenu(){
       connection_status = false;
     }
   }
+}
+
+void WiFiMenu(){
+  int SSID = scanWiFi();
+}
+
+void scrollText(String msg, int xpos, int ypos, bool current){
+  img.createSprite(IWIDTH, IHEIGHT);
+
+  if(!current){
+    img.setTextSize(0);           
+    img.setTextFont(4);           
+    img.setTextColor(tft.color565(3, 211, 216), TFT_BLACK); 
+    img.setTextWrap(false);      
+
+    img.setCursor(xpos, 2);
+    img.print(msg);
+    img.pushSprite(xpos, ypos - 10);
+  }
+  else{
+    for (int pos = IWIDTH; pos > 0; pos--){
+      build_banner(msg, pos);
+      img.pushSprite(xpos, ypos - 10);
+
+      delay(WAIT);
+    }
+  }
+ 
+  img.deleteSprite();
+}
+
+void build_banner(String msg, int xpos){
+  img.setTextSize(0);           
+  img.setTextFont(4);           
+  img.setTextColor(tft.color565(3, 211, 216), TFT_BLACK); 
+  img.setTextWrap(false);      
+
+  img.setCursor(xpos, 2);
+  img.print(msg);
+
+  img.setCursor(xpos - IWIDTH, 2);
+  img.print(msg);          
 }

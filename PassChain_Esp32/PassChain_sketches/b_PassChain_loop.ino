@@ -12,7 +12,7 @@ void loop(){
   switch(menu){
     case 0:{
       tft.fillRect(0,25,240,110,TFT_BLACK);
-      credentialMenu();
+      credentialsMenu();
       break;
     }
 
@@ -21,6 +21,9 @@ void loop(){
     }
 
     case 2:{
+      tft.fillRect(0,25,240,110,TFT_BLACK);
+      //WiFiMenu();
+      accessPoint_start();
       break;
     }
 

@@ -1,7 +1,7 @@
 
 void setup(){
-  Serial.begin(9600);
-  
+  Serial.begin(115200);
+    
  /****************************
   * startDevice_module setup *
   ****************************/ 
@@ -42,8 +42,10 @@ void setup(){
   /*********************
    * WiFi_module setup *
    *********************/ 
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
+   if(load_R_WiFiConfigFile()){
+    read_WiFiFile();
+    close_WiFiFile();
+   }
 
 
   /***************************
@@ -62,11 +64,11 @@ void setup(){
   tft_bold.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
   tft_bold.setFreeFont(&FreeSansBold12pt7b);
 
-  tft_credentials.begin();   
-  tft_credentials.setRotation(1);
-  tft_credentials.setSwapBytes(true);
-  tft_credentials.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
-  tft_credentials.setFreeFont(&FreeSans9pt7b);
+  tft_lightText.begin();   
+  tft_lightText.setRotation(1);
+  tft_lightText.setSwapBytes(true);
+  tft_lightText.setTextColor(tft.color565(3, 211, 216), TFT_BLACK);
+  tft_lightText.setFreeFont(&FreeSans9pt7b);
 
   tft_menu.begin();   
   tft_menu.setRotation(1);
