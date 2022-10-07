@@ -1,4 +1,44 @@
-int scanWiFi(){
+bool load_R_WiFiConfigFile(){
+  if(!SPIFFS.begin(true)){
+    return false;
+  }
+  
+  WiFiFile = SPIFFS.open("/accessPoint.json");
+  if(!WiFiFile){
+    return false;
+  }
+  return true;
+}
+
+bool close_WiFiFile(){
+  if(WiFiFile){
+    WiFiFile.close();
+    return true;
+  }
+  return false;
+}
+
+void read_WiFiFile(){
+  if(WiFiFile){
+    DeserializationError error = deserializeJson(wifi_config, WiFiFile);
+
+    if (error) {
+      Serial.print("deserializeJson() failed: ");
+      Serial.println(error.c_str());
+      return;
+    }
+  }
+}
+
+void accessPoint_start(){
+   WiFi.softAP(wifi_config["SSID"], wifi_config["password"]);
+   IPAddress IP = WiFi.softAPIP();
+   Serial.print("AP IP address: ");
+   Serial.println(IP);
+    server.begin();
+}
+
+/*int scanWiFi(){
 
     int i = 0, j = 0, pos = 0, current = i;
     boolean title = false;
@@ -171,45 +211,4 @@ int scanWiFi(){
         }
       }
     }
-}
-
-
-bool load_R_WiFiConfigFile(){
-  if(!SPIFFS.begin(true)){
-    return false;
-  }
-  
-  WiFiFile = SPIFFS.open("/accessPoint.json");
-  if(!WiFiFile){
-    return false;
-  }
-  return true;
-}
-
-bool close_WiFiFile(){
-  if(WiFiFile){
-    WiFiFile.close();
-    return true;
-  }
-  return false;
-}
-
-void read_WiFiFile(){
-  if(WiFiFile){
-    DeserializationError error = deserializeJson(wifi_config, WiFiFile);
-
-    if (error) {
-      Serial.print("deserializeJson() failed: ");
-      Serial.println(error.c_str());
-      return;
-    }
-  }
-}
-
-void accessPoint_start(){
-   WiFi.softAP(wifi_config["SSID"], wifi_config["password"]);
-   IPAddress IP = WiFi.softAPIP();
-   Serial.print("AP IP address: ");
-   Serial.println(IP);
-    server.begin();
-}
+}*/

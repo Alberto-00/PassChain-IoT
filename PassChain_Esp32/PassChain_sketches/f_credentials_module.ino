@@ -171,8 +171,8 @@ void updateArray(int pos){
 }
 
 int subMenuCredentials(){
-  int i = 0, j = 0, pos = 0, current = i, ypos;
-  boolean title = false, scrolling = false;
+  int i = 0, j = 0, pos = 0, current = i;
+  boolean title = false;
   
   tft_bold.setCursor(45, 45);
   tft_bold.println("Authentication");
@@ -216,35 +216,18 @@ int subMenuCredentials(){
     switch(pos){
       case 0: {
         if(credentials[i].getName() != NULL){
-          if(credentials[i].getName().length() > 16){
-            shift += 28;
-            ypos = shift;
-            tft.setCursor(5, shift);
-            tft.print("> ");
-            scrollText(credentials[i].getName(), 26, ypos, false);
-            current = i;
-            scrolling = true;
-          } else{
-            tft.setCursor(5, shift += 28);
-            tft.print("> " + credentials[i].getName());
-            current = i;
-          }
+          tft.setCursor(5, shift += 28);
+          tft.print("> " + credentials[i].getName());
+          current = i; 
         } else break;
-
+        
         for(j = i+1; j < i+3; j++){
           if(credentials[j].getName() != NULL){
-            if(credentials[i].getName().length() > 16){
-              scrollText(credentials[i].getName(), 26, shift += 28, false);
-            } else{
-              tft.setCursor(26, shift += 28);
-              tft.print(credentials[j].getName()); 
-            }
+            tft.setCursor(26, shift += 28);
+            tft.print(credentials[j].getName());
           } else break;
         }
 
-        if(scrolling){
-          scrollText(credentials[i].getName(), 26, ypos, true);
-        }
         break;
       }
       

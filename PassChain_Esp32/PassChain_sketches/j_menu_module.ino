@@ -169,12 +169,20 @@ void credentialsMenu(){
               tft_bold.setCursor(5, 47);
               tft_bold.print("> Username:");
               tft_lightText.setCursor(26, 73);
-              tft_lightText.print(credentials[select].getUsername());
+
+              if(credentials[select].getUsername().length() > 21)
+                tft_lightText.print(credentials[select].getUsername().substring(0,20));
+              else
+                tft_lightText.print(credentials[select].getUsername());
       
               tft_bold.setCursor(5, 104);
               tft_bold.print("> Password:");
               tft_lightText.setCursor(26, 128);
-              tft_lightText.print(credentials[select].getPassword());
+              
+              if(credentials[select].getPassword().length() > 21)
+                tft_lightText.print(credentials[select].getPassword().substring(0,22));
+              else
+                tft_lightText.print(credentials[select].getPassword());
 
               if(buttonState2 == LOW){
                 write_button("password", credentials[select].getPassword());
@@ -218,44 +226,7 @@ void credentialsMenu(){
   }
 }
 
+/*
 void WiFiMenu(){
   int SSID = scanWiFi();
-}
-
-void scrollText(String msg, int xpos, int ypos, bool current){
-  img.createSprite(IWIDTH, IHEIGHT);
-
-  if(!current){
-    img.setTextSize(0);           
-    img.setTextFont(4);           
-    img.setTextColor(tft.color565(3, 211, 216), TFT_BLACK); 
-    img.setTextWrap(false);      
-
-    img.setCursor(xpos, 2);
-    img.print(msg);
-    img.pushSprite(xpos, ypos - 10);
-  }
-  else{
-    for (int pos = IWIDTH; pos > 0; pos--){
-      build_banner(msg, pos);
-      img.pushSprite(xpos, ypos - 10);
-
-      delay(WAIT);
-    }
-  }
- 
-  img.deleteSprite();
-}
-
-void build_banner(String msg, int xpos){
-  img.setTextSize(0);           
-  img.setTextFont(4);           
-  img.setTextColor(tft.color565(3, 211, 216), TFT_BLACK); 
-  img.setTextWrap(false);      
-
-  img.setCursor(xpos, 2);
-  img.print(msg);
-
-  img.setCursor(xpos - IWIDTH, 2);
-  img.print(msg);          
-}
+}*/

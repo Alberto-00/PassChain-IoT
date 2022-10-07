@@ -17,10 +17,6 @@
 #include "esp_gap_ble_api.h"
 #include "WiFi.h"
 
-#define WAIT 30 // Pause in milliseconds to set scroll speed
-#define IWIDTH  240 // Size of sprite image for the scrolling text, this requires ~14 Kbytes of RAM
-#define IHEIGHT 30 // Size of sprite image for the scrolling text, this requires ~14 Kbytes of RAM
-
 #define BUTTON1PIN 35
 #define BUTTON2PIN 0
 #define DEEP_SLEEP T3
@@ -54,7 +50,6 @@ TFT_eSPI tft_battery = TFT_eSPI();
 TFT_eSPI tft_logo = TFT_eSPI();
 TFT_eSPI tft_bold = TFT_eSPI();
 TFT_eSPI tft_lightText = TFT_eSPI();
-TFT_eSprite img = TFT_eSprite(&tft); 
 
 WiFiServer server(80);
 
@@ -162,5 +157,3 @@ bool fingerprint_match();
  ******************************/
 int mainMenu();
 void credentialsMenu();
-void scrollText(String, int, int, bool);
-void build_banner(String, int);
