@@ -157,3 +157,7 @@ bool fingerprint_match();
  ******************************/
 int mainMenu();
 void credentialsMenu();
+void sendUsername(bool *, int);
+void sendPassword(bool *, int);
+int scrollText(int, bool, bool, bool *);
+int verify_Ble_FingerPrint(bool *);

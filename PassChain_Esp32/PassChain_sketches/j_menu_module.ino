@@ -121,10 +121,11 @@ void credentialsMenu(){
       delay(200);
     
       if(select != -1){
-        bool username = false;
-        bool password = false;
+        bool username = false, password = false;
+        bool scrollUser = false, scrollPasw = false;
         bool exit = false;
         bool doubleDigitBug = false;
+        int state = 0;
       
         tft.fillRect(0,25,235,110,TFT_BLACK);
     
@@ -152,20 +153,12 @@ void credentialsMenu(){
             tft.fillRect(0,25,235,110,TFT_BLACK);
           
             while(!username || !password){
-              check_inactivity_device();
-
-              if(!bleKeyboard.isConnected())
+              if(verify_Ble_FingerPrint(&exit) == -1)
                 break;
-
-              if(fingerprint_match()){
-                exit = false;
-                tft.fillRect(0,25,235,110,TFT_BLACK);
-                break;
-              }
               
               buttonState1 = digitalRead(BUTTON1PIN);
               buttonState2 = digitalRead(BUTTON2PIN);
-      
+                 
               tft_bold.setCursor(5, 47);
               tft_bold.print("> Username:");
               tft_lightText.setCursor(26, 73);
@@ -180,20 +173,24 @@ void credentialsMenu(){
               tft_lightText.setCursor(26, 128);
               
               if(credentials[select].getPassword().length() > 21)
-                tft_lightText.print(credentials[select].getPassword().substring(0,22));
+                tft_lightText.print(credentials[select].getPassword().substring(0,20));
               else
                 tft_lightText.print(credentials[select].getPassword());
 
-              if(buttonState2 == LOW){
-                write_button("password", credentials[select].getPassword());
-                restart_time();
-                password = true;
+              if(credentials[select].getUsername().length() > 21 || credentials[select].getPassword().length() > 21){
+                scrollUser = true;
+                state = scrollText(select, scrollUser, scrollPasw, &exit);
               }
-              if(buttonState1 == LOW){
-                write_button("username", credentials[select].getUsername());
-                restart_time();
-                username = true;
-              }
+
+              if(state == -1)
+                break;
+
+              if(buttonState2 == LOW || state == 2)
+                sendPassword(&password, select);
+              
+              if(buttonState1 == LOW || state == 1)
+                sendUsername(&username, select);
+              
               
               if(username && password){
                 doubleDigitBug = true;
@@ -205,16 +202,11 @@ void credentialsMenu(){
           if(doubleDigitBug)
             break;
             
-          if(buttonState2 == LOW){
-            write_button("password", credentials[select].getPassword());
-            restart_time();
-            password = true;
-          }
-          if(buttonState1 == LOW){
-            write_button("username", credentials[select].getUsername());
-            restart_time();
-            username = true;
-          } 
+          if(buttonState2 == LOW)
+            sendPassword(&password, select);
+              
+          if(buttonState1 == LOW)
+            sendUsername(&username, select);
         }
       }
       /******************************
@@ -223,6 +215,135 @@ void credentialsMenu(){
     
       connection_status = false;
     }
+  }
+}
+
+void sendUsername(bool *username, int select){
+  write_button("username", credentials[select].getUsername());
+  restart_time();
+  *username = true;
+}
+
+void sendPassword(bool *password, int select){
+  write_button("password", credentials[select].getPassword());
+  restart_time();
+  *password = true;
+}
+
+int scrollText(int select, bool scrollUser, bool scrollPasw, bool *exit){
+  while(true){
+    bool goOut = false;
+           
+    /* Username Text */
+    if(credentials[select].getUsername().length() > 21 && scrollUser){
+      tft_lightText.fillRect(26,60,235,18, TFT_BLACK);
+      tft_lightText.setCursor(26, 73);
+      
+      while(true){
+        for(int i = 0; i < credentials[select].getUsername().length(); i++){
+          if(i == 0){
+            tft_lightText.print(credentials[select].getUsername().substring(i, 20 + i));
+            delay(800);
+          } else
+              tft_lightText.print(credentials[select].getUsername().substring(i, 20 + i));
+          
+          if(verify_Ble_FingerPrint(exit) == -1)
+            return -1;
+            
+          buttonState1 = digitalRead(BUTTON1PIN);
+          buttonState2 = digitalRead(BUTTON2PIN);   
+            
+          if(buttonState2 == LOW){
+            scrollPasw = true;
+            scrollUser = false;
+            goOut = true;
+
+            tft_lightText.fillRect(26,60,235,18, TFT_BLACK);
+            tft_lightText.setCursor(26, 73);
+            tft_lightText.print(credentials[select].getUsername().substring(0,20));
+            
+            delay(100);
+            break;
+          }
+
+          if(buttonState1 == LOW)
+            return 1;
+
+          delay(100);
+          tft_lightText.fillRect(26,60,235,18, TFT_BLACK);
+          tft_lightText.setCursor(26, 73);
+        }
+        
+        if(goOut)
+          break;
+      } 
+    }
+    
+    /*Password Text */
+    goOut = false;
+      
+    if(credentials[select].getPassword().length() > 21 && scrollPasw){
+      tft_lightText.fillRect(26,115,235,18, TFT_BLACK);
+      tft_lightText.setCursor(26, 128);
+        
+      while(true){
+        for(int i = 0; i < credentials[select].getPassword().length(); i++){
+          if(i == 0){
+            tft_lightText.print(credentials[select].getPassword().substring(i, 20 + i));
+            delay(800);
+          } else
+              tft_lightText.print(credentials[select].getPassword().substring(i, 20 + i));
+              
+          if(verify_Ble_FingerPrint(exit) == -1)
+            return -1;
+            
+          buttonState1 = digitalRead(BUTTON1PIN);
+          buttonState2 = digitalRead(BUTTON2PIN);
+          
+          if(buttonState1 == LOW){
+            scrollPasw = false;
+            scrollUser = true;
+            goOut = true;
+
+            tft_lightText.fillRect(26,115,235,18, TFT_BLACK);
+            tft_lightText.setCursor(26, 128);
+            tft_lightText.print(credentials[select].getPassword().substring(0,20));
+            
+            delay(100);
+            break;
+          }
+
+          if(buttonState2 == LOW)
+            return 2;
+
+          delay(100);
+          tft_lightText.fillRect(26,115,235,18, TFT_BLACK);
+          tft_lightText.setCursor(26, 128);
+        }
+        
+        if(goOut)
+          break;
+      } 
+    }
+  }
+    
+  if(buttonState2 == LOW)
+    return 2;
+      
+  if(buttonState1 == LOW)
+    return 1;
+}
+
+int verify_Ble_FingerPrint(bool *exit){
+  check_inactivity_device();
+
+  if(!bleKeyboard.isConnected())
+    return -1;
+
+  if(fingerprint_match()){
+    *exit = false;
+    tft.fillRect(0,25,235,110,TFT_BLACK);
+    return -1;
   }
 }
 
