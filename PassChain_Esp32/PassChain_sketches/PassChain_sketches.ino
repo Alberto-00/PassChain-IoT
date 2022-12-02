@@ -15,14 +15,39 @@
 #include "battery/battery_low.h"
 #include "Credential.h"
 #include "esp_gap_ble_api.h"
-#include "WiFi.h"
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <WiFiAP.h>
+
+/**********************************************************/
+/*Crypto module*/
+
+#include <wolfssl.h>
+#include <wolfssl/ssl.h>
+//#include <Ethernet.h>
+
+#define USE_CERT_BUFFERS_256
+#include "certificates/certs_test.h"
+
+const int port = 11111; /* port to listen on */
+
+//EthernetServer server(port);
+//EthernetClient client;
+WiFiServer server(port);
+WiFiClient client;
+
+WOLFSSL_CTX* ctx = NULL;
+WOLFSSL* ssl = NULL;
+
+/**********************************************************/
 
 #define BUTTON1PIN 35
 #define BUTTON2PIN 0
 #define DEEP_SLEEP T3
 #define BLOCKSCREEN_TIME 120000   /* tempo dopo il quale si avvia il block-screen 120s = 2min */
 #define DEEPSLEEP_TIME 150000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (120000 + 150000) = 270s = 4.5m */
-#define WiFiScan_TIME 7000   /*  tempo dopo il quale Esp32 avvia una nuova scansione delle reti WiFi */
+
+//#define WiFiScan_TIME 7000   /*  tempo dopo il quale Esp32 avvia una nuova scansione delle reti WiFi */
 
 #define uS_TO_S_FACTOR 1000000 /* Fattore di conversione da microsecondi a secondi */
 #define TIME_TO_SLEEP 30       /* Tempo prima del quale scheda vada in deep_sleep_mode (in secondi) */
@@ -40,6 +65,15 @@ SoftwareSerial mySerial(2, 3);
 #define mySerial Serial1
 #endif
 
+// Replace with your network credentials
+const char* ssid     = "Napoli";
+const char* password = "sucasuca";
+
+// Set web server port number to 80
+//WiFiServer server(80);
+
+// Variable to store the HTTP request
+String header;
 
 /****************************
  *     Global Variables     *
@@ -51,7 +85,6 @@ TFT_eSPI tft_logo = TFT_eSPI();
 TFT_eSPI tft_bold = TFT_eSPI();
 TFT_eSPI tft_lightText = TFT_eSPI();
 
-WiFiServer server(80);
 
 BleKeyboard bleKeyboard;
 StaticJsonDocument<12288> doc;
@@ -60,7 +93,6 @@ DigitalRainAnim digitalRainAnim = DigitalRainAnim();
 Credential credentials[100];
 touch_pad_t touchPin;
 File authFile, WiFiFile;
-String header;
 
 Pangodream_18650_CL BL(ADC_PIN, CONV_FACTOR, READS);
 char *batteryImages[ARRAY_SIZE] = {"battery/battery_01", "battery/battery_02", "battery/battery_03", "battery/battery_04", "battery/battery_05"};
@@ -152,12 +184,20 @@ void fingerprint_delete();
 bool fingerprint_match();
 
 
-/******************************
+/**************************
  *  functions menu_module *
- ******************************/
+ **************************/
 int mainMenu();
 void credentialsMenu();
 void sendUsername(bool *, int);
 void sendPassword(bool *, int);
 int scrollText(int, bool, bool, bool *);
 int verify_Ble_FingerPrint(bool *);
+
+
+/***************************
+ * functions crypto_module *
+ ***************************/
+int EthernetSend(WOLFSSL* ssl, char* msg, int sz, void* ctx);
+int EthernetReceive(WOLFSSL* ssl, char* reply, int sz, void* ctx);
+void cryptoRun();
