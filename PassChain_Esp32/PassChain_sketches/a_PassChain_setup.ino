@@ -91,7 +91,7 @@ void setup(){
   WiFi.begin(ssid, password);
   //WiFi.softAP(ssid, password);
   //IPAddress myIP = WiFi.softAPIP();
-  Serial.print("AP IP address: ");
+  
   //Serial.println(myIP);
 
   Serial.println("Server started");
@@ -99,6 +99,8 @@ void setup(){
     delay(500);
     Serial.print(".");
   }
+  Serial.print("AP IP address: ");
+  Serial.println(WiFi.localIP());
   
   int err;
   WOLFSSL_METHOD* method;
@@ -116,7 +118,7 @@ void setup(){
   }
 
   /* initialize wolfSSL using callback functions */
-  wolfSSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, 0);
+  wolfSSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, 0); /* SSL_VERIFY_PEER (fa anche authentication client), SSL_VERIFY_NONE solo authentication server */
   wolfSSL_SetIOSend(ctx, EthernetSend);
   wolfSSL_SetIORecv(ctx, EthernetReceive);
 

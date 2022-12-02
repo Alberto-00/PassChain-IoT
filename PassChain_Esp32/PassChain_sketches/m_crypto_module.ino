@@ -1,6 +1,4 @@
 
-
-
 int EthernetSend(WOLFSSL* ssl, char* msg, int sz, void* ctx) {
   int sent = 0;
   sent = client.write((byte*)msg, sz);
@@ -27,11 +25,14 @@ void cryptoRun() {
   const char* cipherName;
 
   /* Listen for incoming client requests. */
-  client = server.available();
-  if (!client) {
-    Serial.println("NON FUNZIONA !! !!! !!! !!! !!!");
-    return;
+  while(!client){
+    client = server.available();
+    /*if (!client) {
+      Serial.println("NON FUNZIONA !! !!! !!! !!! !!!");
+      break;
+    }*/
   }
+  
 
   if (client.connected()) {
 
@@ -42,14 +43,17 @@ void cryptoRun() {
       Serial.println("Unable to allocate SSL object");
       return;
     }
+    Serial.println("Sono qui1");
 
     err = wolfSSL_accept(ssl);
     if (err != WOLFSSL_SUCCESS) {
+      Serial.println("Sono qui3");
       err = wolfSSL_get_error(ssl, 0);
       wolfSSL_ERR_error_string(err, errBuf);
       Serial.print("TLS Accept Error: ");
       Serial.println(errBuf);
     }
+    Serial.println("Sono qui2");
 
     Serial.print("SSL version is ");
     Serial.println(wolfSSL_get_version(ssl));
