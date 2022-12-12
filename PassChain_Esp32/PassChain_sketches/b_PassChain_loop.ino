@@ -22,8 +22,7 @@ void loop(){
 
     case 2:{
       tft.fillRect(0,25,240,110,TFT_BLACK);
-      //WiFiMenu();
-      //accessPoint_start();
+      accessPoint_start();
       cryptoRun();
       break;
     }

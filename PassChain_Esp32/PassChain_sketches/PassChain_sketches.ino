@@ -7,6 +7,8 @@
 #include <Pangodream_18650_CL.h>
 #include "logo/logo.h"
 #include "logo/home.h"
+#include "logo/wifi.h"
+#include "logo/bluetooth.h"
 #include "battery/battery_01.h"
 #include "battery/battery_02.h"
 #include "battery/battery_03.h"
@@ -14,40 +16,18 @@
 #include "battery/battery_05.h"
 #include "battery/battery_low.h"
 #include "Credential.h"
-#include "esp_gap_ble_api.h"
-#include <WiFi.h>
-#include <WiFiClient.h>
-#include <WiFiAP.h>
+#include "WiFiClientSecure.h"
 
-/**********************************************************/
-/*Crypto module*/
+//#include "esp_gap_ble_api.h" //forse non serve**************
 
-#include <wolfssl.h>
-#include <wolfssl/ssl.h>
-//#include <Ethernet.h>
+//For restart esp ESP.restart();
 
-#define USE_CERT_BUFFERS_256
-#include "certificates/certs_test.h"
-
-const int port = 11111; /* port to listen on */
-
-//EthernetServer server(port);
-//EthernetClient client;
-WiFiServer server(port);
-WiFiClient client;
-
-WOLFSSL_CTX* ctx = NULL;
-WOLFSSL* ssl = NULL;
-
-/**********************************************************/
 
 #define BUTTON1PIN 35
 #define BUTTON2PIN 0
 #define DEEP_SLEEP T3
 #define BLOCKSCREEN_TIME 120000   /* tempo dopo il quale si avvia il block-screen 120s = 2min */
 #define DEEPSLEEP_TIME 150000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (120000 + 150000) = 270s = 4.5m */
-
-//#define WiFiScan_TIME 7000   /*  tempo dopo il quale Esp32 avvia una nuova scansione delle reti WiFi */
 
 #define uS_TO_S_FACTOR 1000000 /* Fattore di conversione da microsecondi a secondi */
 #define TIME_TO_SLEEP 30       /* Tempo prima del quale scheda vada in deep_sleep_mode (in secondi) */
@@ -65,15 +45,6 @@ SoftwareSerial mySerial(2, 3);
 #define mySerial Serial1
 #endif
 
-// Replace with your network credentials
-const char* ssid     = "Napoli";
-const char* password = "sucasuca";
-
-// Set web server port number to 80
-//WiFiServer server(80);
-
-// Variable to store the HTTP request
-String header;
 
 /****************************
  *     Global Variables     *
@@ -84,7 +55,6 @@ TFT_eSPI tft_battery = TFT_eSPI();
 TFT_eSPI tft_logo = TFT_eSPI();
 TFT_eSPI tft_bold = TFT_eSPI();
 TFT_eSPI tft_lightText = TFT_eSPI();
-
 
 BleKeyboard bleKeyboard;
 StaticJsonDocument<12288> doc;
@@ -117,6 +87,35 @@ unsigned long start_time;
 unsigned long stop_time;
 unsigned int sizeJson;
 
+const char* hostname = "example.org";
+unsigned int port = 11111;
+WiFiClientSecure client(hostname);
+
+const char* test_root_ca = \
+                           "-----BEGIN CERTIFICATE-----\n" \
+                           "MIID4jCCAsqgAwIBAgIUbenEW900x1q5XiVRI3szwnzNBSkwDQYJKoZIhvcNAQEL\n" \
+                           "BQAwgYYxCzAJBgNVBAYTAml0MQswCQYDVQQIDAJpdDELMAkGA1UEBwwCaXQxFDAS\n" \
+                           "BgNVBAoMC2V4YW1wbGUub3JnMRQwEgYDVQQLDAtleGFtcGxlLm9yZzEUMBIGA1UE\n" \
+                           "AwwLZXhhbXBsZS5vcmcxGzAZBgkqhkiG9w0BCQEWDGdhQGdtYWlsLmNvbTAeFw0y\n" \
+                           "MjEyMDkyMDU0MzlaFw0yMzEyMDkyMDU0MzlaMIGGMQswCQYDVQQGEwJpdDELMAkG\n" \
+                           "A1UECAwCaXQxCzAJBgNVBAcMAml0MRQwEgYDVQQKDAtleGFtcGxlLm9yZzEUMBIG\n" \
+                           "A1UECwwLZXhhbXBsZS5vcmcxFDASBgNVBAMMC2V4YW1wbGUub3JnMRswGQYJKoZI\n" \
+                           "hvcNAQkBFgxnYUBnbWFpbC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK\n" \
+                           "AoIBAQC8/ZiExCt3m9vcD3iRGINWysb6WuvTHMB+sI59cxBG2jUY2mOUiRNeTOKU\n" \
+                           "8IKNna3fqdBADQIzIMsXERKh1i7rGP8MoxOzblB6s3kNw8+7ukUrxi/8RBEjMZDD\n" \
+                           "6hS1w4Ar/NUfUz22AFrPEno00NqSLEk9/4jeaEvyFMEO0S1L0TmhmV/E/21APwm8\n" \
+                           "KZB0AL7MJLQP7j4iDFg37OoULq7uTexaqRvPofvDa040LTRC9r8NkAJXxhaTPgGv\n" \
+                           "glIJW/dkFQ7O67zn2+5kdLb6uqugk1AykZXZWnrjRnLswLl7xwdJp2vU8k1+HtCy\n" \
+                           "R/2hFDWVP4VVVi+OsNm1fJr1Yk9nAgMBAAGjRjBEMB8GA1UdIwQYMBaAFFZznupu\n" \
+                           "uIjUbe5FDjRvT3XdruuQMAkGA1UdEwQCMAAwFgYDVR0RBA8wDYILZXhhbXBsZS5v\n" \
+                           "cmcwDQYJKoZIhvcNAQELBQADggEBADAORO3n5PSTvYN06oe1L2pnXO0XyD1bWyrU\n" \
+                           "QEdxlu1CQvj3g7YNztKfwQ8tcCFKK1JkRboZ8GPVJIlw/MSxJha7pLy69Y68Wtgz\n" \
+                           "fzJsHYcMPHEtjXnRVsbfYKF6vYBCUUvw6QGGsc07NsNZ//jPt2WUzTY8XvG/CFD7\n" \
+                           "rJbPjeridcll5e9mSBiBxhSIs4/4cgwHbhXhHD4pPMuk1XB6Yb1xx7P7T2+2mNg2\n" \
+                           "6knD8QoS6u1StfwVgkGNXrocqfam1/dK8UOwiqfQ+6WWA8LEVAr3ABS3zRTJNkXx\n" \
+                           "bKSKBJAdqSRJ8aapbpKKL4CjdZu1+pu5uFR+ZYHo+73790OdVJY=\n" \
+                           "-----END CERTIFICATE-----\n";
+
 
 /*******************************
  *  functions battery_module   *
@@ -135,8 +134,6 @@ void sendSequence(String);
 /**************************
  * functions WiFi_module  *
  **************************/
-void WiFiMenu();
-int scanWiFi();
 bool load_R_WiFiConfigFile();
 void read_WiFiFile();
 bool close_WiFiFile();
@@ -198,6 +195,4 @@ int verify_Ble_FingerPrint(bool *);
 /***************************
  * functions crypto_module *
  ***************************/
-int EthernetSend(WOLFSSL* ssl, char* msg, int sz, void* ctx);
-int EthernetReceive(WOLFSSL* ssl, char* reply, int sz, void* ctx);
 void cryptoRun();

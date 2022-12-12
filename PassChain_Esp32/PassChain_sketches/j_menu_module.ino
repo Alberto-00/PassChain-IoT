@@ -346,8 +346,3 @@ int verify_Ble_FingerPrint(bool *exit){
     return -1;
   }
 }
-
-/*
-void WiFiMenu(){
-  int SSID = scanWiFi();
-}*/

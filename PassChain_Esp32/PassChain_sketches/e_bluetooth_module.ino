@@ -19,10 +19,11 @@ void check_connection() {
       tft.setCursor(5, 47);
       tft.fillRect(0,25,235,110,TFT_BLACK);
       tft.print("The device is");
-      tft.setCursor(5, 73);
+      tft.setCursor(5, 74);
       tft.print("connected !");
+      tft_logo.pushImage(90, 84, 42, 48, bluetooth);
 
-      delay(2500);
+      delay(3000);
       
       tft.fillRect(0,25,235,110,TFT_BLACK);
       return;
@@ -33,7 +34,7 @@ void check_connection() {
       tft.setCursor(5, 47);
       tft.fillRect(0,25,235,110,TFT_BLACK);
       tft.print("Connection");
-      tft.setCursor(5, 73);
+      tft.setCursor(5, 74);
       tft.print("Failed !");
 
       tft.setCursor(5, 122);
