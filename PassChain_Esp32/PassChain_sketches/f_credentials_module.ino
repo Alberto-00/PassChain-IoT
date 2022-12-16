@@ -16,7 +16,7 @@ bool load_W_credentialsFile(){
     return false;
   }
   
-  authFile = SPIFFS.open("/credentials.json", "a");
+  authFile = SPIFFS.open("/credentials.json", "w");
   if(!authFile){
     return false;
   }
@@ -52,15 +52,12 @@ void read_credentialsFile(){
 
       if(doc["credentials"][i].containsKey("password") && doc["credentials"][i]["password"] != NULL)
          credentials[i].setPassword(doc["credentials"][i]["password"]);
-
-      if(doc["credentials"][i].containsKey("pinCode") && doc["credentials"][i]["pinCode"] != NULL)
-         credentials[i].setPinCode(doc["credentials"][i]["pinCode"]);
     }
   } else
     Serial.println("Can't open file.");
 }
 
-bool write_credentialsFile(char *name, char *username, char *password, char *pinCode){
+bool write_credentialsFile(char *name, char *username, char *password){
   if(sizeJson + 1 < 80){
     if(load_W_credentialsFile()){
       if(name != NULL){
@@ -77,11 +74,6 @@ bool write_credentialsFile(char *name, char *username, char *password, char *pin
         doc["credentials"][sizeJson]["password"] = password;
         credentials[sizeJson].setPassword(doc["credentials"][sizeJson]["password"]);
       }
-         
-      if(pinCode != NULL){
-        doc["credentials"][sizeJson]["pinCode"] = pinCode;
-        credentials[sizeJson].setPinCode(doc["credentials"][sizeJson]["pinCode"]);
-      }  
     
       sizeJson++;
       serializeJsonPretty(doc, authFile);
@@ -93,7 +85,7 @@ bool write_credentialsFile(char *name, char *username, char *password, char *pin
       return false;
 }
 
-bool update_credentialsFile(char *oldName, char* newName, char* username, char* password, char* pinCode){
+bool update_credentialsFile(char *oldName, char* newName, char* username, char* password){
   if(load_W_credentialsFile()){
     if(oldName != NULL){
       for(int i = 0; i < sizeJson; i++){
@@ -112,11 +104,6 @@ bool update_credentialsFile(char *oldName, char* newName, char* username, char* 
           if(password != NULL){
             doc["credentials"][i]["password"] = password;
             credentials[i].setPassword(doc["credentials"][i]["password"]);
-          }
-
-          if(pinCode != NULL){
-            doc["credentials"][i]["pinCode"] = pinCode;
-            credentials[i].setPinCode(doc["credentials"][i]["pinCode"]);
           }
           serializeJsonPretty(doc, authFile);
           close_credentialsFile();
@@ -162,10 +149,6 @@ void updateArray(int pos){
 
     if(credentials[i+1].getPassword() != NULL){
       credentials[i].setPassword(credentials[i+1].getPassword());
-    }
-
-    if(credentials[i+1].getPinCode() != NULL){
-      credentials[i].setPinCode(credentials[i+1].getPinCode());
     }
   }
 }

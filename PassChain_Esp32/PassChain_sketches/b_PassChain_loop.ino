@@ -11,7 +11,6 @@ void loop(){
 
   switch(menu){
     case 0:{
-      tft.fillRect(0,25,240,110,TFT_BLACK);
       credentialsMenu();
       break;
     }
@@ -21,13 +20,13 @@ void loop(){
     }
 
     case 2:{
-      tft.fillRect(0,25,240,110,TFT_BLACK);
-      accessPoint_start();
-      cryptoRun();
+      
       break;
     }
 
     case 3:{
+      tft.fillRect(0,25,240,110,TFT_BLACK);
+      accessPoint_start();
       break;
     }
   }
