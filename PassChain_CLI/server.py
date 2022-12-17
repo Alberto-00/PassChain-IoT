@@ -3,6 +3,7 @@ from ssl import SSLContext, PROTOCOL_TLS_SERVER
 from Loader import *
 from main import select_actions
 import json
+import ast
 import netifaces
 
 
@@ -55,7 +56,7 @@ def init_server():
 
             print(f'Client Says: {welcome_mex}')
 
-            select_actions(json.loads(data.decode('utf-8')), connection, key)
+            select_actions(ast.literal_eval("".join(map(chr, data))), connection, key)
 
             # connection.close() # close the connection
             # socket.close(self=True)

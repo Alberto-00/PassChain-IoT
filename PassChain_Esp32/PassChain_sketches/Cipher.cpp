@@ -12,7 +12,7 @@ Cipher::Cipher() {
   // sometimes serval keys wont work 
   // https://tls.mbed.org/kb/how-to/generate-an-aes-key
   
-  setKey("%A.Esp32_Pa66.C%");
+  setKey("abcdefghijklmnop");
 }
 
 Cipher::Cipher(char * key) {

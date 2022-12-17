@@ -73,36 +73,41 @@ void stopConnectionToServer(){
   client.stop();
   WiFi.disconnect(true);  // Disconnect from the network
   WiFi.mode(WIFI_OFF); //Switch WiFi off
+  restart_time();
   tft.fillRect(0,25,235,110,TFT_BLACK);
 }
 
 void update_credentials(int op, String entry){
+  /*split string*/
   int str_len = entry.length() + 1;
   char buffer[str_len]; 
   entry.toCharArray(buffer, str_len);
   
   char *token = strtok(buffer, "-");
-  char *data[3]; 
-  int i = 0;
-
-  while(token != NULL && i < 4){
+  char *data[3];
+  String entry_string[2]; 
+  
+  for(int i = 0; i < 3 && token != NULL; i++){
     token = strtok(NULL, "-");
     data[i] = token;
-    Serial.println(data[i]);
-    String mystring(data[i]);
-    Serial.print("Decrypt: "); Serial.println(cipher->decryptBuffer(mystring));
-    i++;
+    
+    if(i == 0)
+      continue;
+      
+    String char_to_string(data[i]);
+    entry_string[i-1] = cipher->encryptString(char_to_string);
   }
+  /*end split string*/
   
   switch(op){
     case 1: {
-      if(write_credentialsFile(data[0], data[1], data[2])){
+      if(write_credentialsFile(data[0], entry_string[0], entry_string[1])){        
         tft.fillRect(0,25,240,110,TFT_BLACK);
         tft.setCursor(43, 60);
         tft.fillRect(0,25,235,110,TFT_BLACK);
         tft.print("Add Success!");
         tft_logo.pushImage(90, 75, 52, 52, success);
-        delay(10000);
+        delay(3500);
       }
       else{
         tft.fillRect(0,25,240,110,TFT_BLACK);
@@ -110,7 +115,7 @@ void update_credentials(int op, String entry){
         tft.fillRect(0,25,235,110,TFT_BLACK);
         tft.print("Add Error!");
         tft_logo.pushImage(90, 75, 52, 52, error);
-        delay(10000);
+        delay(3500);
       }
       break;
     }

@@ -57,7 +57,7 @@ void read_credentialsFile(){
     Serial.println("Can't open file.");
 }
 
-bool write_credentialsFile(char *name, char *username, char *password){
+bool write_credentialsFile(char *name, String username, String password){
   if(sizeJson + 1 < 80){
     if(load_W_credentialsFile()){
       if(name != NULL){

@@ -1,6 +1,9 @@
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad
-BLOCK_SIZE = 32  # Bytes
+from mbedtls import cipher
+
+import pandas as pd
+import copy
+
+BLOCK_SIZE = 16  # Bytes
 
 
 def add_credential(json_credentials, connection, key):
@@ -31,14 +34,11 @@ def add_credential(json_credentials, connection, key):
 
                         option = input()
                         if option.casefold() == 'y':
-                            cipher = AES.new(key, AES.MODE_ECB)
-                            entry = {'name': name.encode('utf-8'),
-                                     'username': cipher.encrypt(pad(username.encode('utf-8'), BLOCK_SIZE)),
-                                     'password': cipher.encrypt(pad(password.encode('utf-8'), BLOCK_SIZE))}
+                            entry_enc = {'name': name, 'username': '**************', 'password': '**************'}
 
-                            json_credentials.append(entry)
-                            connection.sendall(b'1-' + entry['name'] + b'-' +
-                                               entry['username'] + b'-' + entry['password'])
+                            json_credentials.append(entry_enc)
+                            connection.sendall(b'1-' + name.encode('utf-8') + b'-' + username.encode('utf-8') + b'-' +
+                                               password.encode('utf-8'))
                             return
 
                         elif option.casefold() == 'n':
@@ -82,7 +82,14 @@ def add_credential(json_credentials, connection, key):
 
 
 def update_credential(json_credentials, connection):
-    print('a')
+    print('\nUpdate credentials...')
+
+    while True:
+        print('Select the index that do you want update?')
+        index = int(input())
+
+        if len(json_credentials) > 0 and 0 < index < len(json_credentials):
+            print('a')
 
 
 def delete_credential(json_credentials, connection):
@@ -95,3 +102,16 @@ def set_fingerprints(json_credentials, connection):
 
 def exitcode():
     print('a')
+
+
+def decrypt_credentials(json_credentials, key):
+    json_credentials_tmp = copy.deepcopy(json_credentials)
+    c = cipher.AES.new(key, cipher.MODE_ECB, b"sssssssss")
+    print(key)
+
+    for entry in json_credentials_tmp:
+        entry['username'] = c.decrypt(entry['username'].encode()).decode('utf-8'),
+        entry['password'] = c.decrypt(entry['password'].encode()).decode('utf-8'),
+
+    print(pd.DataFrame(data=json_credentials_tmp))
+

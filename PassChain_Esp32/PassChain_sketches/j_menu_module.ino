@@ -137,6 +137,8 @@ void credentialsMenu(){
           
           buttonState1 = digitalRead(BUTTON1PIN);
           buttonState2 = digitalRead(BUTTON2PIN);
+          String username_dec = cipher->decryptString(credentials[select].getUsername());
+          String password_dec = cipher->decryptString(credentials[select].getPassword());
       
           tft_bold.setCursor(5, 47);
           tft_bold.print("> Username:");
@@ -163,33 +165,33 @@ void credentialsMenu(){
               tft_bold.print("> Username:");
               tft_lightText.setCursor(26, 73);
 
-              if(credentials[select].getUsername().length() > 21)
-                tft_lightText.print(credentials[select].getUsername().substring(0,20));
+              if(username_dec.length() > 21)
+                tft_lightText.print(username_dec.substring(0,20));
               else
-                tft_lightText.print(credentials[select].getUsername());
+                 tft_lightText.print(username_dec);
       
               tft_bold.setCursor(5, 104);
               tft_bold.print("> Password:");
               tft_lightText.setCursor(26, 128);
-              
-              if(credentials[select].getPassword().length() > 21)
-                tft_lightText.print(credentials[select].getPassword().substring(0,20));
-              else
-                tft_lightText.print(credentials[select].getPassword());
 
-              if(credentials[select].getUsername().length() > 21 || credentials[select].getPassword().length() > 21){
+              if(password_dec.length() > 21)
+                tft_lightText.print(password_dec.substring(0,20));
+              else 
+                tft_lightText.print(password_dec);
+
+              if(username_dec.length() > 21 || password_dec.length() > 21){
                 scrollUser = true;
-                state = scrollText(select, scrollUser, scrollPasw, &exit);
+                state = scrollText(username_dec, password_dec, scrollUser, scrollPasw, &exit);
               }
 
               if(state == -1)
                 break;
 
               if(buttonState2 == LOW || state == 2)
-                sendPassword(&password, select);
+                sendPassword(&password, password_dec);
               
               if(buttonState1 == LOW || state == 1)
-                sendUsername(&username, select);
+                sendUsername(&username, username_dec);
               
               
               if(username && password){
@@ -203,10 +205,10 @@ void credentialsMenu(){
             break;
             
           if(buttonState2 == LOW)
-            sendPassword(&password, select);
+            sendPassword(&password, password_dec);
               
           if(buttonState1 == LOW)
-            sendUsername(&username, select);
+            sendUsername(&username, username_dec);
         }
       }
       /******************************
@@ -218,34 +220,34 @@ void credentialsMenu(){
   }
 }
 
-void sendUsername(bool *username, int select){
-  write_button("username", credentials[select].getUsername());
+void sendUsername(bool *username, String username_dec){
+  write_button("username", username_dec);
   restart_time();
   *username = true;
 }
 
-void sendPassword(bool *password, int select){
-  write_button("password", credentials[select].getPassword());
+void sendPassword(bool *password, String password_dec){
+  write_button("password", password_dec);
   restart_time();
   *password = true;
 }
 
-int scrollText(int select, bool scrollUser, bool scrollPasw, bool *exit){
+int scrollText(String username_dec, String password_dec, bool scrollUser, bool scrollPasw, bool *exit){
   while(true){
     bool goOut = false;
            
     /* Username Text */
-    if(credentials[select].getUsername().length() > 21 && scrollUser){
+    if(username_dec.length() > 21 && scrollUser){
       tft_lightText.fillRect(26,60,235,18, TFT_BLACK);
       tft_lightText.setCursor(26, 73);
       
       while(true){
-        for(int i = 0; i < credentials[select].getUsername().length(); i++){
+        for(int i = 0; i < username_dec.length(); i++){
           if(i == 0){
-            tft_lightText.print(credentials[select].getUsername().substring(i, 20 + i));
+            tft_lightText.print(username_dec.substring(i, 20 + i));
             delay(800);
           } else
-              tft_lightText.print(credentials[select].getUsername().substring(i, 20 + i));
+              tft_lightText.print(username_dec.substring(i, 20 + i));
           
           if(verify_Ble_FingerPrint(exit) == -1)
             return -1;
@@ -260,7 +262,7 @@ int scrollText(int select, bool scrollUser, bool scrollPasw, bool *exit){
 
             tft_lightText.fillRect(26,60,235,18, TFT_BLACK);
             tft_lightText.setCursor(26, 73);
-            tft_lightText.print(credentials[select].getUsername().substring(0,20));
+            tft_lightText.print(username_dec.substring(0,20));
             
             delay(100);
             break;
@@ -282,17 +284,17 @@ int scrollText(int select, bool scrollUser, bool scrollPasw, bool *exit){
     /*Password Text */
     goOut = false;
       
-    if(credentials[select].getPassword().length() > 21 && scrollPasw){
+    if(password_dec.length() > 21 && scrollPasw){
       tft_lightText.fillRect(26,115,235,18, TFT_BLACK);
       tft_lightText.setCursor(26, 128);
         
       while(true){
-        for(int i = 0; i < credentials[select].getPassword().length(); i++){
+        for(int i = 0; i < password_dec.length(); i++){
           if(i == 0){
-            tft_lightText.print(credentials[select].getPassword().substring(i, 20 + i));
+            tft_lightText.print(password_dec.substring(i, 20 + i));
             delay(800);
           } else
-              tft_lightText.print(credentials[select].getPassword().substring(i, 20 + i));
+              tft_lightText.print(password_dec.substring(i, 20 + i));
               
           if(verify_Ble_FingerPrint(exit) == -1)
             return -1;
@@ -307,7 +309,7 @@ int scrollText(int select, bool scrollUser, bool scrollPasw, bool *exit){
 
             tft_lightText.fillRect(26,115,235,18, TFT_BLACK);
             tft_lightText.setCursor(26, 128);
-            tft_lightText.print(credentials[select].getPassword().substring(0,20));
+            tft_lightText.print(password_dec.substring(0,20));
             
             delay(100);
             break;

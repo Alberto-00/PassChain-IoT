@@ -224,7 +224,7 @@ bool load_R_credentialsFile();
 bool load_W_credentialsFile();
 bool close_credentialsFile();
 void read_credentialsFile();
-bool write_credentialsFile(char*, char*, char*);
+bool write_credentialsFile(char*, String, String);
 bool update_credentialsFile(char *, char*, char*, char*);
 bool remove_credentialsFile(char*);
 void updateArray(int);
@@ -247,9 +247,9 @@ bool fingerprint_match();
  **************************/
 int mainMenu();
 void credentialsMenu();
-void sendUsername(bool *, int);
-void sendPassword(bool *, int);
-int scrollText(int, bool, bool, bool *);
+void sendUsername(bool *, String);
+void sendPassword(bool *, String);
+int scrollText(String, String, bool, bool, bool *);
 int verify_Ble_FingerPrint(bool *);
 
 

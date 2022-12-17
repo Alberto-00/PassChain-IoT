@@ -8,9 +8,11 @@ void loop(){
   * menu_module loop *
   ************************/
   menu = mainMenu();
+  tft.fillRect(0,25,240,110,TFT_BLACK);
 
   switch(menu){
     case 0:{
+      bleKeyboard.begin();
       credentialsMenu();
       break;
     }
