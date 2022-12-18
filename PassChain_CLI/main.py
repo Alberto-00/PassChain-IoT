@@ -39,7 +39,7 @@ def select_actions(json_credentials, connection, key):
 
         match option:
             case '1':
-                add_credential(json_credentials, connection, key)
+                add_credential(json_credentials, connection)
             case '2':
                 update_credential(json_credentials, connection)
             case '3':
@@ -51,7 +51,7 @@ def select_actions(json_credentials, connection, key):
             case '7':
                 enc_or_dec_print = True
             case 'quit':
-                exitcode()
+                exitcode(connection)
             case _:
                 while True:
                     print("Option not valid. Retry [Y/n]")

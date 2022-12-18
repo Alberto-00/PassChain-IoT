@@ -78,33 +78,33 @@ void stopConnectionToServer(){
 }
 
 void update_credentials(int op, String entry){
-  /*split string*/
   int str_len = entry.length() + 1;
   char buffer[str_len]; 
   entry.toCharArray(buffer, str_len);
-  
-  char *token = strtok(buffer, "-");
-  char *data[3];
-  String entry_string[2]; 
-  
-  for(int i = 0; i < 3 && token != NULL; i++){
-    token = strtok(NULL, "-");
-    data[i] = token;
-    
-    if(i == 0)
-      continue;
       
-    String char_to_string(data[i]);
-    entry_string[i-1] = cipher->encryptString(char_to_string);
-  }
-  /*end split string*/
-  
+  char *token = strtok(buffer, "-");
+  String entry_string[2]; 
+      
   switch(op){
     case 1: {
+      /*split string*/
+      char *data[3];
+      
+      for(int i = 0; i < 3 && token != NULL; i++){
+        token = strtok(NULL, "-");
+        data[i] = token;
+        
+        if(i == 0)
+          continue;
+          
+        String char_to_string(data[i]);
+        entry_string[i-1] = cipher->encryptString(char_to_string);
+      }
+      /*end split string*/
+  
       if(write_credentialsFile(data[0], entry_string[0], entry_string[1])){        
         tft.fillRect(0,25,240,110,TFT_BLACK);
         tft.setCursor(43, 60);
-        tft.fillRect(0,25,235,110,TFT_BLACK);
         tft.print("Add Success!");
         tft_logo.pushImage(90, 75, 52, 52, success);
         delay(3500);
@@ -112,7 +112,6 @@ void update_credentials(int op, String entry){
       else{
         tft.fillRect(0,25,240,110,TFT_BLACK);
         tft.setCursor(43, 60);
-        tft.fillRect(0,25,235,110,TFT_BLACK);
         tft.print("Add Error!");
         tft_logo.pushImage(90, 75, 52, 52, error);
         delay(3500);
@@ -121,10 +120,59 @@ void update_credentials(int op, String entry){
     }
     
     case 2: {
+      /*split string*/
+      char *data[4];
+            
+      for(int i = 0; i < 4 && token != NULL; i++){
+        token = strtok(NULL, "-");
+        data[i] = token;
+        
+        if(i < 2)
+          continue;
+
+        String char_to_string(data[i]);
+        
+        if(strcmp(data[i], "NULL") != 0)
+          entry_string[i-2] = cipher->encryptString(char_to_string);
+        else
+          entry_string[i-2] = char_to_string;
+      }
+      /*end split string*/
+  
+      if(update_credentialsFile(data[0], data[1], entry_string[0], entry_string[1])){        
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(30, 60);
+        tft.print("Update Success!");
+        tft_logo.pushImage(90, 75, 52, 52, success);
+        delay(3500);
+      }
+      else{
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(30, 60);
+        tft.print("Update Error!");
+        tft_logo.pushImage(90, 75, 52, 52, error);
+        delay(3500);
+      }
       break;
     }
     
     case 3: {
+      char *data = strtok(NULL, "-");
+  
+      if(remove_credentialsFile(data)){        
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(30, 60);
+        tft.print("Delete Success!");
+        tft_logo.pushImage(90, 75, 52, 52, success);
+        delay(3500);
+      }
+      else{
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(30, 60);
+        tft.print("Delete Error!");
+        tft_logo.pushImage(90, 75, 52, 52, error);
+        delay(3500);
+      }
       break;
     }
     

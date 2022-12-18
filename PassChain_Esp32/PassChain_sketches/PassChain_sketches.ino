@@ -225,7 +225,7 @@ bool load_W_credentialsFile();
 bool close_credentialsFile();
 void read_credentialsFile();
 bool write_credentialsFile(char*, String, String);
-bool update_credentialsFile(char *, char*, char*, char*);
+bool update_credentialsFile(char *, char*, String, String);
 bool remove_credentialsFile(char*);
 void updateArray(int);
 int subMenuCredentials();

@@ -23,7 +23,7 @@ void check_connection() {
       tft.print("connected !");
       tft_logo.pushImage(90, 84, 42, 48, bluetooth);
 
-      delay(3000);
+      delay(2700);
       
       tft.fillRect(0,25,235,110,TFT_BLACK);
       return;

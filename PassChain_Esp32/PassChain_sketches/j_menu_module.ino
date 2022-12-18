@@ -106,7 +106,8 @@ void credentialsMenu(){
         restart_time();
         connection_status = true;
       }
-    } else{
+    } 
+    else{
       check_inactivity_device();
     
       if(connection_status){

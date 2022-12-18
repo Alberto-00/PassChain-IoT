@@ -85,23 +85,23 @@ bool write_credentialsFile(char *name, String username, String password){
       return false;
 }
 
-bool update_credentialsFile(char *oldName, char* newName, char* username, char* password){
+bool update_credentialsFile(char *oldName, char* newName, String username, String password){
   if(load_W_credentialsFile()){
     if(oldName != NULL){
       for(int i = 0; i < sizeJson; i++){
         if(strcmp(doc["credentials"][i]["name"], oldName) == 0){
           
-          if(newName != NULL){
+          if(newName != NULL && strcmp(newName, "NULL") != 0){
             doc["credentials"][i]["name"] = newName;
             credentials[i].setName(doc["credentials"][i]["name"]);
           }
 
-          if(username != NULL){
+          if(username != NULL && username != "NULL"){
             doc["credentials"][i]["username"] = username;
             credentials[i].setUsername(doc["credentials"][i]["username"]);
           }
 
-          if(password != NULL){
+          if(password != NULL && password != "NULL"){
             doc["credentials"][i]["password"] = password;
             credentials[i].setPassword(doc["credentials"][i]["password"]);
           }
@@ -138,19 +138,35 @@ bool remove_credentialsFile(char* name){
 }
 
 void updateArray(int pos){
+  if(pos == 0 && sizeJson == 1){
+    credentials[pos].setName("");
+    credentials[pos].setUsername("");
+    credentials[pos].setPassword("");
+    sizeJson = 0;
+    return;
+  }
+  
   for(int i = pos; i < sizeJson - 1; i++){
-    if(credentials[i+1].getName() != NULL){
+    if(credentials[i+1].getName() != NULL && !(credentials[i+1].getName()).isEmpty()){
       credentials[i].setName(credentials[i+1].getName());
-    }
-
-    if(credentials[i+1].getUsername() != NULL){
+    } 
+  
+    if(credentials[i+1].getUsername() != NULL && !(credentials[i+1].getUsername()).isEmpty()){
       credentials[i].setUsername(credentials[i+1].getUsername());
     }
-
-    if(credentials[i+1].getPassword() != NULL){
+  
+    if(credentials[i+1].getPassword() != NULL && !(credentials[i+1].getPassword()).isEmpty()){
       credentials[i].setPassword(credentials[i+1].getPassword());
     }
   }
+
+  if(credentials[sizeJson-1].getName() != NULL && !(credentials[sizeJson-1].getName()).isEmpty()){
+    credentials[sizeJson-1].setName("");
+    credentials[sizeJson-1].setUsername("");
+    credentials[sizeJson-1].setPassword("");
+  }
+  
+  sizeJson--;
 }
 
 int subMenuCredentials(){
@@ -198,14 +214,14 @@ int subMenuCredentials(){
      
     switch(pos){
       case 0: {
-        if(credentials[i].getName() != NULL){
+        if(credentials[i].getName() != NULL && !(credentials[i].getName()).isEmpty()){
           tft.setCursor(5, shift += 28);
           tft.print("> " + credentials[i].getName());
           current = i; 
         } else break;
         
         for(j = i+1; j < i+3; j++){
-          if(credentials[j].getName() != NULL){
+          if(credentials[j].getName() != NULL && !(credentials[j].getName()).isEmpty()){
             tft.setCursor(26, shift += 28);
             tft.print(credentials[j].getName());
           } else break;
@@ -215,13 +231,13 @@ int subMenuCredentials(){
       }
       
       case 1:{
-        if(credentials[i].getName() != NULL){
+        if(credentials[i].getName() != NULL && !(credentials[i].getName()).isEmpty()){
           tft.setCursor(26, shift += 28);
           tft.println(credentials[i].getName());
         } else break;
 
         for(j = i+1; j < i+3; j++){
-          if(credentials[j].getName() != NULL){
+          if(credentials[j].getName() != NULL && !(credentials[j].getName()).isEmpty()){
             if(j == i+1){
               tft.setCursor(5, shift += 28);
               tft.print("> " + credentials[j].getName());
@@ -236,13 +252,13 @@ int subMenuCredentials(){
       }
       
       case 2:{
-        if(credentials[i].getName() != NULL){
+        if(credentials[i].getName() != NULL && !(credentials[i].getName()).isEmpty()){
           tft.setCursor(26, shift += 28);
           tft.println(credentials[i].getName());
         } else break;
         
         for(j = i+1; j < i+3; j++){
-          if(credentials[j].getName() != NULL){
+          if(credentials[j].getName() != NULL && !(credentials[j].getName()).isEmpty()){
             if(j == i+2){
               tft.setCursor(5, shift += 28);
               tft.print("> " + credentials[j].getName()); 
@@ -275,7 +291,7 @@ int subMenuCredentials(){
       }
       else if(buttonState2 == LOW){
         if(pos == 2){
-          if(credentials[i+3].getName() != NULL){
+          if(credentials[i+3].getName() != NULL && !(credentials[i+3].getName()).isEmpty()){
             pos++;
             delay(200);
           } else{
@@ -285,7 +301,7 @@ int subMenuCredentials(){
           }
         } 
         else if(pos == 0){
-           if(credentials[i+1].getName() != NULL){
+           if(credentials[i+1].getName() != NULL && !(credentials[i+1].getName()).isEmpty()){
             pos++;
             delay(200);
           } else{
@@ -295,7 +311,7 @@ int subMenuCredentials(){
           }
         } 
         else if(pos == 1){
-          if(credentials[i+2].getName() != NULL){
+          if(credentials[i+2].getName() != NULL && !(credentials[i+2].getName()).isEmpty()){
             pos++;
             delay(200);
           } else{
