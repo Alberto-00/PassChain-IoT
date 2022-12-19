@@ -77,21 +77,21 @@ void stopConnectionToServer(){
   tft.fillRect(0,25,235,110,TFT_BLACK);
 }
 
-void update_credentials(int op, String entry){
+void update_credentials(int op, String entry){  
   int str_len = entry.length() + 1;
   char buffer[str_len]; 
   entry.toCharArray(buffer, str_len);
       
-  char *token = strtok(buffer, "-");
+  char *token = strtok(buffer, "Æ");
   String entry_string[2]; 
       
   switch(op){
-    case 1: {
+    case 1: { // ADD credentials
       /*split string*/
       char *data[3];
       
       for(int i = 0; i < 3 && token != NULL; i++){
-        token = strtok(NULL, "-");
+        token = strtok(NULL, "Æ");
         data[i] = token;
         
         if(i == 0)
@@ -119,12 +119,12 @@ void update_credentials(int op, String entry){
       break;
     }
     
-    case 2: {
+    case 2: { // UPDATE credentials
       /*split string*/
       char *data[4];
             
       for(int i = 0; i < 4 && token != NULL; i++){
-        token = strtok(NULL, "-");
+        token = strtok(NULL, "Æ");
         data[i] = token;
         
         if(i < 2)
@@ -156,8 +156,8 @@ void update_credentials(int op, String entry){
       break;
     }
     
-    case 3: {
-      char *data = strtok(NULL, "-");
+    case 3: { // DELETE credentials
+      char *data = strtok(NULL, "Æ");
   
       if(remove_credentialsFile(data)){        
         tft.fillRect(0,25,240,110,TFT_BLACK);
@@ -180,7 +180,35 @@ void update_credentials(int op, String entry){
       break;
     }
     
-    case 5: {
+    case 5: { // Set HotSpot
+      char *data[2];
+
+      for(int i = 0; i < 2 && token != NULL; i++){
+        token = strtok(NULL, "Æ");
+        data[i] = token;
+
+        String char_to_string(data[i]);
+        
+        if(strcmp(data[i], "NULL") != 0)
+          entry_string[i] = cipher->encryptString(char_to_string);
+        else
+          entry_string[i] = "";
+      }
+
+      if(update_hotSpot(entry_string[0], entry_string[1])){
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(30, 60);
+        tft.print("HotSpot Success!");
+        tft_logo.pushImage(90, 75, 52, 52, success);
+        delay(3500);
+      }
+      else{
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(30, 60);
+        tft.print("HotSpot Error!");
+        tft_logo.pushImage(90, 75, 52, 52, error);
+        delay(3500);
+      }
       break;
     }
   }

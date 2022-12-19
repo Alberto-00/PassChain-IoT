@@ -6,8 +6,9 @@ import pandas as pd
 import copy
 
 
-def select_actions(json_credentials, connection, key):
+def select_actions(json_credentials, hotspot, connection, key):
     enc_or_dec_print = True
+    new_hotspot = hotspot
 
     while True:
         print("\n\n##################################\n"
@@ -46,6 +47,8 @@ def select_actions(json_credentials, connection, key):
                 delete_credential(json_credentials, connection)
             case '4':
                 set_fingerprints(json_credentials, connection)
+            case '5':
+                new_hotspot = set_hotspot(new_hotspot, connection)
             case '6':
                 enc_or_dec_print = False
             case '7':

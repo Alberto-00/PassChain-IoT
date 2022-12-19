@@ -57,9 +57,9 @@ def add_credential(json_credentials, connection):
                                 entry_enc = {'name': name, 'username': '**************', 'password': '**************'}
 
                                 json_credentials.append(entry_enc)
-                                connection.sendall(b'1-' + name.encode('utf-8') +
-                                                   b'-' + username.encode('utf-8') +
-                                                   b'-' + password.encode('utf-8'))
+                                connection.sendall(b'1' + '\xC6'.encode('utf-8') + name.encode('utf-8') +
+                                                   '\xC6'.encode('utf-8') + username.encode('utf-8') +
+                                                   '\xC6'.encode('utf-8') + password.encode('utf-8'))
                                 return
 
                             elif option.casefold() == 'n':
@@ -147,13 +147,13 @@ def update_credential(json_credentials, connection):
                                                                     entry_name['name'] = new_name
                                                                     entry_name['username'] = new_username
                                                                     entry_name['password'] = new_password
-                                                                    connection.sendall(b'2-' +
+                                                                    connection.sendall(b'2' + '\xC6'.encode('utf-8') +
                                                                                        old_name.encode('utf-8') +
-                                                                                       b'-' +
+                                                                                       '\xC6'.encode('utf-8') +
                                                                                        new_name.encode('utf-8') +
-                                                                                       b'-' +
+                                                                                       '\xC6'.encode('utf-8') +
                                                                                        new_username.encode('utf-8') +
-                                                                                       b'-' +
+                                                                                       '\xC6'.encode('utf-8') +
                                                                                        new_password.encode('utf-8'))
                                                                     return
                                                                 elif option.casefold() == 'n':
@@ -164,10 +164,13 @@ def update_credential(json_credentials, connection):
                                                         elif option.casefold() == 'n':
                                                             entry_name['name'] = new_name
                                                             entry_name['username'] = new_username
-                                                            connection.sendall(b'2-' + old_name.encode('utf-8') +
-                                                                               b'-' + new_name.encode('utf-8') +
-                                                                               b'-' + new_username.encode('utf-8') +
-                                                                               b'-NULL')
+                                                            connection.sendall(b'2' + '\xC6'.encode('utf-8') +
+                                                                               old_name.encode('utf-8') +
+                                                                               '\xC6'.encode('utf-8') +
+                                                                               new_name.encode('utf-8') +
+                                                                               '\xC6'.encode('utf-8') +
+                                                                               new_username.encode('utf-8') +
+                                                                               '\xC6'.encode('utf-8') + b'NULL')
                                                             return
                                                         else:
                                                             if not option_invalid():
@@ -196,9 +199,13 @@ def update_credential(json_credentials, connection):
 
                                                             entry_name['name'] = new_name
                                                             entry_name['password'] = new_password
-                                                            connection.sendall(b'2-' + old_name.encode('utf-8') +
-                                                                               b'-' + new_name.encode('utf-8') +
-                                                                               b'-NULL-' + new_password.encode('utf-8'))
+                                                            connection.sendall(b'2' + '\xC6'.encode('utf-8') +
+                                                                               old_name.encode('utf-8') +
+                                                                               '\xC6'.encode('utf-8') +
+                                                                               new_name.encode('utf-8') +
+                                                                               '\xC6'.encode('utf-8') + b'NULL' +
+                                                                               '\xC6'.encode('utf-8') +
+                                                                               new_password.encode('utf-8'))
                                                             return
                                                         elif option.casefold() == 'n':
                                                             continue
@@ -207,9 +214,12 @@ def update_credential(json_credentials, connection):
                                                                 return
                                                 elif option.casefold() == 'n':
                                                     entry_name['name'] = new_name
-                                                    connection.sendall(b'2-' + old_name.encode('utf-8') +
-                                                                       b'-' + new_name.encode('utf-8') +
-                                                                       b'-NULL-NULL')
+                                                    connection.sendall(b'2' + '\xC6'.encode('utf-8') +
+                                                                       old_name.encode('utf-8') +
+                                                                       '\xC6'.encode('utf-8') +
+                                                                       new_name.encode('utf-8') +
+                                                                       '\xC6'.encode('utf-8') + b'NULL' +
+                                                                       '\xC6'.encode('utf-8') + b'NULL')
                                                     return
                                                 else:
                                                     if not option_invalid():
@@ -253,9 +263,13 @@ def update_credential(json_credentials, connection):
 
                                                 entry_name['username'] = new_username
                                                 entry_name['password'] = new_password
-                                                connection.sendall(b'2-' + old_name.encode('utf-8') +
-                                                                   b'-NULL-' + new_username.encode('utf-8') +
-                                                                   b'-' + new_password.encode('utf-8'))
+                                                connection.sendall(b'2' + '\xC6'.encode('utf-8') +
+                                                                   old_name.encode('utf-8') +
+                                                                   '\xC6'.encode('utf-8') + b'NULL' +
+                                                                   '\xC6'.encode('utf-8') +
+                                                                   new_username.encode('utf-8') +
+                                                                   '\xC6'.encode('utf-8') +
+                                                                   new_password.encode('utf-8'))
                                                 return
                                             elif option.casefold() == 'n':
                                                 continue
@@ -264,8 +278,12 @@ def update_credential(json_credentials, connection):
                                                     return
                                         elif option.casefold() == 'n':
                                             entry_name['username'] = new_username
-                                            connection.sendall(b'2-' + old_name.encode('utf-8') +
-                                                               b'-NULL-' + new_username.encode('utf-8') + b'-NULL')
+                                            connection.sendall(b'2' + '\xC6'.encode('utf-8') +
+                                                               old_name.encode('utf-8') +
+                                                               '\xC6'.encode('utf-8') + b'NULL' +
+                                                               '\xC6'.encode('utf-8') +
+                                                               new_username.encode('utf-8') +
+                                                               '\xC6'.encode('utf-8') + b'NULL')
                                             return
                                         else:
                                             if not option_invalid():
@@ -290,8 +308,10 @@ def update_credential(json_credentials, connection):
                                             continue
 
                                         entry_name['password'] = new_password
-                                        connection.sendall(b'2-' + old_name.encode('utf-8') +
-                                                           b'-NULL-NULL-' + new_password.encode('utf-8'))
+                                        connection.sendall(b'2' + '\xC6'.encode('utf-8') + old_name.encode('utf-8') +
+                                                           '\xC6'.encode('utf-8') + b'NULL' + '\xC6'.encode('utf-8') +
+                                                           b'NULL' + '\xC6'.encode('utf-8') +
+                                                           new_password.encode('utf-8'))
                                         return
                                     elif option.casefold() == 'n':
                                         continue
@@ -345,7 +365,7 @@ def delete_credential(json_credentials, connection):
             for i in range(len(json_credentials)):
                 if json_credentials[i]['name'] == name:
                     del json_credentials[i]
-                    connection.sendall(b'3-' + name.encode('utf-8'))
+                    connection.sendall(b'3' + '\xC6'.encode('utf-8') + name.encode('utf-8'))
                     return
 
             print("[ERROR] Name not found.")
@@ -370,8 +390,111 @@ def set_fingerprints(json_credentials, connection):
     print('a')
 
 
+def set_hotspot(hotspot, connection):
+    print('\nSetup HotSpot credentials...')
+
+    cred = hotspot.split('\xC6')
+    cred[0] = cred[0][0:len(cred[0]) - 1]
+    cred[1] = cred[1][0:len(cred[1]) - 1]
+    print('Actual credentials: [SSID: ' + cred[0] + ", password: " + cred[1] + "]\n")
+
+    while True:
+        print('Do you want update SSID? [Y/n]')
+
+        option = input()
+        if option.casefold() == 'y':
+            while True:
+                print('Please insert SSID: ')
+                ssid = input().strip()
+                print(f"Is '{ssid}' correct? [Y/n]")
+
+                option = input()
+                if option.casefold() == 'y':
+                    if ssid == "":
+                        print("[ERROR] The SSID is empty.\n")
+                        continue
+
+                    while True:
+                        print('\nDo you want update Password? [Y/n]')
+                        option = input()
+
+                        if option.casefold() == 'y':
+                            while True:
+                                print('Please insert password: ')
+                                password = input().strip()
+                                print(f"Is '{password}' correct? [Y/n]")
+
+                                option = input()
+                                if option.casefold() == 'y':
+                                    if password == "":
+                                        print("[ERROR] The password is empty.\n")
+                                        continue
+
+                                    if len(password) < 8:
+                                        print("[ERROR] The password must be at least 8 characters.\n")
+                                        continue
+
+                                    connection.sendall(b'5' + '\xC6'.encode('utf-8') + ssid.encode('utf-8') +
+                                                       '\xC6'.encode('utf-8') + password.encode('utf-8'))
+                                    return ssid + '\xC6' + password
+                                elif option.casefold() == 'n':
+                                    continue
+                                else:
+                                    if not option_invalid():
+                                        return
+                        elif option.casefold() == 'n':
+                            connection.sendall(b'5' + '\xC6'.encode('utf-8') +
+                                               ssid.encode('utf-8') + '\xC6'.encode('utf-8') + b'NULL')
+                            return ssid + '\xC6' + cred[1]
+                        else:
+                            if not option_invalid():
+                                return
+                elif option.casefold() == 'n':
+                    continue
+                else:
+                    if not option_invalid():
+                        return
+        elif option.casefold() == 'n':
+            while True:
+                print('\nDo you want update Password? [Y/n]')
+                option = input()
+
+                if option.casefold() == 'y':
+                    while True:
+                        print('Please insert password: ')
+                        password = input().strip()
+                        print(f"Is '{password}' correct? [Y/n]")
+
+                        option = input()
+                        if option.casefold() == 'y':
+                            if password == "":
+                                print("[ERROR] The password is empty.\n")
+                                continue
+
+                            if len(password) < 8:
+                                print("[ERROR] The password must be at least 8 characters.\n")
+                                continue
+
+                            connection.sendall(b'5' + '\xC6'.encode('utf-8') + b'NULL' + '\xC6'.encode('utf-8') +
+                                               password.encode('utf-8'))
+                            return cred[0] + '\xC6' + password
+                        elif option.casefold() == 'n':
+                            continue
+                        else:
+                            if not option_invalid():
+                                return
+                elif option.casefold() == 'n':
+                    return
+                else:
+                    if not option_invalid():
+                        return
+        else:
+            if not option_invalid():
+                return
+
+
 def exitcode(connection):
-    connection.close()  # close the connection
+    connection.close()
     sys.exit()
 
 

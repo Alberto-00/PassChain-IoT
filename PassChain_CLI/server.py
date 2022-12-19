@@ -1,3 +1,4 @@
+import ssl
 from socket import socket, AF_INET, SOCK_STREAM
 from ssl import SSLContext, PROTOCOL_TLS_SERVER
 from Loader import *
@@ -25,7 +26,8 @@ def init_server():
     context.load_cert_chain("certs/server/domain.pem", "certs/server/domainK.pem")
 
     # client authentication
-    context.load_verify_locations("certs/clients/domainClient.pem")
+    context.verify_mode = ssl.CERT_REQUIRED
+    context.load_verify_locations("certs/CA/rootCA.pem")
 
     with socket(AF_INET, SOCK_STREAM) as server:
         server.bind((ip, port))
@@ -42,6 +44,10 @@ def init_server():
 
             # remove \r\n
             connection.recv(2)
+            hotspot = connection.recv(16384).decode('utf-8')
+
+            # remove \r\n
+            connection.recv(2)
             con_len = int(connection.recv(6).decode('utf-8'))
 
             # remove \r\n
@@ -55,4 +61,4 @@ def init_server():
 
             print(f'Client Says: {welcome_mex}')
 
-            select_actions(ast.literal_eval("".join(map(chr, data))), connection, key)
+            select_actions(ast.literal_eval("".join(map(chr, data))), hotspot, connection, key)

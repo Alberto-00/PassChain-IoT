@@ -97,27 +97,28 @@ WiFiClientSecure client(hostname);
 
 const char* test_root_ca = \
                            "-----BEGIN CERTIFICATE-----\n" \
-                           "MIID4jCCAsqgAwIBAgIUbenEW900x1q5XiVRI3szwnzNBSkwDQYJKoZIhvcNAQEL\n" \
+                           "MIID7zCCAtegAwIBAgIUb1aKD6PrUPRLWFASn7z7vKnHHnMwDQYJKoZIhvcNAQEL\n" \
                            "BQAwgYYxCzAJBgNVBAYTAml0MQswCQYDVQQIDAJpdDELMAkGA1UEBwwCaXQxFDAS\n" \
                            "BgNVBAoMC2V4YW1wbGUub3JnMRQwEgYDVQQLDAtleGFtcGxlLm9yZzEUMBIGA1UE\n" \
                            "AwwLZXhhbXBsZS5vcmcxGzAZBgkqhkiG9w0BCQEWDGdhQGdtYWlsLmNvbTAeFw0y\n" \
-                           "MjEyMDkyMDU0MzlaFw0yMzEyMDkyMDU0MzlaMIGGMQswCQYDVQQGEwJpdDELMAkG\n" \
+                           "MjEyMDkyMDUzNTVaFw0yNzEyMDgyMDUzNTVaMIGGMQswCQYDVQQGEwJpdDELMAkG\n" \
                            "A1UECAwCaXQxCzAJBgNVBAcMAml0MRQwEgYDVQQKDAtleGFtcGxlLm9yZzEUMBIG\n" \
                            "A1UECwwLZXhhbXBsZS5vcmcxFDASBgNVBAMMC2V4YW1wbGUub3JnMRswGQYJKoZI\n" \
                            "hvcNAQkBFgxnYUBnbWFpbC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK\n" \
-                           "AoIBAQC8/ZiExCt3m9vcD3iRGINWysb6WuvTHMB+sI59cxBG2jUY2mOUiRNeTOKU\n" \
-                           "8IKNna3fqdBADQIzIMsXERKh1i7rGP8MoxOzblB6s3kNw8+7ukUrxi/8RBEjMZDD\n" \
-                           "6hS1w4Ar/NUfUz22AFrPEno00NqSLEk9/4jeaEvyFMEO0S1L0TmhmV/E/21APwm8\n" \
-                           "KZB0AL7MJLQP7j4iDFg37OoULq7uTexaqRvPofvDa040LTRC9r8NkAJXxhaTPgGv\n" \
-                           "glIJW/dkFQ7O67zn2+5kdLb6uqugk1AykZXZWnrjRnLswLl7xwdJp2vU8k1+HtCy\n" \
-                           "R/2hFDWVP4VVVi+OsNm1fJr1Yk9nAgMBAAGjRjBEMB8GA1UdIwQYMBaAFFZznupu\n" \
-                           "uIjUbe5FDjRvT3XdruuQMAkGA1UdEwQCMAAwFgYDVR0RBA8wDYILZXhhbXBsZS5v\n" \
-                           "cmcwDQYJKoZIhvcNAQELBQADggEBADAORO3n5PSTvYN06oe1L2pnXO0XyD1bWyrU\n" \
-                           "QEdxlu1CQvj3g7YNztKfwQ8tcCFKK1JkRboZ8GPVJIlw/MSxJha7pLy69Y68Wtgz\n" \
-                           "fzJsHYcMPHEtjXnRVsbfYKF6vYBCUUvw6QGGsc07NsNZ//jPt2WUzTY8XvG/CFD7\n" \
-                           "rJbPjeridcll5e9mSBiBxhSIs4/4cgwHbhXhHD4pPMuk1XB6Yb1xx7P7T2+2mNg2\n" \
-                           "6knD8QoS6u1StfwVgkGNXrocqfam1/dK8UOwiqfQ+6WWA8LEVAr3ABS3zRTJNkXx\n" \
-                           "bKSKBJAdqSRJ8aapbpKKL4CjdZu1+pu5uFR+ZYHo+73790OdVJY=\n" \
+                           "AoIBAQDT4c/z2dmTiBdkEHnkTcg/z7zB9zH3riBlBVbk/l3rNjbA87eEyTg6gi21\n" \
+                           "41huAd6R4JzcJvvSPSeIJjcbn85NQXF9Ws77DA/5HpvQa4nIn8jM67XjrKD78E5S\n" \
+                           "Tmblq9n5o7HSDc/3kRrpMXuGmFfitQGYgXuvqH4126J+TK48TPYczinYIehKKnDC\n" \
+                           "olKFLTl3V2eJGCDlOcrtn1QmGYZ6Af2Pzg8DzAPG4J3O0jgH/FN88HsNwCAl1rc8\n" \
+                           "NQyj5/uZGKbFhxBryTNz83IKFZ3Y6ctijGWQ5SC3iJStO9zxnndhUryba6l7cImJ\n" \
+                           "cfKNA8a4MeIo2KmBNa1ZLeTSSu0rAgMBAAGjUzBRMB0GA1UdDgQWBBRWc57qbriI\n" \
+                           "1G3uRQ40b0913a7rkDAfBgNVHSMEGDAWgBRWc57qbriI1G3uRQ40b0913a7rkDAP\n" \
+                           "BgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQA46kR7NNPgaHJ1YEGq\n" \
+                           "exnczfyf8KvMXKoynTTNDRMp1JfxAArPFigDyO58/CBokvtM9TRPeYHu5cI+Pa4P\n" \
+                           "P2cgxsYWfIqf9qncCQ1NOsL0LSpH576ats+PCdEzIIL+ypUDLBUdSllLsDfjq0oH\n" \
+                           "UyekWV55guFhNmk3IyjlUgDLtmf9Aeq2XS/yawxNADEKnlQcNc2fFQR/wXLi8p4F\n" \
+                           "p6IqM3V2n3nVlsu25y01sU9nhukRF3kl/VBek8tIyl9VHcEzAWHn+q5QmamyUSHK\n" \
+                           "X2u/5OGaFjCrR7hnzlQZSoF3DAURUCU064Eync6acAIMqssipgCjwg6MHTuWJo7/\n" \
+                           "JkPm\n" \
                            "-----END CERTIFICATE-----\n";
 
 
@@ -196,8 +197,10 @@ void sendSequence(String);
  * functions WiFi_module  *
  **************************/
 bool load_R_WiFiConfigFile();
+bool load_W_hotSpotFile();
 void read_WiFiFile();
 bool close_WiFiFile();
+bool update_hotSpot(String, String);
 void accessPoint_start();
  
 
