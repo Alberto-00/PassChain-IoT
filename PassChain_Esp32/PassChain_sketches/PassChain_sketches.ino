@@ -21,8 +21,6 @@
 #include "WiFiClientSecure.h"
 #include "Cipher.h"
 
-//#include "esp_gap_ble_api.h" //forse non serve**************
-
 //For restart esp ESP.restart();
 
 
@@ -202,7 +200,7 @@ void read_WiFiFile();
 bool close_WiFiFile();
 bool update_hotSpot(String, String);
 void accessPoint_start();
- 
+
 
 /********************************
  * functions blockScreen_module *
