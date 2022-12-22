@@ -25,14 +25,15 @@ bool connectionToServer(){
        tft.print("responding.");
         
        WiFi.disconnect(true);  // Disconnect from the network
-       WiFi.mode(WIFI_OFF); //Switch WiFi off
+       WiFi.mode(WIFI_OFF); // Switch WiFi off
+       bleKeyboard.begin(); // active BLE
         
        delay(3000);
        tft.fillRect(0,25,235,110,TFT_BLACK);
        return false;
      }
   } while (!client.connect(WiFi.gatewayIP(), port));
-
+  
   return true;
 }
 
@@ -72,9 +73,21 @@ void startCommunicationToServer(String str){
 void stopConnectionToServer(){
   client.stop();
   WiFi.disconnect(true);  // Disconnect from the network
-  WiFi.mode(WIFI_OFF); //Switch WiFi off
+  WiFi.mode(WIFI_OFF); // Switch WiFi off
   restart_time();
-  tft.fillRect(0,25,235,110,TFT_BLACK);
+  
+  for(int i = 0; i < 3; i++){
+    tft.fillRect(0,25,235,110,TFT_BLACK);
+    tft.setCursor(5, 47);
+    tft.print("Server shutdown.");
+    tft.setCursor(5, 87);
+    tft.print("Restarting."); delay(400);
+    tft.print("."); delay(400);
+    tft.print("."); delay(400);
+    tft.print("."); delay(400);
+  }
+  
+  ESP.restart();
 }
 
 void update_credentials(int op, String entry){  
@@ -176,7 +189,62 @@ void update_credentials(int op, String entry){
       break;
     }
     
-    case 4: {
+    case 4: { //Set Fingerprint
+      token = strtok(NULL, "Æ");
+      
+      if(strcmp(token, "repair") == 0){
+        finger.getTemplateCount();
+        int repair_num = finger.templateCount % 6;
+                
+        for(int i = 0; i < repair_num; i++){
+          finger.getTemplateCount();
+          
+          if(!fingerprint_delete(finger.templateCount)){
+            tft.fillRect(0,25,240,110,TFT_BLACK);
+            tft.setCursor(30, 60);
+            tft.print("Delete Error!");
+            tft_logo.pushImage(90, 75, 52, 52, error);
+            delay(3500);
+            return;
+          }
+        }
+        
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(30, 60);
+        tft.print("Delete Success!");
+        tft_logo.pushImage(90, 75, 52, 52, success);
+        delay(3500);
+      }
+      else if(strcmp(token, "add") == 0){
+        steps_enroll = 1;
+        
+        for(int i = 0; i < 6; i++){
+          finger.getTemplateCount();
+          
+          if(fingerprint_enroll(finger.templateCount + 1))
+            steps_enroll++;
+        }
+      }
+      else if(strcmp(token, "delete") == 0){
+        for(int i = 0; i < 6; i++){
+          finger.getTemplateCount();
+          
+          if(!fingerprint_delete(finger.templateCount)){
+            tft.fillRect(0,25,240,110,TFT_BLACK);
+            tft.setCursor(30, 60);
+            tft.print("Delete Error!");
+            tft_logo.pushImage(90, 75, 52, 52, error);
+            delay(3500);
+            return;
+          }
+        }
+
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(30, 60);
+        tft.print("Delete Success!");
+        tft_logo.pushImage(90, 75, 52, 52, success);
+        delay(3500);
+      }
       break;
     }
     

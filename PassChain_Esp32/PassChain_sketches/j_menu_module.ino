@@ -1,6 +1,7 @@
 int mainMenu(){
   int pos = 0;
-  
+
+  tft.fillRect(0,25,240,110,TFT_BLACK);
   tft_bold.setCursor(55, 47);
   tft_bold.println("PassChain");
   tft.drawLine(0, 54, 235, 54, tft.color565(3, 211, 216));
@@ -63,9 +64,6 @@ int mainMenu(){
         tft_menu.print("> Settings");
         break;  
       }
-
-      default:
-        break;
     }
     
     while(buttonState1 == digitalRead(BUTTON1PIN) && buttonState2 == digitalRead(BUTTON2PIN)){
@@ -81,8 +79,9 @@ int mainMenu(){
         pos++;
         delay(200);
       }
-      
-      if(fingerprint_match()){
+
+      uint8_t id = fingerprint_match();
+      if(id > 0 && id < 7){
         return pos;
       }
     }
@@ -150,14 +149,20 @@ void credentialsMenu(){
           tft_bold.print("> Password:");
           tft.setCursor(26, 132);
           tft.print("************");
-          
-          if(fingerprint_match()){
+
+          uint8_t id = fingerprint_match();
+          if(id > 0 && id < 7){
             exit = true;
             tft.fillRect(0,25,235,110,TFT_BLACK);
           
             while(!username || !password){
-              if(verify_Ble_FingerPrint(&exit) == -1)
+              int flag = verify_Ble_FingerPrint(&exit);
+              if(flag == -1)
                 break;
+              else if(flag == 0){
+                connection_status = false;
+                return;
+              }
               
               buttonState1 = digitalRead(BUTTON1PIN);
               buttonState2 = digitalRead(BUTTON2PIN);
@@ -166,8 +171,10 @@ void credentialsMenu(){
               tft_bold.print("> Username:");
               tft_lightText.setCursor(26, 73);
 
-              if(username_dec.length() > 21)
+              if(username_dec.length() > 21){
+                scrollUser = true;
                 tft_lightText.print(username_dec.substring(0,20));
+              }
               else
                  tft_lightText.print(username_dec);
       
@@ -175,15 +182,15 @@ void credentialsMenu(){
               tft_bold.print("> Password:");
               tft_lightText.setCursor(26, 128);
 
-              if(password_dec.length() > 21)
+              if(password_dec.length() > 21){
+                scrollPasw = true;
                 tft_lightText.print(password_dec.substring(0,20));
+              }
               else 
                 tft_lightText.print(password_dec);
 
-              if(username_dec.length() > 21 || password_dec.length() > 21){
-                scrollUser = true;
+              if(username_dec.length() > 21 || password_dec.length() > 21)
                 state = scrollText(username_dec, password_dec, scrollUser, scrollPasw, &exit);
-              }
 
               if(state == -1)
                 break;
@@ -202,6 +209,12 @@ void credentialsMenu(){
             }
             delay(200);
           }
+          
+          if(id > 6 && id < 13){
+            connection_status = false;
+            return;
+          }
+          
           if(doubleDigitBug)
             break;
             
@@ -215,7 +228,12 @@ void credentialsMenu(){
       /******************************
       *   credentials_module END   *
       ******************************/
-    
+
+      else if(select == -1){
+        connection_status = false;
+        return;
+      }
+      
       connection_status = false;
     }
   }
@@ -238,7 +256,7 @@ int scrollText(String username_dec, String password_dec, bool scrollUser, bool s
     bool goOut = false;
            
     /* Username Text */
-    if(username_dec.length() > 21 && scrollUser){
+    if(username_dec.length() > 21 || scrollUser){
       tft_lightText.fillRect(26,60,235,18, TFT_BLACK);
       tft_lightText.setCursor(26, 73);
       
@@ -285,7 +303,7 @@ int scrollText(String username_dec, String password_dec, bool scrollUser, bool s
     /*Password Text */
     goOut = false;
       
-    if(password_dec.length() > 21 && scrollPasw){
+    if(password_dec.length() > 21 || scrollPasw){
       tft_lightText.fillRect(26,115,235,18, TFT_BLACK);
       tft_lightText.setCursor(26, 128);
         
@@ -343,9 +361,13 @@ int verify_Ble_FingerPrint(bool *exit){
   if(!bleKeyboard.isConnected())
     return -1;
 
-  if(fingerprint_match()){
+  uint8_t id = fingerprint_match();
+  if(id > 0 && id < 7){
     *exit = false;
     tft.fillRect(0,25,235,110,TFT_BLACK);
     return -1;
+  }
+  else if(id > 6 && id < 13){
+    return 0;
   }
 }

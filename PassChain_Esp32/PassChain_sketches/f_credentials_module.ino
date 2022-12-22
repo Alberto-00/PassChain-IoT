@@ -54,7 +54,7 @@ void read_credentialsFile(){
          credentials[i].setPassword(doc["credentials"][i]["password"]);
     }
   } else
-    Serial.println("Can't open file.");
+    ESP.restart();
 }
 
 bool write_credentialsFile(char *name, String username, String password){
@@ -105,6 +105,7 @@ bool update_credentialsFile(char *oldName, char* newName, String username, Strin
             doc["credentials"][i]["password"] = password;
             credentials[i].setPassword(doc["credentials"][i]["password"]);
           }
+          
           serializeJsonPretty(doc, authFile);
           close_credentialsFile();
           return true;
@@ -226,7 +227,6 @@ int subMenuCredentials(){
             tft.print(credentials[j].getName());
           } else break;
         }
-
         break;
       }
       
@@ -321,10 +321,13 @@ int subMenuCredentials(){
           }
         }
       }
-      
-      if(fingerprint_match()){ 
+
+      uint8_t id = fingerprint_match();
+      if(id > 0 && id < 7)
         return current;
-      }
+        
+      else if(id > 6 && id < 13)
+        return -1;
     }
   }
 }

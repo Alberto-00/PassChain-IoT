@@ -1,5 +1,5 @@
 
-//minimo 3.5
+//minimo 3.5V
 void battery_setup() {
   tft_battery.begin();
   tft_battery.setRotation(1);

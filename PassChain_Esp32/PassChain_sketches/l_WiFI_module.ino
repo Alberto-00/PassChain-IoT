@@ -61,7 +61,7 @@ bool update_hotSpot(String ssid, String password){
 void accessPoint_start(){
   if(WiFi.status() != WL_CONNECTED){ 
     bleKeyboard.end();
-
+    
     String ssid = wifi_config["SSID"];
     String password = wifi_config["password"];
 
@@ -115,7 +115,9 @@ void accessPoint_start(){
       tft.print("server !!");
       
       client.println("Hello World!");
-      client.println(cipher->getKey());
+      
+      finger.getTemplateCount();
+      client.println(finger.templateCount);
       client.println(ssi_dec + "Æ" + password_dec);
 
       String credentialsJsonString = doc["credentials"];

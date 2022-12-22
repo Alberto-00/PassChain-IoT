@@ -1,9 +1,10 @@
+#!/usr/bin/python
+import time
 import sys
 
 from mbedtls import cipher
 
-import pandas as pd
-import copy
+BUFF_SIZE = 16
 
 
 def add_credential(json_credentials, connection):
@@ -60,6 +61,7 @@ def add_credential(json_credentials, connection):
                                 connection.sendall(b'1' + '\xC6'.encode('utf-8') + name.encode('utf-8') +
                                                    '\xC6'.encode('utf-8') + username.encode('utf-8') +
                                                    '\xC6'.encode('utf-8') + password.encode('utf-8'))
+                                waiting()
                                 return
 
                             elif option.casefold() == 'n':
@@ -155,6 +157,7 @@ def update_credential(json_credentials, connection):
                                                                                        new_username.encode('utf-8') +
                                                                                        '\xC6'.encode('utf-8') +
                                                                                        new_password.encode('utf-8'))
+                                                                    waiting()
                                                                     return
                                                                 elif option.casefold() == 'n':
                                                                     continue
@@ -171,6 +174,7 @@ def update_credential(json_credentials, connection):
                                                                                '\xC6'.encode('utf-8') +
                                                                                new_username.encode('utf-8') +
                                                                                '\xC6'.encode('utf-8') + b'NULL')
+                                                            waiting()
                                                             return
                                                         else:
                                                             if not option_invalid():
@@ -206,6 +210,7 @@ def update_credential(json_credentials, connection):
                                                                                '\xC6'.encode('utf-8') + b'NULL' +
                                                                                '\xC6'.encode('utf-8') +
                                                                                new_password.encode('utf-8'))
+                                                            waiting()
                                                             return
                                                         elif option.casefold() == 'n':
                                                             continue
@@ -220,6 +225,7 @@ def update_credential(json_credentials, connection):
                                                                        new_name.encode('utf-8') +
                                                                        '\xC6'.encode('utf-8') + b'NULL' +
                                                                        '\xC6'.encode('utf-8') + b'NULL')
+                                                    waiting()
                                                     return
                                                 else:
                                                     if not option_invalid():
@@ -270,6 +276,7 @@ def update_credential(json_credentials, connection):
                                                                    new_username.encode('utf-8') +
                                                                    '\xC6'.encode('utf-8') +
                                                                    new_password.encode('utf-8'))
+                                                waiting()
                                                 return
                                             elif option.casefold() == 'n':
                                                 continue
@@ -284,6 +291,7 @@ def update_credential(json_credentials, connection):
                                                                '\xC6'.encode('utf-8') +
                                                                new_username.encode('utf-8') +
                                                                '\xC6'.encode('utf-8') + b'NULL')
+                                            waiting()
                                             return
                                         else:
                                             if not option_invalid():
@@ -312,6 +320,7 @@ def update_credential(json_credentials, connection):
                                                            '\xC6'.encode('utf-8') + b'NULL' + '\xC6'.encode('utf-8') +
                                                            b'NULL' + '\xC6'.encode('utf-8') +
                                                            new_password.encode('utf-8'))
+                                        waiting()
                                         return
                                     elif option.casefold() == 'n':
                                         continue
@@ -366,6 +375,7 @@ def delete_credential(json_credentials, connection):
                 if json_credentials[i]['name'] == name:
                     del json_credentials[i]
                     connection.sendall(b'3' + '\xC6'.encode('utf-8') + name.encode('utf-8'))
+                    waiting()
                     return
 
             print("[ERROR] Name not found.")
@@ -386,8 +396,80 @@ def delete_credential(json_credentials, connection):
                 return
 
 
-def set_fingerprints(json_credentials, connection):
-    print('a')
+def set_fingerprints(count_fingerprints, connection):
+    print('\nSetup fingerprints...')
+
+    if count_fingerprints % 6 != 0:
+        while True:
+            print('There is an error with fingerprint. Repair? [Y/n]')
+
+            option = input()
+            if option.casefold() == 'y':
+                connection.sendall(b'4' + '\xC6'.encode('utf-8') + b'repair')
+                waiting()
+                return count_fingerprints - int(count_fingerprints / 6)
+            elif option.casefold() == 'n':
+                return
+            else:
+                if not option_invalid():
+                    return
+    elif count_fingerprints > 126:
+        print('Fingerprint database is full. Do you want delete someone? [Y/n]')
+
+        option = input()
+        if option.casefold() == 'y':
+            while True:
+                print('Will delete the last Fingerprint. Are you sure? [Y/n]')
+
+                option = input()
+                if option.casefold() == 'y':
+                    connection.sendall(b'4' + '\xC6'.encode('utf-8') + b'delete')
+                    waiting()
+                    return count_fingerprints - 6
+                elif option.casefold() == 'n':
+                    return
+                else:
+                    if not option_invalid():
+                        return
+        elif option.casefold() == 'n':
+            return
+        else:
+            if not option_invalid():
+                return
+    else:
+        while True:
+            num_fingers = int(count_fingerprints / 6)
+            print(f'\nThere is {num_fingers} Fingerprint stored.')
+            print('What do you do? [add/del/quit]')
+
+            option = input()
+            if option.casefold() == 'add':
+                connection.sendall(b'4' + '\xC6'.encode('utf-8') + b'add')
+                print('Waiting save Fingerprint on PassChain....')
+
+                while connection.recv(3).decode('utf-8') == 'end':
+                    return count_fingerprints + 6
+            elif option.casefold() == 'del':
+                if count_fingerprints - 12 >= 6:
+                    while True:
+                        print('Will delete the last Fingerprint. Are you sure? [Y/n]')
+
+                        option = input()
+                        if option.casefold() == 'y':
+                            connection.sendall(b'4' + '\xC6'.encode('utf-8') + b'delete')
+                            waiting()
+                            return count_fingerprints - 6
+                        elif option.casefold() == 'n':
+                            return
+                        else:
+                            if not option_invalid():
+                                return
+                print('[ERROR] Cannot delete Fingerprint: there is only two Fingerprint.')
+            elif option.casefold() == 'quit':
+                return
+            else:
+                if not option_invalid():
+                    return
 
 
 def set_hotspot(hotspot, connection):
@@ -436,6 +518,7 @@ def set_hotspot(hotspot, connection):
 
                                     connection.sendall(b'5' + '\xC6'.encode('utf-8') + ssid.encode('utf-8') +
                                                        '\xC6'.encode('utf-8') + password.encode('utf-8'))
+                                    waiting()
                                     return ssid + '\xC6' + password
                                 elif option.casefold() == 'n':
                                     continue
@@ -445,6 +528,7 @@ def set_hotspot(hotspot, connection):
                         elif option.casefold() == 'n':
                             connection.sendall(b'5' + '\xC6'.encode('utf-8') +
                                                ssid.encode('utf-8') + '\xC6'.encode('utf-8') + b'NULL')
+                            waiting()
                             return ssid + '\xC6' + cred[1]
                         else:
                             if not option_invalid():
@@ -477,6 +561,7 @@ def set_hotspot(hotspot, connection):
 
                             connection.sendall(b'5' + '\xC6'.encode('utf-8') + b'NULL' + '\xC6'.encode('utf-8') +
                                                password.encode('utf-8'))
+                            waiting()
                             return cred[0] + '\xC6' + password
                         elif option.casefold() == 'n':
                             continue
@@ -498,18 +583,6 @@ def exitcode(connection):
     sys.exit()
 
 
-def decrypt_credentials(json_credentials, key):
-    json_credentials_tmp = copy.deepcopy(json_credentials)
-    c = cipher.AES.new(key, cipher.MODE_ECB, b"sssssssss")
-    print(key)
-
-    for entry in json_credentials_tmp:
-        entry['username'] = c.decrypt(entry['username'].encode()).decode('utf-8'),
-        entry['password'] = c.decrypt(entry['password'].encode()).decode('utf-8'),
-
-    print(pd.DataFrame(data=json_credentials_tmp))
-
-
 def option_invalid():
     while True:
         print("Option not valid. Retry [Y/n]")
@@ -519,3 +592,11 @@ def option_invalid():
             return True
         elif select.casefold() == 'n':
             return False
+
+
+def waiting():
+    print('Wait to Esp completes operation.', end='')
+
+    for i in range(7):
+        time.sleep(0.5)
+        print(".", end='')

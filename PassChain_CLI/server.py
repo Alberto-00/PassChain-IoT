@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import ssl
 from socket import socket, AF_INET, SOCK_STREAM
 from ssl import SSLContext, PROTOCOL_TLS_SERVER
@@ -40,7 +41,7 @@ def init_server():
 
             # remove \r\n
             connection.recv(2)
-            key = connection.recv(16)
+            num_fingerprint = int(connection.recv(3).decode('utf-8'))
 
             # remove \r\n
             connection.recv(2)
@@ -59,6 +60,8 @@ def init_server():
             for i in range(0, num_chunks + 1):
                 data.extend(connection.recv(max_chunk))
 
-            print(f'Client Says: {welcome_mex}')
+            # remove \r\n
+            connection.recv(2)
 
-            select_actions(ast.literal_eval("".join(map(chr, data))), hotspot, connection, key)
+            print(f'Client Says: {welcome_mex}')
+            select_actions(ast.literal_eval("".join(map(chr, data))), hotspot, num_fingerprint, connection)

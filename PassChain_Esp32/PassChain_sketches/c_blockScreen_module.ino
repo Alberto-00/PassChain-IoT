@@ -5,7 +5,7 @@ bool isInactive_device(unsigned long inactivity_time){
 
   stop_time = millis();
 
-  if(buttonState1 == LOW || buttonState2 == LOW || fingerprint_match()){
+  if(buttonState1 == LOW || buttonState2 == LOW || fingerprint_match() != 0){
     restart_time();
     return false;
   } else if((stop_time - start_time) > inactivity_time){
@@ -21,7 +21,7 @@ void blockScreen(){
   while(true){
     digitalRainAnim.loop();
     
-    if(fingerprint_match()){
+    if(fingerprint_match() != 0){
       delay(100);
       break;
     }

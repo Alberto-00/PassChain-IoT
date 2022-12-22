@@ -2,17 +2,15 @@
 void loop(){
   buttonState1 = digitalRead(BUTTON1PIN);
   buttonState2 = digitalRead(BUTTON2PIN);
-  int menu = 0;
 
  /************************
   * menu_module loop *
   ************************/
-  menu = mainMenu();
+  int menu = mainMenu();
   tft.fillRect(0,25,240,110,TFT_BLACK);
 
   switch(menu){
     case 0:{
-      bleKeyboard.begin();
       credentialsMenu();
       break;
     }
@@ -22,7 +20,6 @@ void loop(){
     }
 
     case 2:{
-      
       break;
     }
 

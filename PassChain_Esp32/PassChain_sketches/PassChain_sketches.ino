@@ -21,9 +21,6 @@
 #include "WiFiClientSecure.h"
 #include "Cipher.h"
 
-//For restart esp ESP.restart();
-
-
 #define BUTTON1PIN 35
 #define BUTTON2PIN 0
 #define DEEP_SLEEP T3
@@ -31,7 +28,7 @@
 #define DEEPSLEEP_TIME 150000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (120000 + 150000) = 270s = 4.5m */
 
 #define uS_TO_S_FACTOR 1000000 /* Fattore di conversione da microsecondi a secondi */
-#define TIME_TO_SLEEP 30       /* Tempo prima del quale scheda vada in deep_sleep_mode (in secondi) */
+#define TIME_TO_SLEEP 30       /* Tempo prima del quale la scheda vada in deep_sleep_mode (in secondi) */
 #define Threshold 40
 
 #define MIN_USB_VOL 4.50
@@ -69,6 +66,7 @@ Cipher* cipher = new Cipher();
 Pangodream_18650_CL BL(ADC_PIN, CONV_FACTOR, READS);
 char *batteryImages[ARRAY_SIZE] = {"battery/battery_01", "battery/battery_02", "battery/battery_03", "battery/battery_04", "battery/battery_05"};
 TaskHandle_t TaskHandle_2;
+
 double _vs[100] = {3.505, 3.510, 3.515, 3.520, 3.525, 3.530, 3.540, 3.550, 3.600, 3.650, 3.700,
                 3.703, 3.706, 3.710, 3.713, 3.716, 3.719, 3.723, 3.726, 3.729, 3.732, 3.735, 
                 3.739, 3.742, 3.745, 3.748, 3.752, 3.755, 3.758, 3.761, 3.765, 3.768, 3.771, 
@@ -81,7 +79,7 @@ double _vs[100] = {3.505, 3.510, 3.515, 3.520, 3.525, 3.530, 3.540, 3.550, 3.600
                 4.200};
 
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
-uint8_t id;
+int steps_enroll = 1;
 
 int buttonState1, buttonState2;
 bool connection_status = false;
@@ -236,11 +234,11 @@ int subMenuCredentials();
  * functions fingerprint_module *
  ********************************/
 void fingerprint_setup();
-void fingerprint_info();
-bool fingerprint_enroll();
+bool fingerprint_enroll(uint8_t);
 void fingerprint_deleteAll();
-void fingerprint_delete();
-bool fingerprint_match();
+bool fingerprint_delete(uint8_t);
+bool deleteFingerprint(uint8_t);
+uint8_t fingerprint_match();
 
 
 /**************************

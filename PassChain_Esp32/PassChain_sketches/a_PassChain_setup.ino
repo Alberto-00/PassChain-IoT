@@ -35,7 +35,7 @@ void setup(){
   pinMode(BUTTON1PIN, INPUT);
   pinMode(BUTTON2PIN, INPUT);
   
-  //bleKeyboard.begin();
+  bleKeyboard.begin();
   wakeup_deepSleep();
 
 

@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from actions import *
 from server import *
 
@@ -6,9 +7,9 @@ import pandas as pd
 import copy
 
 
-def select_actions(json_credentials, hotspot, connection, key):
-    enc_or_dec_print = True
+def select_actions(json_credentials, hotspot, num_fingerprint, connection):
     new_hotspot = hotspot
+    new_finger = num_fingerprint
 
     while True:
         print("\n\n##################################\n"
@@ -19,21 +20,15 @@ def select_actions(json_credentials, hotspot, connection, key):
               "# 4. Set Finger Prints           #\n"
               "# 5. Set HotSpot credentials     #\n"
               "#                                #\n"                       
-              "# 6. Show decrypted credentials  #\n"
-              "# 7. Show encrypted credentials  #\n"
               "# 'quit' to Exit                 #\n"
               "##################################\n")
 
-        if enc_or_dec_print:
-            json_credentials_enc_tmp = copy.deepcopy(json_credentials)
-            for entry in json_credentials_enc_tmp:
-                entry['username'] = '**************'
-                entry['password'] = '**************'
+        json_credentials_enc_tmp = copy.deepcopy(json_credentials)
+        for entry in json_credentials_enc_tmp:
+            entry['username'] = '**************'
+            entry['password'] = '**************'
 
-            print(pd.DataFrame(data=json_credentials_enc_tmp))
-        else:
-            decrypt_credentials(json_credentials, key)
-
+        print(pd.DataFrame(data=json_credentials_enc_tmp))
         print("\nInsert action: ")
 
         option = input()
@@ -46,13 +41,9 @@ def select_actions(json_credentials, hotspot, connection, key):
             case '3':
                 delete_credential(json_credentials, connection)
             case '4':
-                set_fingerprints(json_credentials, connection)
+                new_finger = set_fingerprints(new_finger, connection)
             case '5':
                 new_hotspot = set_hotspot(new_hotspot, connection)
-            case '6':
-                enc_or_dec_print = False
-            case '7':
-                enc_or_dec_print = True
             case 'quit':
                 exitcode(connection)
             case _:
@@ -71,7 +62,9 @@ if __name__ == '__main__':
     print(pyfiglet.figlet_format("Welcome    to\nPassChain"))
     print('##########################################################\n\n')
 
-    # try:
-    init_server()
-    # except:
-    # print("\n[ERROR] Something was wrong: connection refused.")
+    try:
+        init_server()
+    except Exception:
+        print(f"\n[ERROR] Something was wrong: connection refused or "
+              f"address already in use (kill the port '{get_ip()}:11111').")
+        sys.exit()
