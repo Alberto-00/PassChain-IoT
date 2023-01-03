@@ -445,10 +445,16 @@ def set_fingerprints(count_fingerprints, connection):
             option = input()
             if option.casefold() == 'add':
                 connection.sendall(b'4' + '\xC6'.encode('utf-8') + b'add')
-                print('Waiting save Fingerprint on PassChain....')
+                while True:
+                    print('Enter [Y] when you finished: ')
+                    option = input()
 
-                while connection.recv(3).decode('utf-8') == 'end':
-                    return count_fingerprints + 6
+                    if option.casefold() == 'y':
+                        return count_fingerprints + 6
+                    else:
+                        if not option_invalid():
+                            return
+
             elif option.casefold() == 'del':
                 if count_fingerprints - 12 >= 6:
                     while True:
