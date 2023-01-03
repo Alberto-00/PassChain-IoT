@@ -88,6 +88,8 @@ unsigned int sizeJson;
 
 const char* hostname = "example.org";
 unsigned int port = 11111;
+char ssid_dec[256] = {0};
+char password_dec[256]= {0};
 WiFiClientSecure client(hostname);
 
 const char* test_root_ca = \
@@ -204,6 +206,7 @@ void read_WiFiFile();
 bool close_WiFiFile();
 bool update_hotSpot(char*, char*, char*, char*);
 void accessPoint_start();
+void decryptHotSpot(char *, char *);
 
 
 /********************************

@@ -63,7 +63,8 @@ void write_button(String type, String credentials){
   tft.fillRect(0,25,235,110,TFT_BLACK);
 }
 
-void sendSequence(String sequence){
+
+/*void sendSequence(String sequence){
   int len = sequence.length();
   int special=0;
   for (int i=0;i<=len;i++) {
@@ -90,4 +91,4 @@ void sendSequence(String sequence){
       delay(20);
     }
   }
-}
+}*/

@@ -91,7 +91,6 @@ int mainMenu(){
 
 
 void credentialsMenu(){
-  
   while(true){  
     
     /*************************
@@ -184,9 +183,11 @@ void credentialsMenu(){
           
             while(!username || !password){
               int flag = verify_Ble_FingerPrint(&exit);
+              
               if(flag == -1)
                 break;
-              else if(flag == 0){
+                
+              else if(flag == -2){
                 connection_status = false;
                 return;
               }
@@ -216,20 +217,16 @@ void credentialsMenu(){
               else 
                 tft_lightText.print(password_dec);
 
-              if(username_dec.length() > 21 || password_dec.length() > 21)
+              if(username_dec.length() > 21 || password_dec.length() > 21){
                 state = scrollText(username_dec, password_dec, scrollUser, scrollPasw, &exit);
 
-              if(state == -1)
-                break;
-                
-              else if(state == -2){
-                connection_status = false;
-                return;
-              }
-
-              if(id > 6 && id < 13){
-                connection_status = false;
-                return;
+                if(state == -1)
+                  break;
+                  
+                else if(state == -2){
+                  connection_status = false;
+                  return;
+                }
               }
                 
               if(buttonState2 == LOW || state == 2)
@@ -415,4 +412,6 @@ int verify_Ble_FingerPrint(bool *exit){
   else if(id > 6 && id < 13){
     return -2;
   }
+  
+  return 0;
 }

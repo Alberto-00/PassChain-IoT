@@ -1,7 +1,6 @@
 #!/usr/bin/python
 from actions import *
 from server import *
-
 import pyfiglet
 import pandas as pd
 import copy
@@ -27,6 +26,8 @@ def select_actions(json_credentials, hotspot, num_fingerprint, connection):
         for entry in json_credentials_enc_tmp:
             entry['username'] = '**************'
             entry['password'] = '**************'
+            entry['ivUser'] = '            '
+            entry['ivPassword'] = '             '
 
         print(pd.DataFrame(data=json_credentials_enc_tmp))
         print("\nInsert action: ")

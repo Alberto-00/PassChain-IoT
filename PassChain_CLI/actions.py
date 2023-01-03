@@ -2,8 +2,6 @@
 import time
 import sys
 
-from mbedtls import cipher
-
 BUFF_SIZE = 16
 
 
@@ -262,6 +260,7 @@ def update_credential(json_credentials, connection):
                                             new_password = input().strip()
                                             print(f"Is '{new_password}' correct? [Y/n]")
 
+                                            option = input()
                                             if option.casefold() == 'y':
                                                 if new_password == "":
                                                     print("[ERROR] The password is empty.\n")
@@ -310,6 +309,7 @@ def update_credential(json_credentials, connection):
                                     new_password = input().strip()
                                     print(f"Is '{new_password}' correct? [Y/n]")
 
+                                    option = input()
                                     if option.casefold() == 'y':
                                         if new_password == "":
                                             print("[ERROR] The password is empty.\n")
@@ -476,8 +476,6 @@ def set_hotspot(hotspot, connection):
     print('\nSetup HotSpot credentials...')
 
     cred = hotspot.split('\xC6')
-    cred[0] = cred[0][0:len(cred[0]) - 1]
-    cred[1] = cred[1][0:len(cred[1]) - 1]
     print('Actual credentials: [SSID: ' + cred[0] + ", password: " + cred[1] + "]\n")
 
     while True:

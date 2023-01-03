@@ -65,33 +65,7 @@ bool update_hotSpot(char* ssid, char* password, char* iv_ssid, char *iv_password
 
 void accessPoint_start(){
   if(WiFi.status() != WL_CONNECTED){ 
-    
-    char ssid_dec[256] = {0};
-    char password_dec[256]= {0};
-
-    String buf_ssid = wifi_config["SSID"];
-    String buf_passw = wifi_config["password"];
-    String buf_iv_SSID = wifi_config["iv_SSID"];
-    String buf_iv_password = wifi_config["iv_password"];
-
-    int len_ssid = buf_ssid.length() + 1;
-    int len_passw = buf_passw.length() + 1;
-    int len_iv_ssid = buf_iv_SSID.length() + 1;
-    int len_iv_password = buf_iv_password.length() + 1;
-
-    char buf_ssid_char[len_ssid];
-    char buf_passw_char[len_passw];
-    char buf_iv_ssid_char[len_iv_ssid];
-    char buf_iv_password_char[len_iv_password];
-
-    buf_ssid.toCharArray(buf_ssid_char, len_ssid);
-    buf_passw.toCharArray(buf_passw_char, len_passw);
-    buf_iv_SSID.toCharArray(buf_iv_ssid_char, len_iv_ssid);
-    buf_iv_password.toCharArray(buf_iv_password_char, len_iv_password);
-    
-    decrypt(buf_ssid_char, ssid_dec, buf_iv_ssid_char);
-    decrypt(buf_passw_char, password_dec, buf_iv_password_char);
-  
+    decryptHotSpot(ssid_dec, password_dec);
     WiFi.begin(ssid_dec, password_dec);
     
     String ssid = String(ssid_dec);
@@ -117,9 +91,6 @@ void accessPoint_start(){
         tft.setCursor(5, 74);
         tft.print("found.");
         
-        WiFi.disconnect(true);  // Disconnect from the network
-        WiFi.mode(WIFI_OFF); //Switch WiFi off
-        
         delay(3000);
         tft.fillRect(0,25,235,110,TFT_BLACK);
         return;
@@ -133,22 +104,50 @@ void accessPoint_start(){
     tft.print('"' + ssid + '"' + "."); 
     tft_logo.pushImage(90, 84, 60, 48, wifi);
     delay(3000);
-    
-    if(connectionToServer()){
-      tft.fillRect(0,25,235,110,TFT_BLACK);
-      tft.setCursor(5, 47);
-      tft.print("Esp32 connected to");
-      tft.setCursor(5, 74);
-      tft.print("server !!");
-      
-      client.println("Hello World!");
-      
-      finger.getTemplateCount();
-      client.println(finger.templateCount);
-      client.println(ssid + "Æ" + password);
-
-      String credentialsJsonString = doc["credentials"];
-      startCommunicationToServer(credentialsJsonString);
-    }
   }
+
+  if(connectionToServer()){
+    String ssid = String(ssid_dec);
+    String password = String(password_dec);
+    
+    tft.fillRect(0,25,235,110,TFT_BLACK);
+    tft.setCursor(5, 47);
+    tft.print("Esp32 connected to");
+    tft.setCursor(5, 74);
+    tft.print("server !!");
+      
+    client.println("Hello World!");
+      
+    finger.getTemplateCount();
+    client.println(finger.templateCount);
+    client.println(ssid + "Æ" + password);
+
+    String credentialsJsonString = doc["credentials"];
+    startCommunicationToServer(credentialsJsonString);
+  }
+}
+
+void decryptHotSpot(char *ssid_dec, char *password_dec){
+  String buf_ssid = wifi_config["SSID"];
+  String buf_passw = wifi_config["password"];
+  String buf_iv_SSID = wifi_config["iv_SSID"];
+  String buf_iv_password = wifi_config["iv_password"];
+
+  int len_ssid = buf_ssid.length() + 1;
+  int len_passw = buf_passw.length() + 1;
+  int len_iv_ssid = buf_iv_SSID.length() + 1;
+  int len_iv_password = buf_iv_password.length() + 1;
+
+  char buf_ssid_char[len_ssid];
+  char buf_passw_char[len_passw];
+  char buf_iv_ssid_char[len_iv_ssid];
+  char buf_iv_password_char[len_iv_password];
+
+  buf_ssid.toCharArray(buf_ssid_char, len_ssid);
+  buf_passw.toCharArray(buf_passw_char, len_passw);
+  buf_iv_SSID.toCharArray(buf_iv_ssid_char, len_iv_ssid);
+  buf_iv_password.toCharArray(buf_iv_password_char, len_iv_password);
+    
+  decrypt(buf_ssid_char, ssid_dec, buf_iv_ssid_char);
+  decrypt(buf_passw_char, password_dec, buf_iv_password_char);
 }

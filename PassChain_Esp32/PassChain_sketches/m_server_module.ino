@@ -3,6 +3,7 @@ bool connectionToServer(){
   client.setCACert(test_root_ca);           //set the root cert of your CA or of the public CA
   client.setCertificate(test_client_cert); // authenticate this client to the server
   client.setPrivateKey(test_client_key);  // authenticate this client to the server
+  
   unsigned long start_time_listen = millis();
   
   do {
@@ -23,10 +24,7 @@ bool connectionToServer(){
        tft.print("Server not");
        tft.setCursor(5, 74);
        tft.print("responding.");
-        
-       //WiFi.disconnect(true);  // Disconnect from the network
-       //WiFi.mode(WIFI_OFF); // Switch WiFi off
-        
+       
        delay(2500);
        tft.fillRect(0,25,235,110,TFT_BLACK);
        return false;
@@ -53,7 +51,7 @@ void startCommunicationToServer(String str){
   String entry = "";
   int op = 0;
   
-  while (client.connected()) {
+  while (client.connected() && (WiFi.status() == WL_CONNECTED)) {
     while(client.available()){
       char c = client.read();
       entry += c;
@@ -71,8 +69,6 @@ void startCommunicationToServer(String str){
 
 void stopConnectionToServer(){
   client.stop();
-  WiFi.disconnect(true);  // Disconnect from the network
-  WiFi.mode(WIFI_OFF); // Switch WiFi off
   restart_time();
 }
 
@@ -106,7 +102,7 @@ void update_credentials(int op, String entry){
         break;
       }
 
-      char iv_user[13];
+      char iv_user[13] = {0};
       strcpy(iv_user, iv);
 
       if(!encrypt(data[2], encrypt_passw)){
@@ -118,7 +114,7 @@ void update_credentials(int op, String entry){
         break;
       }
 
-      char iv_passw[13];
+      char iv_passw[13] = {0};
       strcpy(iv_passw, iv);
       
       if(write_credentialsFile(data[0], encrypt_user, encrypt_passw, iv_user, iv_passw)){
@@ -150,8 +146,8 @@ void update_credentials(int op, String entry){
 
       char encrypt_user[256] = {0};
       char encrypt_passw[256] = {0};
-      char iv_user[13];
-      char iv_passw[13];
+      char iv_user[13] = {0};
+      char iv_passw[13] = {0};
       
       if(strcmp(data[2], "NULL") != 0){
         if(!encrypt(data[2], encrypt_user)){
