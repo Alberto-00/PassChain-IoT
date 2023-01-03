@@ -36,6 +36,7 @@ void setup(){
   pinMode(BUTTON2PIN, INPUT);
   
   bleKeyboard.begin();
+  bleKeyboard.setDelay(14);
   wakeup_deepSleep();
 
 
@@ -83,11 +84,4 @@ void setup(){
   *   battery_module setup   *
   ****************************/
   battery_setup();
-
-
-  /***************************
-  *   server_module setup   *
-  ****************************/
-  char *key = "%A.Esp32_Pa66.C%";
-  cipher->setKey(key);
 }

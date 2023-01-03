@@ -19,7 +19,7 @@
 #include "battery/battery_low.h"
 #include "Credential.h"
 #include "WiFiClientSecure.h"
-#include "Cipher.h"
+#include "mbedtls/gcm.h"
 
 #define BUTTON1PIN 35
 #define BUTTON2PIN 0
@@ -55,13 +55,12 @@ TFT_eSPI tft_bold = TFT_eSPI();
 TFT_eSPI tft_lightText = TFT_eSPI();
 
 BleKeyboard bleKeyboard;
-StaticJsonDocument<12288> doc;
-StaticJsonDocument<128> wifi_config;
+StaticJsonDocument<30000> doc;
+StaticJsonDocument<300> wifi_config;
 DigitalRainAnim digitalRainAnim = DigitalRainAnim();
 Credential credentials[100];
 touch_pad_t touchPin;
 File authFile, WiFiFile;
-Cipher* cipher = new Cipher();
 
 Pangodream_18650_CL BL(ADC_PIN, CONV_FACTOR, READS);
 char *batteryImages[ARRAY_SIZE] = {"battery/battery_01", "battery/battery_02", "battery/battery_03", "battery/battery_04", "battery/battery_05"};
@@ -175,6 +174,13 @@ const char* test_client_cert = \
                                "-----END CERTIFICATE-----\n";
 
 
+mbedtls_gcm_context aes;
+char *key = "cRfUjWnZr4u7x!A%";
+char iv[13] = {""};
+char tag[17] = {0};
+char tag2[17] = {0};
+
+
 /*******************************
  *  functions battery_module   *
  *******************************/
@@ -184,7 +190,7 @@ int getBatteryLevel();
 /*******************************
  * functions bluetooth_module  *
  *******************************/
-void check_connection();
+bool check_connection();
 void write_button(String, String);
 void sendSequence(String);
 
@@ -196,7 +202,7 @@ bool load_R_WiFiConfigFile();
 bool load_W_hotSpotFile();
 void read_WiFiFile();
 bool close_WiFiFile();
-bool update_hotSpot(String, String);
+bool update_hotSpot(char*, char*, char*, char*);
 void accessPoint_start();
 
 
@@ -223,11 +229,19 @@ bool load_R_credentialsFile();
 bool load_W_credentialsFile();
 bool close_credentialsFile();
 void read_credentialsFile();
-bool write_credentialsFile(char*, String, String);
-bool update_credentialsFile(char *, char*, String, String);
+bool write_credentialsFile(char*, char*, char*, char*, char*);
+bool update_credentialsFile(char *, char*, char*, char*, char*, char*);
 bool remove_credentialsFile(char*);
 void updateArray(int);
 int subMenuCredentials();
+
+
+/*********************************
+ * functions cryptography_module *
+ ********************************/
+bool encrypt(char *, char *);
+bool decrypt(char *, char *, char *);
+char* generate_iv();
 
 
 /********************************

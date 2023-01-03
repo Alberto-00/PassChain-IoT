@@ -1,5 +1,5 @@
 
-void check_connection() {
+bool check_connection() {
   unsigned long count = 0;
  
   while(true){
@@ -26,7 +26,7 @@ void check_connection() {
       delay(2700);
       
       tft.fillRect(0,25,235,110,TFT_BLACK);
-      return;
+      return true;
     }
     
     count++;
@@ -39,7 +39,8 @@ void check_connection() {
 
       tft.setCursor(5, 122);
       tft.print("Bluetooth off.");
-      return;
+      delay(2800);
+      return false;
     }
   }
 }
@@ -53,7 +54,8 @@ void write_button(String type, String credentials){
   tft.print(type);
   tft.print("."); delay(370);
 
-  sendSequence(credentials);
+  //sendSequence(credentials);
+  bleKeyboard.print(credentials);
   
   tft.print("."); delay(370);
   tft.print("."); delay(370);

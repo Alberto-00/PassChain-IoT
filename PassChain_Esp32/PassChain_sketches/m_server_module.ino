@@ -1,8 +1,8 @@
 
 bool connectionToServer(){
-  client.setCACert(test_root_ca);
-  client.setCertificate(test_client_cert); // for client verification
-  client.setPrivateKey(test_client_key);  // for client verification
+  client.setCACert(test_root_ca);           //set the root cert of your CA or of the public CA
+  client.setCertificate(test_client_cert); // authenticate this client to the server
+  client.setPrivateKey(test_client_key);  // authenticate this client to the server
   unsigned long start_time_listen = millis();
   
   do {
@@ -24,11 +24,10 @@ bool connectionToServer(){
        tft.setCursor(5, 74);
        tft.print("responding.");
         
-       WiFi.disconnect(true);  // Disconnect from the network
-       WiFi.mode(WIFI_OFF); // Switch WiFi off
-       bleKeyboard.begin(); // active BLE
+       //WiFi.disconnect(true);  // Disconnect from the network
+       //WiFi.mode(WIFI_OFF); // Switch WiFi off
         
-       delay(3000);
+       delay(2500);
        tft.fillRect(0,25,235,110,TFT_BLACK);
        return false;
      }
@@ -75,19 +74,6 @@ void stopConnectionToServer(){
   WiFi.disconnect(true);  // Disconnect from the network
   WiFi.mode(WIFI_OFF); // Switch WiFi off
   restart_time();
-  
-  for(int i = 0; i < 3; i++){
-    tft.fillRect(0,25,235,110,TFT_BLACK);
-    tft.setCursor(5, 47);
-    tft.print("Server shutdown.");
-    tft.setCursor(5, 87);
-    tft.print("Restarting."); delay(400);
-    tft.print("."); delay(400);
-    tft.print("."); delay(400);
-    tft.print("."); delay(400);
-  }
-  
-  ESP.restart();
 }
 
 void update_credentials(int op, String entry){  
@@ -96,26 +82,46 @@ void update_credentials(int op, String entry){
   entry.toCharArray(buffer, str_len);
       
   char *token = strtok(buffer, "Æ");
-  String entry_string[2]; 
       
   switch(op){
     case 1: { // ADD credentials
       /*split string*/
       char *data[3];
       
-      for(int i = 0; i < 3 && token != NULL; i++){
+      for(int i = 0; i < 3; i++){
         token = strtok(NULL, "Æ");
         data[i] = token;
-        
-        if(i == 0)
-          continue;
-          
-        String char_to_string(data[i]);
-        entry_string[i-1] = cipher->encryptString(char_to_string);
       }
       /*end split string*/
-  
-      if(write_credentialsFile(data[0], entry_string[0], entry_string[1])){        
+
+      char encrypt_user[256] = {0};
+      char encrypt_passw[256] = {0};
+
+      if(!encrypt(data[1], encrypt_user)){
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(43, 60);
+        tft.print("Add Error!");
+        tft_logo.pushImage(90, 75, 52, 52, error);
+        delay(3500);
+        break;
+      }
+
+      char iv_user[13];
+      strcpy(iv_user, iv);
+
+      if(!encrypt(data[2], encrypt_passw)){
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(43, 60);
+        tft.print("Add Error!");
+        tft_logo.pushImage(90, 75, 52, 52, error);
+        delay(3500);
+        break;
+      }
+
+      char iv_passw[13];
+      strcpy(iv_passw, iv);
+      
+      if(write_credentialsFile(data[0], encrypt_user, encrypt_passw, iv_user, iv_passw)){
         tft.fillRect(0,25,240,110,TFT_BLACK);
         tft.setCursor(43, 60);
         tft.print("Add Success!");
@@ -136,23 +142,50 @@ void update_credentials(int op, String entry){
       /*split string*/
       char *data[4];
             
-      for(int i = 0; i < 4 && token != NULL; i++){
+      for(int i = 0; i < 4; i++){
         token = strtok(NULL, "Æ");
         data[i] = token;
-        
-        if(i < 2)
-          continue;
-
-        String char_to_string(data[i]);
-        
-        if(strcmp(data[i], "NULL") != 0)
-          entry_string[i-2] = cipher->encryptString(char_to_string);
-        else
-          entry_string[i-2] = char_to_string;
       }
       /*end split string*/
-  
-      if(update_credentialsFile(data[0], data[1], entry_string[0], entry_string[1])){        
+
+      char encrypt_user[256] = {0};
+      char encrypt_passw[256] = {0};
+      char iv_user[13];
+      char iv_passw[13];
+      
+      if(strcmp(data[2], "NULL") != 0){
+        if(!encrypt(data[2], encrypt_user)){
+          tft.fillRect(0,25,240,110,TFT_BLACK);
+          tft.setCursor(43, 60);
+          tft.print("Add Error!");
+          tft_logo.pushImage(90, 75, 52, 52, error);
+          delay(3500);
+          break;
+        }
+        strcpy(iv_user, iv);
+      } 
+      else{
+        strcpy(encrypt_user, "NULL");
+        strcpy(iv_user, "NULL");
+      }
+
+      if(strcmp(data[3], "NULL") != 0){
+        if(!encrypt(data[3], encrypt_passw)){
+          tft.fillRect(0,25,240,110,TFT_BLACK);
+          tft.setCursor(43, 60);
+          tft.print("Add Error!");
+          tft_logo.pushImage(90, 75, 52, 52, error);
+          delay(3500);
+          break;
+        }
+        strcpy(iv_passw, iv);
+      } 
+      else{
+        strcpy(encrypt_passw, "NULL");
+        strcpy(iv_passw, "NULL");
+      }
+
+      if(update_credentialsFile(data[0], data[1], encrypt_user, encrypt_passw, iv_user, iv_passw)){
         tft.fillRect(0,25,240,110,TFT_BLACK);
         tft.setCursor(30, 60);
         tft.print("Update Success!");
@@ -251,19 +284,46 @@ void update_credentials(int op, String entry){
     case 5: { // Set HotSpot
       char *data[2];
 
-      for(int i = 0; i < 2 && token != NULL; i++){
+      for(int i = 0; i < 2; i++){
         token = strtok(NULL, "Æ");
         data[i] = token;
-
-        String char_to_string(data[i]);
-        
-        if(strcmp(data[i], "NULL") != 0)
-          entry_string[i] = cipher->encryptString(char_to_string);
-        else
-          entry_string[i] = "";
       }
+      
+      char encrypt_ssid[256] = {0};
+      char encrypt_passw[256] = {0};
+      
+      char iv_ssid[13] = {0};
+      char iv_passw[13] = {0};
+      
+      if(strcmp(data[0], "NULL") != 0){
+        if(!encrypt(data[0], encrypt_ssid)){
+          tft.fillRect(0,25,240,110,TFT_BLACK);
+          tft.setCursor(43, 60);
+          tft.print("Add Error!");
+          tft_logo.pushImage(90, 75, 52, 52, error);
+          delay(3500);
+          break;
+        }
+        strcpy(iv_ssid, iv);
+      } 
+      else
+         strcpy(encrypt_ssid, "NULL");
 
-      if(update_hotSpot(entry_string[0], entry_string[1])){
+      if(strcmp(data[1], "NULL") != 0){        
+        if(!encrypt(data[1], encrypt_passw)){
+          tft.fillRect(0,25,240,110,TFT_BLACK);
+          tft.setCursor(43, 60);
+          tft.print("Add Error!");
+          tft_logo.pushImage(90, 75, 52, 52, error);
+          delay(3500);
+          break;
+        }
+        strcpy(iv_passw, iv);
+      } 
+      else
+         strcpy(encrypt_passw, "NULL");
+      
+      if(update_hotSpot(encrypt_ssid, encrypt_passw, iv_ssid, iv_passw)){     
         tft.fillRect(0,25,240,110,TFT_BLACK);
         tft.setCursor(30, 60);
         tft.print("HotSpot Success!");

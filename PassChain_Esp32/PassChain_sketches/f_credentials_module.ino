@@ -52,12 +52,18 @@ void read_credentialsFile(){
 
       if(doc["credentials"][i].containsKey("password") && doc["credentials"][i]["password"] != NULL)
          credentials[i].setPassword(doc["credentials"][i]["password"]);
+
+      if(doc["credentials"][i].containsKey("ivUser") && doc["credentials"][i]["ivUser"] != NULL)
+         credentials[i].setIVUser(doc["credentials"][i]["ivUser"]);
+
+      if(doc["credentials"][i].containsKey("ivPassword") && doc["credentials"][i]["ivPassword"] != NULL)
+         credentials[i].setIVPassword(doc["credentials"][i]["ivPassword"]);
     }
   } else
     ESP.restart();
 }
 
-bool write_credentialsFile(char *name, String username, String password){
+bool write_credentialsFile(char *name, char *username, char *password, char *ivUser, char *ivPassword){
   if(sizeJson + 1 < 80){
     if(load_W_credentialsFile()){
       if(name != NULL){
@@ -74,6 +80,16 @@ bool write_credentialsFile(char *name, String username, String password){
         doc["credentials"][sizeJson]["password"] = password;
         credentials[sizeJson].setPassword(doc["credentials"][sizeJson]["password"]);
       }
+
+      if(ivUser != NULL){
+        doc["credentials"][sizeJson]["ivUser"] = ivUser;
+        credentials[sizeJson].setIVUser(doc["credentials"][sizeJson]["ivUser"]);
+      }
+
+      if(ivPassword != NULL){
+        doc["credentials"][sizeJson]["ivPassword"] = ivPassword;
+        credentials[sizeJson].setIVPassword(doc["credentials"][sizeJson]["ivPassword"]);
+      }
     
       sizeJson++;
       serializeJsonPretty(doc, authFile);
@@ -85,7 +101,7 @@ bool write_credentialsFile(char *name, String username, String password){
       return false;
 }
 
-bool update_credentialsFile(char *oldName, char* newName, String username, String password){
+bool update_credentialsFile(char *oldName, char* newName, char* username, char* password, char *ivUser, char *ivPassword){
   if(load_W_credentialsFile()){
     if(oldName != NULL){
       for(int i = 0; i < sizeJson; i++){
@@ -96,14 +112,24 @@ bool update_credentialsFile(char *oldName, char* newName, String username, Strin
             credentials[i].setName(doc["credentials"][i]["name"]);
           }
 
-          if(username != NULL && username != "NULL"){
+          if(username != NULL && strcmp(username, "NULL") != 0){
             doc["credentials"][i]["username"] = username;
             credentials[i].setUsername(doc["credentials"][i]["username"]);
           }
 
-          if(password != NULL && password != "NULL"){
+          if(password != NULL && strcmp(password, "NULL") != 0){
             doc["credentials"][i]["password"] = password;
             credentials[i].setPassword(doc["credentials"][i]["password"]);
+          }
+
+          if(ivUser != NULL && strcmp(ivUser, "NULL") != 0){
+            doc["credentials"][i]["ivUser"] = ivUser;
+            credentials[i].setIVUser(doc["credentials"][i]["ivUser"]);
+          }
+
+          if(ivPassword != NULL && strcmp(ivPassword, "NULL") != 0){
+            doc["credentials"][i]["ivPassword"] = ivPassword;
+            credentials[i].setIVPassword(doc["credentials"][i]["ivPassword"]);
           }
           
           serializeJsonPretty(doc, authFile);
@@ -143,6 +169,8 @@ void updateArray(int pos){
     credentials[pos].setName("");
     credentials[pos].setUsername("");
     credentials[pos].setPassword("");
+    credentials[pos].setIVUser("");
+    credentials[pos].setIVPassword("");
     sizeJson = 0;
     return;
   }
@@ -159,12 +187,22 @@ void updateArray(int pos){
     if(credentials[i+1].getPassword() != NULL && !(credentials[i+1].getPassword()).isEmpty()){
       credentials[i].setPassword(credentials[i+1].getPassword());
     }
+
+    if(credentials[i+1].getIVUser() != NULL && !(credentials[i+1].getIVUser()).isEmpty()){
+      credentials[i].setIVUser(credentials[i+1].getIVUser());
+    }
+
+    if(credentials[i+1].getIVPassword() != NULL && !(credentials[i+1].getIVPassword()).isEmpty()){
+      credentials[i].setIVPassword(credentials[i+1].getIVPassword());
+    }
   }
 
   if(credentials[sizeJson-1].getName() != NULL && !(credentials[sizeJson-1].getName()).isEmpty()){
     credentials[sizeJson-1].setName("");
     credentials[sizeJson-1].setUsername("");
     credentials[sizeJson-1].setPassword("");
+    credentials[sizeJson-1].setIVUser("");
+    credentials[sizeJson-1].setIVPassword("");
   }
   
   sizeJson--;
@@ -323,7 +361,7 @@ int subMenuCredentials(){
       }
 
       uint8_t id = fingerprint_match();
-      if(id > 0 && id < 7)
+      if((id > 0 && id < 7) || id > 12)
         return current;
         
       else if(id > 6 && id < 13)

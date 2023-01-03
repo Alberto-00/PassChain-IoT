@@ -81,7 +81,7 @@ int mainMenu(){
       }
 
       uint8_t id = fingerprint_match();
-      if(id > 0 && id < 7){
+      if((id > 0 && id < 7) || id > 12){
         return pos;
       }
     }
@@ -98,12 +98,15 @@ void credentialsMenu(){
     * bluetooth_module loop *
     *************************/
     if(!bleKeyboard.isConnected()){
+      connection_status = false;
       check_inactivity_device();
     
       if(!connection_status){
-        check_connection();
-        restart_time();
-        connection_status = true;
+        if(!check_connection()){
+          restart_time();
+          connection_status = true;
+          return;
+        }
       }
     } 
     else{
@@ -137,8 +140,32 @@ void credentialsMenu(){
           
           buttonState1 = digitalRead(BUTTON1PIN);
           buttonState2 = digitalRead(BUTTON2PIN);
-          String username_dec = cipher->decryptString(credentials[select].getUsername());
-          String password_dec = cipher->decryptString(credentials[select].getPassword());
+
+          // decrypt credential
+          char username_dec_arr[256] = {0};
+          char password_dec_arr[256]= {0};
+
+          int user_len = credentials[select].getUsername().length() + 1; 
+          int passw_len = credentials[select].getPassword().length() + 1;
+          int iv_user_len = credentials[select].getIVUser().length() + 1;
+          int iv_pasw_len = credentials[select].getIVPassword().length() + 1;
+
+          char buf_user[user_len];
+          char buf_pasw[passw_len];
+          char buf_iv_user[iv_user_len];
+          char buf_iv_pasw[iv_pasw_len];
+          
+          credentials[select].getUsername().toCharArray(buf_user, user_len);
+          credentials[select].getPassword().toCharArray(buf_pasw, passw_len);
+          credentials[select].getIVUser().toCharArray(buf_iv_user, iv_user_len);
+          credentials[select].getIVPassword().toCharArray(buf_iv_pasw, iv_pasw_len);
+          
+          decrypt(buf_user, username_dec_arr, buf_iv_user);
+          decrypt(buf_pasw, password_dec_arr, buf_iv_pasw);
+
+          String username_dec = String(username_dec_arr);
+          String password_dec = String(password_dec_arr);
+          // end decryption
       
           tft_bold.setCursor(5, 47);
           tft_bold.print("> Username:");
@@ -151,7 +178,7 @@ void credentialsMenu(){
           tft.print("************");
 
           uint8_t id = fingerprint_match();
-          if(id > 0 && id < 7){
+          if((id > 0 && id < 7) || id > 12){
             exit = true;
             tft.fillRect(0,25,235,110,TFT_BLACK);
           
@@ -194,7 +221,17 @@ void credentialsMenu(){
 
               if(state == -1)
                 break;
+                
+              else if(state == -2){
+                connection_status = false;
+                return;
+              }
 
+              if(id > 6 && id < 13){
+                connection_status = false;
+                return;
+              }
+                
               if(buttonState2 == LOW || state == 2)
                 sendPassword(&password, password_dec);
               
@@ -267,9 +304,13 @@ int scrollText(String username_dec, String password_dec, bool scrollUser, bool s
             delay(800);
           } else
               tft_lightText.print(username_dec.substring(i, 20 + i));
-          
-          if(verify_Ble_FingerPrint(exit) == -1)
+              
+          int verify = verify_Ble_FingerPrint(exit);
+          if(verify == -1)
             return -1;
+            
+          else if(verify == -2)
+            return -2;
             
           buttonState1 = digitalRead(BUTTON1PIN);
           buttonState2 = digitalRead(BUTTON2PIN);   
@@ -315,8 +356,12 @@ int scrollText(String username_dec, String password_dec, bool scrollUser, bool s
           } else
               tft_lightText.print(password_dec.substring(i, 20 + i));
               
-          if(verify_Ble_FingerPrint(exit) == -1)
+          int verify = verify_Ble_FingerPrint(exit);
+          if(verify == -1)
             return -1;
+            
+          else if(verify == -2)
+            return -2;
             
           buttonState1 = digitalRead(BUTTON1PIN);
           buttonState2 = digitalRead(BUTTON2PIN);
@@ -362,12 +407,12 @@ int verify_Ble_FingerPrint(bool *exit){
     return -1;
 
   uint8_t id = fingerprint_match();
-  if(id > 0 && id < 7){
+  if((id > 0 && id < 7) || id > 12){
     *exit = false;
     tft.fillRect(0,25,235,110,TFT_BLACK);
     return -1;
   }
   else if(id > 6 && id < 13){
-    return 0;
+    return -2;
   }
 }

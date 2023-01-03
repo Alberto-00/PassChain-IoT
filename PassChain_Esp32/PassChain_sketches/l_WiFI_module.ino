@@ -37,20 +37,25 @@ void read_WiFiFile(){
     if (error) {
       Serial.print("deserializeJson() failed: ");
       Serial.println(error.c_str());
+      ESP.restart();
       return;
     }
   }
 }
 
-bool update_hotSpot(String ssid, String password){
+bool update_hotSpot(char* ssid, char* password, char* iv_ssid, char *iv_password){
   if(load_W_hotSpotFile()){
     
-    if(ssid != NULL && !ssid.isEmpty())
+    if(ssid != NULL && strcmp(ssid, "NULL") != 0){
       wifi_config["SSID"] = ssid;
+      wifi_config["iv_SSID"] = iv_ssid;
+    }
 
-    if(password != NULL && !password.isEmpty())
+    if(password != NULL && strcmp(password, "NULL") != 0){
       wifi_config["password"] = password;
-
+      wifi_config["iv_password"] = iv_password;
+    }
+    
     serializeJsonPretty(wifi_config, WiFiFile);
     close_WiFiFile();
     return true;
@@ -60,15 +65,37 @@ bool update_hotSpot(String ssid, String password){
 
 void accessPoint_start(){
   if(WiFi.status() != WL_CONNECTED){ 
-    bleKeyboard.end();
     
-    String ssid = wifi_config["SSID"];
-    String password = wifi_config["password"];
+    char ssid_dec[256] = {0};
+    char password_dec[256]= {0};
 
-    String ssi_dec = cipher->decryptString(ssid);
-    String password_dec = cipher->decryptString(password);
+    String buf_ssid = wifi_config["SSID"];
+    String buf_passw = wifi_config["password"];
+    String buf_iv_SSID = wifi_config["iv_SSID"];
+    String buf_iv_password = wifi_config["iv_password"];
 
-    WiFi.begin(ssi_dec.c_str(), password_dec.c_str());
+    int len_ssid = buf_ssid.length() + 1;
+    int len_passw = buf_passw.length() + 1;
+    int len_iv_ssid = buf_iv_SSID.length() + 1;
+    int len_iv_password = buf_iv_password.length() + 1;
+
+    char buf_ssid_char[len_ssid];
+    char buf_passw_char[len_passw];
+    char buf_iv_ssid_char[len_iv_ssid];
+    char buf_iv_password_char[len_iv_password];
+
+    buf_ssid.toCharArray(buf_ssid_char, len_ssid);
+    buf_passw.toCharArray(buf_passw_char, len_passw);
+    buf_iv_SSID.toCharArray(buf_iv_ssid_char, len_iv_ssid);
+    buf_iv_password.toCharArray(buf_iv_password_char, len_iv_password);
+    
+    decrypt(buf_ssid_char, ssid_dec, buf_iv_ssid_char);
+    decrypt(buf_passw_char, password_dec, buf_iv_password_char);
+  
+    WiFi.begin(ssid_dec, password_dec);
+    
+    String ssid = String(ssid_dec);
+    String password = String(password_dec);
 
     // attempt to connect to Wifi network:
     unsigned long start_time_connection = millis();
@@ -76,7 +103,7 @@ void accessPoint_start(){
       tft.setCursor(5, 47);
       tft.print("Connecting to");
       tft.setCursor(5, 74);
-      tft.print(ssi_dec);
+      tft.print(ssid);
       
       delay(400); tft.print(".");
       delay(400); tft.print(".");
@@ -103,7 +130,7 @@ void accessPoint_start(){
     tft.fillRect(0,25,235,110,TFT_BLACK);
     tft.print("Connected to");
     tft.setCursor(5, 74);
-    tft.print('"' + ssi_dec + '"' + "."); 
+    tft.print('"' + ssid + '"' + "."); 
     tft_logo.pushImage(90, 84, 60, 48, wifi);
     delay(3000);
     
@@ -118,7 +145,7 @@ void accessPoint_start(){
       
       finger.getTemplateCount();
       client.println(finger.templateCount);
-      client.println(ssi_dec + "Æ" + password_dec);
+      client.println(ssid + "Æ" + password);
 
       String credentialsJsonString = doc["credentials"];
       startCommunicationToServer(credentialsJsonString);

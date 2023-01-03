@@ -9,7 +9,13 @@ void fingerprint_setup(){
   if (finger.verifyPassword()) {
     Serial.println("Found fingerprint sensor!");
   } else {
-    Serial.println("Did not find fingerprint sensor :(");
+    tft.fillScreen(TFT_BLACK);
+    tft.setCursor(5, 47);
+    tft.print("Fingerprint don't");
+    tft.setCursor(5, 80);
+    tft.print("detect.");
+    tft.setCursor(5, 122);
+    tft.print("Turn off the power."); 
     while (1) { delay(1); }
   }
 }
