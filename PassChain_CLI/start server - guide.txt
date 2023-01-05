@@ -1,0 +1,14 @@
+-------------------------------------
+Kill open port
+
+sudo ss -ltpn
+sudo kill -9 `sudo lsof -t -i:11111`
+-------------------------------------
+
+-----------------------------------
+start server
+
+[On Unix or MacOS, using the bash shell]: "source /path/to/venv/bin/activate"
+[On Windows using the Command Prompt]: "path\to\venv\Scripts\activate.bat"
+
+Then lunch: "python main"
