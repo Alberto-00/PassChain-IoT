@@ -107,8 +107,10 @@
       </path>
     </svg>
   </a>
-  Authors
+  Author & Contacts
 </h2>
 <ul dir="auto">
 <li><strong>Alberto Montefusco</strong>   - <em>Developer</em>   - <a href="https://github.com/Alberto-00">Alberto-00</a></li>
+<li>Email - <a target="_blank" href="mailto:a.montefusco28@studenti.unisa.it">a.montefusco28@studenti.unisa.it</a></li>
+<li>LinkedIn - <a target="_blank" href="https://www.linkedin.com/in/alberto-montefusco">Alberto Montefusco</a></li>
 </ul>
