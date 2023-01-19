@@ -15,6 +15,19 @@ bool isInactive_device(unsigned long inactivity_time){
   }
 }
 
+bool isInactive_device_deep_sleep(unsigned long inactivity_time){ 
+  stop_time = millis();
+
+  if(fingerprint_match() != 0){
+    restart_time();
+    return false;
+  } else if((stop_time - start_time) > inactivity_time){
+      return true;
+  } else {
+    return false;
+  }
+}
+
 void blockScreen(){
   tft.fillScreen(TFT_BLACK);
   

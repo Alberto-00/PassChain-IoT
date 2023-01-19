@@ -25,7 +25,7 @@
 #define BUTTON2PIN 0
 #define DEEP_SLEEP T3
 #define BLOCKSCREEN_TIME 120000   /* tempo dopo il quale si avvia il block-screen 120s = 2min */
-#define DEEPSLEEP_TIME 150000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (120000 + 150000) = 270s = 4.5m */
+#define DEEPSLEEP_TIME 120000   /*  tempo dopo il quale si avvia il deep-sleep sommato al deep-sleep (120000 + 120000) = 240s = 4min */
 
 #define uS_TO_S_FACTOR 1000000 /* Fattore di conversione da microsecondi a secondi */
 #define TIME_TO_SLEEP 30       /* Tempo prima del quale la scheda vada in deep_sleep_mode (in secondi) */
@@ -82,8 +82,8 @@ int steps_enroll = 1;
 
 int buttonState1, buttonState2;
 bool connection_status = false;
-unsigned long start_time;
-unsigned long stop_time;
+unsigned long start_time = millis();
+unsigned long stop_time = millis();
 unsigned int sizeJson;
 
 const char* hostname = "example.org";
@@ -214,6 +214,7 @@ void decryptHotSpot(char *, char *);
  ********************************/
 bool check_inactivity_device();
 bool isInactive_device(unsigned long);
+bool isInactive_device_deep_sleep(unsigned long);
 void blockScreen();
 void restart_time();
 

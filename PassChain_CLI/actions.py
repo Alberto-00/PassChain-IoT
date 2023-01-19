@@ -42,6 +42,10 @@ def add_credential(json_credentials, connection):
                             print("[ERROR] The username is empty.\n")
                             continue
 
+                        elif len(username) > 255:
+                            print("[ERROR] The username is too long.\n")
+                            continue
+
                         while True:
                             print('\nPlease insert Password: ')
                             password = input().strip()
@@ -51,6 +55,14 @@ def add_credential(json_credentials, connection):
                             if option.casefold() == 'y':
                                 if password == "":
                                     print("[ERROR] The password is empty.\n")
+                                    continue
+
+                                elif len(password) > 255:
+                                    print("[ERROR] The password is too long.\n")
+                                    continue
+
+                                elif len(password) < 8:
+                                    print("[ERROR] The password must be at least 8 characters.\n")
                                     continue
 
                                 entry_enc = {'name': name, 'username': '**************', 'password': '**************'}
@@ -128,6 +140,10 @@ def update_credential(json_credentials, connection):
                                                         print("[ERROR] The username is empty.\n")
                                                         continue
 
+                                                    elif len(new_username) > 255:
+                                                        print("[ERROR] The username is too long.\n")
+                                                        continue
+
                                                     while True:
                                                         print('\nDo you want update password? [Y/n]')
                                                         option = input()
@@ -142,6 +158,10 @@ def update_credential(json_credentials, connection):
                                                                 if option.casefold() == 'y':
                                                                     if new_password == "":
                                                                         print("[ERROR] The password is empty.\n")
+                                                                        continue
+
+                                                                    elif len(new_password) > 255:
+                                                                        print("[ERROR] The password is too long.\n")
                                                                         continue
 
                                                                     entry_name['name'] = new_name
@@ -199,6 +219,10 @@ def update_credential(json_credentials, connection):
                                                                 print("[ERROR] The password is empty.\n")
                                                                 continue
 
+                                                            elif len(new_password) > 255:
+                                                                print("[ERROR] The password is too long.\n")
+                                                                continue
+
                                                             entry_name['name'] = new_name
                                                             entry_name['password'] = new_password
                                                             connection.sendall(b'2' + '\xC6'.encode('utf-8') +
@@ -252,6 +276,10 @@ def update_credential(json_credentials, connection):
                                             print("[ERROR] The username is empty.\n")
                                             continue
 
+                                        elif len(new_username) > 255:
+                                            print("[ERROR] The username is too long.\n")
+                                            continue
+
                                         print('\nDo you want update password? [Y/n]')
                                         option = input()
 
@@ -264,6 +292,10 @@ def update_credential(json_credentials, connection):
                                             if option.casefold() == 'y':
                                                 if new_password == "":
                                                     print("[ERROR] The password is empty.\n")
+                                                    continue
+
+                                                elif len(new_password) > 255:
+                                                    print("[ERROR] The password is too long.\n")
                                                     continue
 
                                                 entry_name['username'] = new_username
@@ -313,6 +345,10 @@ def update_credential(json_credentials, connection):
                                     if option.casefold() == 'y':
                                         if new_password == "":
                                             print("[ERROR] The password is empty.\n")
+                                            continue
+
+                                        elif len(new_password) > 255:
+                                            print("[ERROR] The password is too long.\n")
                                             continue
 
                                         entry_name['password'] = new_password
@@ -500,6 +536,10 @@ def set_hotspot(hotspot, connection):
                         print("[ERROR] The SSID is empty.\n")
                         continue
 
+                    elif len(ssid) > 255:
+                        print("[ERROR] The SSID is too long.\n")
+                        continue
+
                     while True:
                         print('\nDo you want update Password? [Y/n]')
                         option = input()
@@ -516,7 +556,11 @@ def set_hotspot(hotspot, connection):
                                         print("[ERROR] The password is empty.\n")
                                         continue
 
-                                    if len(password) < 8:
+                                    elif len(password) > 255:
+                                        print("[ERROR] The password is too long.\n")
+                                        continue
+
+                                    elif len(password) < 8:
                                         print("[ERROR] The password must be at least 8 characters.\n")
                                         continue
 
@@ -559,7 +603,11 @@ def set_hotspot(hotspot, connection):
                                 print("[ERROR] The password is empty.\n")
                                 continue
 
-                            if len(password) < 8:
+                            elif len(password) > 255:
+                                print("[ERROR] The password is too long.\n")
+                                continue
+
+                            elif len(password) < 8:
                                 print("[ERROR] The password must be at least 8 characters.\n")
                                 continue
 

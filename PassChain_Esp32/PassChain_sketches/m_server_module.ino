@@ -93,6 +93,15 @@ void update_credentials(int op, String entry){
       char encrypt_user[256] = {0};
       char encrypt_passw[256] = {0};
 
+      if(strlen(data[1]) > 255 || strlen(data[2]) > 255){
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(43, 60);
+        tft.print("Add Error!");
+        tft_logo.pushImage(90, 75, 52, 52, error);
+        delay(3500);
+        break;
+      }
+
       if(!encrypt(data[1], encrypt_user)){
         tft.fillRect(0,25,240,110,TFT_BLACK);
         tft.setCursor(43, 60);
@@ -148,6 +157,15 @@ void update_credentials(int op, String entry){
       char encrypt_passw[256] = {0};
       char iv_user[13] = {0};
       char iv_passw[13] = {0};
+
+      if(strlen(data[2]) > 255 || strlen(data[3]) > 255){
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(30, 60);
+        tft.print("Update Error!");
+        tft_logo.pushImage(90, 75, 52, 52, error);
+        delay(3500);
+        break;
+      }
       
       if(strcmp(data[2], "NULL") != 0){
         if(!encrypt(data[2], encrypt_user)){
@@ -290,6 +308,15 @@ void update_credentials(int op, String entry){
       
       char iv_ssid[13] = {0};
       char iv_passw[13] = {0};
+
+      if(strlen(data[0]) > 255 || strlen(data[1]) > 255){
+        tft.fillRect(0,25,240,110,TFT_BLACK);
+        tft.setCursor(43, 60);
+        tft.print("Add Error!");
+        tft_logo.pushImage(90, 75, 52, 52, error);
+        delay(3500);
+        break;
+      }
       
       if(strcmp(data[0], "NULL") != 0){
         if(!encrypt(data[0], encrypt_ssid)){

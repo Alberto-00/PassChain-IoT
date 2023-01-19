@@ -4,7 +4,7 @@ void setup(){
     
  /****************************
   * startDevice_module setup *
-  ****************************/ 
+  ****************************/
   tft.begin();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
