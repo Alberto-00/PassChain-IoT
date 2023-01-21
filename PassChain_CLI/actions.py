@@ -124,137 +124,146 @@ def update_credential(json_credentials, connection):
                                         print("[ERROR] The name is empty.\n")
                                         continue
 
-                                    while True:
-                                        print('\nDo you want update username? [Y/n]')
-                                        option = input()
+                                    flag = False
+                                    for name in json_credentials:
+                                        if name['name'] == new_name and name['name'] != old_name:
+                                            print("[ERROR] Update failed: this name already exist.\n")
+                                            flag = True
+                                            break
 
-                                        if option.casefold() == 'y':
-                                            while True:
-                                                print('Please insert username: ')
-                                                new_username = input().strip()
-                                                print(f"Is '{new_username}' correct? [Y/n]")
+                                    if not flag:
+                                        while True:
+                                            print('\nDo you want update username? [Y/n]')
+                                            option = input()
 
-                                                option = input()
-                                                if option.casefold() == 'y':
-                                                    if new_username == "":
-                                                        print("[ERROR] The username is empty.\n")
-                                                        continue
+                                            if option.casefold() == 'y':
+                                                while True:
+                                                    print('Please insert username: ')
+                                                    new_username = input().strip()
+                                                    print(f"Is '{new_username}' correct? [Y/n]")
 
-                                                    elif len(new_username) > 255:
-                                                        print("[ERROR] The username is too long.\n")
-                                                        continue
-
-                                                    while True:
-                                                        print('\nDo you want update password? [Y/n]')
-                                                        option = input()
-
-                                                        if option.casefold() == 'y':
-                                                            while True:
-                                                                print('Please insert password: ')
-                                                                new_password = input().strip()
-                                                                print(f"Is '{new_password}' correct? [Y/n]")
-
-                                                                option = input()
-                                                                if option.casefold() == 'y':
-                                                                    if new_password == "":
-                                                                        print("[ERROR] The password is empty.\n")
-                                                                        continue
-
-                                                                    elif len(new_password) > 255:
-                                                                        print("[ERROR] The password is too long.\n")
-                                                                        continue
-
-                                                                    entry_name['name'] = new_name
-                                                                    entry_name['username'] = new_username
-                                                                    entry_name['password'] = new_password
-                                                                    connection.sendall(b'2' + '\xC6'.encode('utf-8') +
-                                                                                       old_name.encode('utf-8') +
-                                                                                       '\xC6'.encode('utf-8') +
-                                                                                       new_name.encode('utf-8') +
-                                                                                       '\xC6'.encode('utf-8') +
-                                                                                       new_username.encode('utf-8') +
-                                                                                       '\xC6'.encode('utf-8') +
-                                                                                       new_password.encode('utf-8'))
-                                                                    waiting()
-                                                                    return
-                                                                elif option.casefold() == 'n':
-                                                                    continue
-                                                                else:
-                                                                    if not option_invalid():
-                                                                        return
-                                                        elif option.casefold() == 'n':
-                                                            entry_name['name'] = new_name
-                                                            entry_name['username'] = new_username
-                                                            connection.sendall(b'2' + '\xC6'.encode('utf-8') +
-                                                                               old_name.encode('utf-8') +
-                                                                               '\xC6'.encode('utf-8') +
-                                                                               new_name.encode('utf-8') +
-                                                                               '\xC6'.encode('utf-8') +
-                                                                               new_username.encode('utf-8') +
-                                                                               '\xC6'.encode('utf-8') + b'NULL')
-                                                            waiting()
-                                                            return
-                                                        else:
-                                                            if not option_invalid():
-                                                                return
-                                                elif option.casefold() == 'n':
-                                                    continue
-                                                else:
-                                                    if not option_invalid():
-                                                        return
-                                        elif option.casefold() == 'n':
-                                            while True:
-                                                print('\nDo you want update password? [Y/n]')
-                                                option = input()
-
-                                                if option.casefold() == 'y':
-                                                    while True:
-                                                        print('Please insert password: ')
-                                                        new_password = input().strip()
-                                                        print(f"Is '{new_password}' correct? [Y/n]")
-
-                                                        option = input()
-                                                        if option.casefold() == 'y':
-                                                            if new_password == "":
-                                                                print("[ERROR] The password is empty.\n")
-                                                                continue
-
-                                                            elif len(new_password) > 255:
-                                                                print("[ERROR] The password is too long.\n")
-                                                                continue
-
-                                                            entry_name['name'] = new_name
-                                                            entry_name['password'] = new_password
-                                                            connection.sendall(b'2' + '\xC6'.encode('utf-8') +
-                                                                               old_name.encode('utf-8') +
-                                                                               '\xC6'.encode('utf-8') +
-                                                                               new_name.encode('utf-8') +
-                                                                               '\xC6'.encode('utf-8') + b'NULL' +
-                                                                               '\xC6'.encode('utf-8') +
-                                                                               new_password.encode('utf-8'))
-                                                            waiting()
-                                                            return
-                                                        elif option.casefold() == 'n':
+                                                    option = input()
+                                                    if option.casefold() == 'y':
+                                                        if new_username == "":
+                                                            print("[ERROR] The username is empty.\n")
                                                             continue
-                                                        else:
-                                                            if not option_invalid():
+
+                                                        elif len(new_username) > 255:
+                                                            print("[ERROR] The username is too long.\n")
+                                                            continue
+
+                                                        while True:
+                                                            print('\nDo you want update password? [Y/n]')
+                                                            option = input()
+
+                                                            if option.casefold() == 'y':
+                                                                while True:
+                                                                    print('Please insert password: ')
+                                                                    new_password = input().strip()
+                                                                    print(f"Is '{new_password}' correct? [Y/n]")
+
+                                                                    option = input()
+                                                                    if option.casefold() == 'y':
+                                                                        if new_password == "":
+                                                                            print("[ERROR] The password is empty.\n")
+                                                                            continue
+
+                                                                        elif len(new_password) > 255:
+                                                                            print("[ERROR] The password is too long.\n")
+                                                                            continue
+
+                                                                        entry_name['name'] = new_name
+                                                                        entry_name['username'] = new_username
+                                                                        entry_name['password'] = new_password
+                                                                        connection.sendall(
+                                                                            b'2' + '\xC6'.encode('utf-8') +
+                                                                            old_name.encode('utf-8') +
+                                                                            '\xC6'.encode('utf-8') +
+                                                                            new_name.encode('utf-8') +
+                                                                            '\xC6'.encode('utf-8') +
+                                                                            new_username.encode('utf-8') +
+                                                                            '\xC6'.encode('utf-8') +
+                                                                            new_password.encode('utf-8'))
+                                                                        waiting()
+                                                                        return
+                                                                    elif option.casefold() == 'n':
+                                                                        continue
+                                                                    else:
+                                                                        if not option_invalid():
+                                                                            return
+                                                            elif option.casefold() == 'n':
+                                                                entry_name['name'] = new_name
+                                                                entry_name['username'] = new_username
+                                                                connection.sendall(b'2' + '\xC6'.encode('utf-8') +
+                                                                                   old_name.encode('utf-8') +
+                                                                                   '\xC6'.encode('utf-8') +
+                                                                                   new_name.encode('utf-8') +
+                                                                                   '\xC6'.encode('utf-8') +
+                                                                                   new_username.encode('utf-8') +
+                                                                                   '\xC6'.encode('utf-8') + b'NULL')
+                                                                waiting()
                                                                 return
-                                                elif option.casefold() == 'n':
-                                                    entry_name['name'] = new_name
-                                                    connection.sendall(b'2' + '\xC6'.encode('utf-8') +
-                                                                       old_name.encode('utf-8') +
-                                                                       '\xC6'.encode('utf-8') +
-                                                                       new_name.encode('utf-8') +
-                                                                       '\xC6'.encode('utf-8') + b'NULL' +
-                                                                       '\xC6'.encode('utf-8') + b'NULL')
-                                                    waiting()
-                                                    return
-                                                else:
-                                                    if not option_invalid():
+                                                            else:
+                                                                if not option_invalid():
+                                                                    return
+                                                    elif option.casefold() == 'n':
+                                                        continue
+                                                    else:
+                                                        if not option_invalid():
+                                                            return
+                                            elif option.casefold() == 'n':
+                                                while True:
+                                                    print('\nDo you want update password? [Y/n]')
+                                                    option = input()
+
+                                                    if option.casefold() == 'y':
+                                                        while True:
+                                                            print('Please insert password: ')
+                                                            new_password = input().strip()
+                                                            print(f"Is '{new_password}' correct? [Y/n]")
+
+                                                            option = input()
+                                                            if option.casefold() == 'y':
+                                                                if new_password == "":
+                                                                    print("[ERROR] The password is empty.\n")
+                                                                    continue
+
+                                                                elif len(new_password) > 255:
+                                                                    print("[ERROR] The password is too long.\n")
+                                                                    continue
+
+                                                                entry_name['name'] = new_name
+                                                                entry_name['password'] = new_password
+                                                                connection.sendall(b'2' + '\xC6'.encode('utf-8') +
+                                                                                   old_name.encode('utf-8') +
+                                                                                   '\xC6'.encode('utf-8') +
+                                                                                   new_name.encode('utf-8') +
+                                                                                   '\xC6'.encode('utf-8') + b'NULL' +
+                                                                                   '\xC6'.encode('utf-8') +
+                                                                                   new_password.encode('utf-8'))
+                                                                waiting()
+                                                                return
+                                                            elif option.casefold() == 'n':
+                                                                continue
+                                                            else:
+                                                                if not option_invalid():
+                                                                    return
+                                                    elif option.casefold() == 'n':
+                                                        entry_name['name'] = new_name
+                                                        connection.sendall(b'2' + '\xC6'.encode('utf-8') +
+                                                                           old_name.encode('utf-8') +
+                                                                           '\xC6'.encode('utf-8') +
+                                                                           new_name.encode('utf-8') +
+                                                                           '\xC6'.encode('utf-8') + b'NULL' +
+                                                                           '\xC6'.encode('utf-8') + b'NULL')
+                                                        waiting()
                                                         return
-                                        else:
-                                            if not option_invalid():
-                                                return
+                                                    else:
+                                                        if not option_invalid():
+                                                            return
+                                            else:
+                                                if not option_invalid():
+                                                    return
                                 elif option.casefold() == 'n':
                                     continue
                                 else:
