@@ -53,10 +53,9 @@ void write_button(String type, String credentials){
   tft.setCursor(5, 88); 
   tft.print(type);
   tft.print("."); delay(370);
-
-  //sendSequence(credentials);
-  bleKeyboard.print(credentials);
   
+  bleKeyboard.print(credentials);
+    
   tft.print("."); delay(370);
   tft.print("."); delay(370);
   tft.print(".");

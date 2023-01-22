@@ -20,9 +20,9 @@ void setup(){
   fingerprint_setup();
 
   
-  /****************************
+  /***************************
   * blockScreen_module setup *
-  *****************************/
+  ****************************/
   digitalRainAnim.init(&tft);
   digitalRainAnim.setTextColor(4, 188, 200);
   digitalRainAnim.setHeadCharColor(4, 254, 253);
@@ -36,7 +36,7 @@ void setup(){
   pinMode(BUTTON2PIN, INPUT);
   
   bleKeyboard.begin();
-  bleKeyboard.setDelay(14);
+  bleKeyboard.setDelay(50);
   wakeup_deepSleep();
 
 
